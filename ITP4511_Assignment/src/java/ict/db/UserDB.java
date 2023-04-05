@@ -154,10 +154,10 @@ public class UserDB extends BaseDAO{
         User u = null;
         try {
             cnnt = getConnection();
-            String preQueryStatement = "SELECT * FROM user WHERE firstName=? OR lastName=?";
+            String preQueryStatement = "SELECT * FROM user WHERE firstName LIKE ? OR lastName LIKE ?";
             pStmnt = cnnt.prepareStatement(preQueryStatement);
-            pStmnt.setString(1, name);
-            pStmnt.setString(2, name);
+            pStmnt.setString(1, ("%"+name+"%"));
+            pStmnt.setString(2, ("%"+name+"%"));
             ResultSet rs = null;
             rs = pStmnt.executeQuery();
             while (rs.next()) {
@@ -182,16 +182,16 @@ public class UserDB extends BaseDAO{
         return us;
     }
 
-    public ArrayList<User> queryUserByPhone(String tel) {
+    public ArrayList<User> queryUserByPhone(String phone) {
         Connection cnnt = null;
         PreparedStatement pStmnt = null;
         ArrayList<User> us = new ArrayList<User>();
         User u = null;
         try {
             cnnt = getConnection();
-            String preQueryStatement = "SELECT * FROM user WHERE phone=?";
+            String preQueryStatement = "SELECT * FROM user WHERE phone LIKE ?";
             pStmnt = cnnt.prepareStatement(preQueryStatement);
-            pStmnt.setString(1, tel);
+            pStmnt.setString(1, ("%"+phone+"%"));
             ResultSet rs = null;
             rs = pStmnt.executeQuery();
             while (rs.next()) {
