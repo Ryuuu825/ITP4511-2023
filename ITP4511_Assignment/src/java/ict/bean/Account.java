@@ -14,12 +14,18 @@ public class Account implements Serializable{
     private int id;
     private String username;
     private String password;
-    private String role;
+    private int role;
+
+    private enum roleEnum {
+        Member,
+        Staff,
+        SeniorManager
+    };
 
     public Account() {
     }
 
-    public Account(int id, String username, String password, String role) {
+    public Account(int id, String username, String password, int role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -51,10 +57,10 @@ public class Account implements Serializable{
     }
 
     public String getRole() {
-        return role;
+        return roleEnum.values()[role].toString();
     }
 
-    public void setRole(String role) {
+    public void setRole(int role) {
         this.role = role;
     }
     
