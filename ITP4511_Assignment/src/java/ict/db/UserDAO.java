@@ -4,10 +4,8 @@
  */
 package ict.db;
 
-import com.mysql.jdbc.Connection;
 import ict.bean.User;
 import ict.util.DbUtil;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -46,8 +44,8 @@ public class UserDAO {
 
     public boolean addRecord(int accountId, String firstName, String lastName, String email, String phone) {
         boolean isSuccess = false;
-        if (queryUserByAccountId(accountId) == null) {
-            ArrayList<Object> params = new ArrayList();
+        if (queryRecordByAccountId(accountId) == null) {
+            ArrayList<Object> params = new ArrayList<>();
             params.add(accountId);
             params.add(firstName);
             params.add(lastName);
@@ -59,10 +57,10 @@ public class UserDAO {
         return isSuccess;
     }
 
-    public User queryUserById(int id) {
+    public User queryRecordById(int id) {
         User u = null;
         String sql = "SELECT * FROM user WHERE id=?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         if (!ls.isEmpty()) {
@@ -78,10 +76,10 @@ public class UserDAO {
         return u;
     }
 
-    public User queryUserByAccountId(int accountId) {
+    public User queryRecordByAccountId(int accountId) {
         User u = null;
         String sql = "SELECT * FROM user WHERE accountId=?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(accountId);
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         if (!ls.isEmpty()) {
@@ -97,10 +95,10 @@ public class UserDAO {
         return u;
     }
 
-    public ArrayList<User> queryUserByName(String name) {
+    public ArrayList<User> queryRecordByName(String name) {
         User u = null;
         String sql = "SELECT * FROM user WHERE firstName LIKE ? OR lastName LIKE ?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(("%" + name + "%"));
         params.add(("%" + name + "%"));
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
@@ -118,10 +116,10 @@ public class UserDAO {
         return us;
     }
 
-    public ArrayList<User> queryUserByPhone(String phone) {
+    public ArrayList<User> queryRecordByPhone(String phone) {
         User u = null;
         String sql = "SELECT * FROM user WHERE phone LIKE ?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(("%" + phone + "%"));
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         ArrayList<User> us = new ArrayList<>();
@@ -138,10 +136,10 @@ public class UserDAO {
         return us;
     }
 
-    public ArrayList<User> queryUser() {
+    public ArrayList<User> queryRecord() {
         User u = null;
         String sql = "SELECT * FROM user";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         ArrayList<User> us = new ArrayList<>();
         for (Map<String, Object> m : ls) {
@@ -159,7 +157,7 @@ public class UserDAO {
 
     public boolean delRecord(int id) {
         String sql = "DELETE FROM user WHERE id=?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         boolean isSuccess = false;
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
@@ -170,7 +168,7 @@ public class UserDAO {
         String sql = "UPDATE user "
                 + "SET firstName = ?, lastName = ?, email = ?, phone = ? "
                 + "WHERE id = ?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(u.getFirstName());
         params.add(u.getLastName());
         params.add(u.getEmail());

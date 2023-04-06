@@ -21,11 +21,11 @@ public class TestAccount {
         udb.dropTable();
         db.dropTable();
         db.createTable();
-        db.addAccount("ben", "123", 3);
-        db.addAccount("ken", "123", 3);
-        db.addAccount("user", "123", 1);
-        db.addAccount("staff", "123", 2);
-        Account acc = db.queryById(3);
+        db.addRecord("ben", "123", 3);
+        db.addRecord("ken", "123", 3);
+        db.addRecord("user", "123", 1);
+        db.addRecord("staff", "123", 2);
+        Account acc = db.queryRecordById(3);
         acc.toString();
         acc.setPassword("456");
         db.editRecord(acc);

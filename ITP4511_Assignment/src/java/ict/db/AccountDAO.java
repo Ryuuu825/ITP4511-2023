@@ -4,11 +4,9 @@
  */
 package ict.db;
 
-import com.mysql.jdbc.Connection;
 import ict.bean.Account;
 import ict.bean.User;
 import ict.util.DbUtil;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -37,15 +35,15 @@ public class AccountDAO{
                 + "username varchar(25) NOT NULL,"
                 + "password varchar(25) NOT NULL,"
                 + "role INT(1) NOT NULL,"
-                + "PRIMARY KEY (id, username)"
+                + "PRIMARY KEY (id)"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
     }
 
-    public boolean addAccount(String username, String pwd, int role) {
+    public boolean addRecord(String username, String pwd, int role) {
         boolean isSuccess = false;
-        if (queryByUsername(username) == null) {
-            ArrayList<Object> params = new ArrayList();
+        if (queryRecordByUsername(username) == null) {
+            ArrayList<Object> params = new ArrayList<>();
             params.add(username);
             params.add(pwd);
             params.add(role);
@@ -56,7 +54,7 @@ public class AccountDAO{
     }
 
     public boolean isVaildAccount(String username, String pwd) {
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(username);
         params.add(pwd);
         String sql = "SELECT * FROM account WHERE username=? and password=?";
@@ -68,9 +66,9 @@ public class AccountDAO{
         return isVaild;
     }
 
-    public Account queryById(int id) {
+    public Account queryRecordById(int id) {
         String sql = "SELECT * FROM account WHERE id=?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         Account acc = null;
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
@@ -84,9 +82,9 @@ public class AccountDAO{
         return acc;
     }
 
-    public Account queryByUsername(String username) {
+    public Account queryRecordByUsername(String username) {
         String sql = "SELECT * FROM account WHERE username=?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(username);
         Account acc = null;
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
@@ -102,11 +100,12 @@ public class AccountDAO{
 
     public boolean delRecord(int id) {
         String sql = "DELETE FROM account WHERE id=?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         boolean isSuccess = false;
+        //delete releted user records
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
-        User u = userDB.queryUserByAccountId(id);
+        User u = userDB.queryRecordByAccountId(id);
         isSuccess = userDB.delRecord(u.getId());
         if (isSuccess == true) {
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);
@@ -114,11 +113,28 @@ public class AccountDAO{
         return isSuccess;
     }
 
+    public ArrayList<Account> queryRecord() {
+        Account acc = null;
+        String sql = "SELECT * FROM user";
+        ArrayList<Object> params = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        ArrayList<Account> accs = new ArrayList<>();
+        for (Map<String, Object> m : ls) {
+            acc = new Account();
+            acc.setId((int) m.get("id"));
+            acc.setPassword((String) m.get("password"));
+            acc.setRole((int) m.get("role"));
+            acc.setUsername((String) m.get("username"));
+            accs.add(acc);
+        }
+        return accs;
+    }
+    
     public boolean editRecord(Account acc) {
         String sql = "UPDATE account "
                 + "SET username = ?, password = ?, role = ? "
                 + "WHERE id = ?";
-        ArrayList<Object> params = new ArrayList();
+        ArrayList<Object> params = new ArrayList<>();
         params.add(acc.getUsername());
         params.add(acc.getPassword());
         params.add(acc.getRole());

@@ -77,6 +77,9 @@ public class User implements Serializable{
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", accountId=" + accountId + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + '}';
+    }
 }

@@ -57,7 +57,7 @@ public class Account implements Serializable {
         this.password = password;
     }
 
-    public String getRoleEnum() {
+    public String getRoleString() {
         return roleEnum.values()[role].toString();
     }
     
