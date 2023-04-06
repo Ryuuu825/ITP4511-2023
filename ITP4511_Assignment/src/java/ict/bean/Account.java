@@ -10,7 +10,8 @@ import java.io.Serializable;
  *
  * @author jyuba
  */
-public class Account implements Serializable{
+public class Account implements Serializable {
+
     private int id;
     private String username;
     private String password;
@@ -56,12 +57,21 @@ public class Account implements Serializable{
         this.password = password;
     }
 
-    public String getRole() {
+    public String getRoleEnum() {
         return roleEnum.values()[role].toString();
+    }
+    
+    public int getRole() {
+        return role;
     }
 
     public void setRole(int role) {
         this.role = role;
     }
-    
+
+     @Override
+    public String toString() {
+        return "Account{" + "id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + '}';
+    }
+
 }
