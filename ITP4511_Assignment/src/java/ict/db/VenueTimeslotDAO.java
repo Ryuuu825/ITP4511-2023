@@ -17,7 +17,7 @@ public class VenueTimeslotDAO extends BaseDAO {
 
     public void createTable() {
         String sql = "CREATE TABLE IF NOT EXISTS venue_timeslot ("
-                + "id INT(11) NOT NULL,"
+                + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "venueId INT(11) NOT NULL,"
                 + "timeslotId INT(11) NOT NULL,"
                 + "bookingId INT(11) DEFAULT NULL,"
