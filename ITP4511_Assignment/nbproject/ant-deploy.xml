@@ -54,11 +54,6 @@
     <target name="-parse-glassfish-web" depends="-init-cl-deployment-env" if="glassfish.web.present">
         <tempfile prefix="gfv3" property="temp.gf.web" destdir="${java.io.tmpdir}"/>
         <copy file="${deploy.ant.docbase.dir}/WEB-INF/glassfish-web.xml" tofile="${temp.gf.web}"/>
-        <!-- replace all the comment -->
-        <replace file="${temp.gf.web}">
-            <replacetoken><![CDATA[<!--]]></replacetoken>
-            <replacevalue><![CDATA[]]></replacevalue>
-        </replace>
         <!-- The doctype triggers resolution which can fail -->
         <replace file="${temp.gf.web}">
             <replacetoken><![CDATA[<!DOCTYPE]]></replacetoken>
@@ -66,7 +61,7 @@
         </replace>
         <replace file="${temp.gf.web}">
             <replacetoken><![CDATA[<glassfish-web-app]]></replacetoken>
-            <replacevalue><![CDATA[<glassfish-web-app]]></replacevalue>
+            <replacevalue><![CDATA[--> <glassfish-web-app]]></replacevalue>
         </replace>
         <xmlproperty file="${temp.gf.web}" validate="false">
         </xmlproperty>

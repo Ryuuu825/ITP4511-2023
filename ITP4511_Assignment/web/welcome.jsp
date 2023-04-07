@@ -36,16 +36,19 @@
             </li>
         </ul>
     </header>
-    <div id="carousel" class="carousel slide opacity-75" data-bs-ride="carousel">
+    <div class="absolute z-2 text-bg-">
+        
+    </div>
+    <div id="carousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="assets/img/venue/hall.jpg" class="d-block w-100" alt="...">
+                <img src="assets/img/venue/slide1.jpg" class="d-block w-100">
             </div>
             <div class="carousel-item">
-                <img src="assets/img/venue/center.jpg" class="d-block w-100" alt="...">
+                <img src="assets/img/venue/slide2.jpg" class="d-block w-100">
             </div>
             <div class="carousel-item">
-                <img src="assets/img/venue/restaurant.jpg" class="d-block w-100" alt="...">
+                <img src="assets/img/venue/slide3.jpg" class="d-block w-100">
             </div>
         </div>
     </div>
