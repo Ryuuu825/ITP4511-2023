@@ -5,7 +5,6 @@
 package ict.db;
 
 import ict.bean.Guest;
-import ict.util.DbUtil;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -13,18 +12,10 @@ import java.util.Map;
  *
  * @author jyuba
  */
-public class GuestDAO {
-
-    private String dbUrl;
-    private String dbUser;
-    private String dbPassword;
-    private DbUtil dbUtil;
+public class GuestDAO extends BaseDAO{
 
     public GuestDAO(String dbUrl, String dbUser, String dbPassword) {
-        this.dbUrl = dbUrl;
-        this.dbUser = dbUser;
-        this.dbPassword = dbPassword;
-        this.dbUtil = new DbUtil(dbUrl, dbUser, dbPassword);
+        super(dbUrl, dbUser, dbPassword);
     }
 
     public void createTable() {
@@ -32,7 +23,7 @@ public class GuestDAO {
                 = "CREATE TABLE IF NOT EXISTS guest ("
                 + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "bookingId INT(11) NOT NULL,"
-                + "name varchar(25) NOT NULL,"
+                + "name varchar(50) NOT NULL,"
                 + "email varchar(50) NOT NULL,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (bookingId) REFERENCES booking(id)"

@@ -6,7 +6,6 @@ package ict.db;
 
 import ict.bean.Account;
 import ict.bean.User;
-import ict.util.DbUtil;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -14,18 +13,10 @@ import java.util.Map;
  *
  * @author jyuba
  */
-public class AccountDAO{
-
-    private String dbUrl;
-    private String dbUser;
-    private String dbPassword;
-    private DbUtil dbUtil;
+public class AccountDAO extends BaseDAO {
 
     public AccountDAO(String dbUrl, String dbUser, String dbPassword) {
-        this.dbUrl = dbUrl;
-        this.dbUser = dbUser;
-        this.dbPassword = dbPassword;
-        this.dbUtil = new DbUtil(dbUrl, dbUser, dbPassword);
+        super(dbUrl, dbUser, dbPassword);
     }
 
     public void createTable() {
@@ -34,7 +25,7 @@ public class AccountDAO{
                 + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "username varchar(25) NOT NULL,"
                 + "password varchar(25) NOT NULL,"
-                + "role INT(1) NOT NULL,"
+                + "role TINYINT(1) NOT NULL,"
                 + "PRIMARY KEY (id)"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
@@ -129,7 +120,7 @@ public class AccountDAO{
         }
         return accs;
     }
-    
+
     public boolean editRecord(Account acc) {
         String sql = "UPDATE account "
                 + "SET username = ?, password = ?, role = ? "

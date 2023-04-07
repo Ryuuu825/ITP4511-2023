@@ -14,10 +14,14 @@ public class Venue implements Serializable {
 
     private int id;
     private String name;
+    private String location;
     private String address;
     private int capacity;
     private int type;
     private String img;
+    private String description;
+    private int userId;
+    private double hourlyRate;
 
     private enum typeEnum {
         SportsClub,
@@ -92,9 +96,41 @@ public class Venue implements Serializable {
         return typeEnum.values()[type].toString();
     }
 
-    @Override
-    public String toString() {
-        return "Venue{" + "id=" + id + ", name=" + name + ", address=" + address + ", capacity=" + capacity + ", type=" + type + ", img=" + img + '}';
+    public String getDescription() {
+        return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public double getHourlyRate() {
+        return hourlyRate;
+    }
+
+    public void setHourlyRate(double hourlyRate) {
+        this.hourlyRate = hourlyRate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    @Override
+    public String toString() {
+        return "Venue{" + "id=" + id + ", name=" + name + ", location=" + location + ", address=" + address + ", capacity=" + capacity + ", type=" + type + ", img=" + img + ", description=" + description + ", userId=" + userId + ", hourlyRate=" + hourlyRate + '}';
+    }
+    
 }

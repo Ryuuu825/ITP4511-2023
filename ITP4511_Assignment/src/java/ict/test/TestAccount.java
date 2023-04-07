@@ -1,9 +1,14 @@
 package ict.test;
 
-
 import ict.bean.Account;
 import ict.db.AccountDAO;
+import ict.db.BaseDAO;
+import ict.db.BookingDAO;
+import ict.db.GuestDAO;
+import ict.db.TimeslotDAO;
 import ict.db.UserDAO;
+import ict.db.VenueDAO;
+import ict.db.VenueTimeslotDAO;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -16,23 +21,38 @@ import ict.db.UserDAO;
 public class TestAccount {
 
     public static void main(String[] args) {
-        UserDAO udb = new UserDAO("jdbc:mysql://localhost:3306/ITP4511_DB", "root", "");
-        AccountDAO db = new AccountDAO("jdbc:mysql://localhost:3306/ITP4511_DB", "root", "");
-        udb.dropTable();
-        db.dropTable();
-        db.createTable();
-        db.addRecord("ben", "123", 3);
-        db.addRecord("ken", "123", 3);
-        db.addRecord("user", "123", 1);
-        db.addRecord("staff", "123", 2);
-        Account acc = db.queryRecordById(3);
-        acc.toString();
-        acc.setPassword("456");
-        db.editRecord(acc);
+        String dbUrl = "jdbc:mysql://localhost:3306/ITP4511_ASM_DB";
+        String dbUser = "root";
+        String dbPassword = "";
+        UserDAO udb = new UserDAO(dbUrl, dbUser, dbPassword);
+        AccountDAO adb = new AccountDAO(dbUrl, dbUser, dbPassword);
+        GuestDAO gdb = new GuestDAO(dbUrl, dbUser, dbPassword);
+        TimeslotDAO tdb = new TimeslotDAO(dbUrl, dbUser, dbPassword);
+        BookingDAO bdb = new BookingDAO(dbUrl, dbUser, dbPassword);
+        VenueDAO vdb = new VenueDAO(dbUrl, dbUser, dbPassword);
+        VenueTimeslotDAO vtdb = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+//        udb.dropTable();
+//        db.dropTable();
+        adb.createTable();
         udb.createTable();
-        udb.addRecord(1, "Ben", "Poon", "210426767@stu.vtc.edu.hk", "62723020");
-        udb.addRecord(2, "Ken", "Lee", "210426767@stu.vtc.edu.hk", "62723020");
-        udb.addRecord(3, "User", "Lam", "210426767@stu.vtc.edu.hk", "62723020");
-        db.delRecord(1);
+        vdb.createTable();
+        tdb.createTable();
+        vtdb.createTable();
+        bdb.createTable();
+        gdb.createTable();
+//        adb.addRecord("ben", "123", 3);
+//        adb.addRecord("ken", "123", 3);
+//        adb.addRecord("user", "123", 1);
+//        adb.addRecord("staff", "123", 2);
+//        udb.addRecord(1, "Ben", "Poon", "210426767@stu.vtc.edu.hk", "62723020");
+//        udb.addRecord(2, "Ken", "Lee", "210426767@stu.vtc.edu.hk", "62723020");
+//        udb.addRecord(3, "User", "Lam", "210426767@stu.vtc.edu.hk", "62723020");
+//        Account acc = adb.queryRecordById(3);
+//        acc.toString();
+//        acc.setPassword("456");
+//        adb.editRecord(acc);
+//        udb.createTable();
+//        
+//        adb.delRecord(1);
     }
 }

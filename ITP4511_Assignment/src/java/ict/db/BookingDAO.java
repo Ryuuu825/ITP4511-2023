@@ -6,7 +6,7 @@ package ict.db;
 
 import ict.bean.Booking;
 import ict.bean.Guest;
-import ict.util.DbUtil;
+import ict.bean.VenueTimeslot;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -14,18 +14,10 @@ import java.util.Map;
  *
  * @author jyuba
  */
-public class BookingDAO {
-
-    private String dbUrl;
-    private String dbUser;
-    private String dbPassword;
-    private DbUtil dbUtil;
+public class BookingDAO extends BaseDAO{
 
     public BookingDAO(String dbUrl, String dbUser, String dbPassword) {
-        this.dbUrl = dbUrl;
-        this.dbUser = dbUser;
-        this.dbPassword = dbPassword;
-        this.dbUtil = new DbUtil(dbUrl, dbUser, dbPassword);
+        super(dbUrl, dbUser, dbPassword);
     }
 
     public void createTable() {
@@ -33,14 +25,10 @@ public class BookingDAO {
                 = "CREATE TABLE IF NOT EXISTS booking ("
                 + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "userId INT(11) NOT NULL,"
-                + "venueId INT(11) NOT NULL,"
-                + "timeslotId INT(11) NOT NULL,"
-                + "approvalStatus INT(1) NOT NULL,"
-                + "attendanceStatus INT(1) NOT NULL,"
+                + "approvalStatus TINYINT(1) NOT NULL,"
+                + "attendanceStatus TINYINT(1) NOT NULL,"
                 + "PRIMARY KEY (id),"
-                + "FOREIGN KEY (userId) REFERENCES user(id),"
-                + "FOREIGN KEY (venueId) REFERENCES venue(id),"
-                + "FOREIGN KEY (timeslotId) REFERENCES timeslot(id)"
+                + "FOREIGN KEY (userId) REFERENCES user(id)"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
     }
@@ -103,13 +91,21 @@ public class BookingDAO {
         boolean isSuccess = false;
 
         //delete releted guest records
+        VenueTimeslotDAO vtsDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+        ArrayList<VenueTimeslot> vts = vtsDB.queryRocordByBookingId(id);
+        for (VenueTimeslot vt : vts) {
+            vt.setBookingId(0);
+            isSuccess = vtsDB.editRecord(vt);
+        }
+        
+        //delete releted guest records
         GuestDAO gDB = new GuestDAO(dbUrl, dbUser, dbPassword);
         ArrayList<Guest> gs = gDB.queryRecordByBookingId(id);
         for (Guest ts : gs) {
             isSuccess = gDB.delRecord(ts.getId());
         }
 
-        if (isSuccess == true) {
+        if (isSuccess) {
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         }
         return isSuccess;
