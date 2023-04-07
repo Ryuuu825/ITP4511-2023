@@ -17,11 +17,12 @@ public class VenueTimeslotDAO extends BaseDAO {
 
     public void createTable() {
         String sql = "CREATE TABLE IF NOT EXISTS venue_timeslot ("
+                + "id INT(11) NOT NULL,"
                 + "venueId INT(11) NOT NULL,"
                 + "timeslotId INT(11) NOT NULL,"
                 + "bookingId INT(11) DEFAULT NULL,"
                 + "date DATE NOT NULL,"
-                + "PRIMARY KEY (venueId, timeslotId),"
+                + "PRIMARY KEY (id, venueId, timeslotId),"
                 + "FOREIGN KEY (venueId) REFERENCES venue(id),"
                 + "FOREIGN KEY (bookingId) REFERENCES booking(id),"
                 + "FOREIGN KEY (timeslotId) REFERENCES timeslot(id)"
@@ -63,12 +64,11 @@ public class VenueTimeslotDAO extends BaseDAO {
         return isSuccess;
     }
 
-    public boolean delRecord(int venueId, int timeslotId) {
+    public boolean delRecord(int id) {
         boolean isSuccess = false;
         ArrayList<Object> params = new ArrayList<>();
-        params.add(venueId);
-        params.add(timeslotId);
-        String sql = "DELETE FROM venue_timeslot WHERE venueId=? and timeslotId=?";
+        params.add(id);
+        String sql = "DELETE FROM venue_timeslot WHERE id=?";
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }

@@ -12,6 +12,7 @@ import java.time.LocalDate;
  * @author jyuba
  */
 public class VenueTimeslot implements Serializable{
+    private int id;
     private int timeslotId;
     private int venueId;
     private LocalDate date;
@@ -20,11 +21,20 @@ public class VenueTimeslot implements Serializable{
     public VenueTimeslot() {
     }
 
-    public VenueTimeslot(int timeslotId, int venueId, LocalDate date, int bookingId) {
+    public VenueTimeslot(int id, int timeslotId, int venueId, LocalDate date, int bookingId) {
+        this.id = id;
         this.timeslotId = timeslotId;
         this.venueId = venueId;
         this.date = date;
         this.bookingId = bookingId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getTimeslotId() {
@@ -61,6 +71,7 @@ public class VenueTimeslot implements Serializable{
 
     @Override
     public String toString() {
-        return "VenueTimeslot{" + "timeslotId=" + timeslotId + ", venueId=" + venueId + ", date=" + date + ", bookingId=" + bookingId + '}';
+        return "VenueTimeslot{" + "id=" + id + ", timeslotId=" + timeslotId + ", venueId=" + venueId + ", date=" + date + ", bookingId=" + bookingId + '}';
     }
+
 }
