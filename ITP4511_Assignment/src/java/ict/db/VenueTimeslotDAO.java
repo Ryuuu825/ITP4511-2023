@@ -8,6 +8,7 @@ import java.util.Map;
 import ict.bean.Timeslot;
 import ict.bean.Venue;
 import ict.bean.VenueTimeslot;
+import java.sql.Date;
 
 public class VenueTimeslotDAO extends BaseDAO {
 
@@ -188,4 +189,26 @@ public class VenueTimeslotDAO extends BaseDAO {
         return vts;
     }
 
+    public ArrayList<VenueTimeslot> queryRocord() {
+        String sql = "SELECT * FROM venue_timeslot";
+        ArrayList<Object> params = new ArrayList<>();
+        ArrayList<VenueTimeslot> vts = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            VenueTimeslot vt = new VenueTimeslot();
+            vt.setBookingId((int) m.get("bookingId"));
+            vt.setVenueId((int) m.get("venueId"));
+            vt.setTimeslotId((int) m.get("timeslotId"));
+            vt.setDate((LocalDate) m.get("date"));
+            vts.add(vt);
+        }
+        return vts;
+    }
+
+    public LocalDate queryMaxDate() {
+        String sql = "SELECT max(date) as max FROM venue_timeslot";
+        ArrayList<Object> params = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        return ((Date)ls.get(0).get("max")).toLocalDate();
+    }
 }
