@@ -72,7 +72,7 @@
                                 <input type="hidden" name="action" value="register" />
                                 <!-- Username input -->
                                 <div class="form-outline mb-4">
-                                    <input type="text" id="username" required aria-required="true"
+                                    <input type="text" name="username" id="username" required aria-required="true"
                                         class="form-control border" />
                                     <label class="form-label" for="username">Username</label>
                                 </div>
@@ -102,7 +102,7 @@
 
                                 <!-- Email input -->
                                 <div class="form-outline mb-4">
-                                    <input type="email" id="email" class="form-control border" />
+                                    <input type="email" name="email" id="email" class="form-control border" />
                                     <label class="form-label" for="email">Email address</label>
                                 </div>
 
