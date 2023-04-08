@@ -31,5 +31,5 @@ public class GenerateVenueTimeslot {
                 dbUtil.updateByPreparedStatement(sql, params);
             }
         }
-    }
+    }   
 }

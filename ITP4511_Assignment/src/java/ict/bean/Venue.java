@@ -93,7 +93,7 @@ public class Venue implements Serializable {
     }
 
     public String getTypeString() {
-        return typeEnum.values()[type].toString();
+        return typeEnum.values()[type-1].toString();
     }
 
     public String getDescription() {

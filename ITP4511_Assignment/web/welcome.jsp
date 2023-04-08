@@ -36,8 +36,8 @@
             </li>
         </ul>
     </header>
-    <div class="absolute z-2 text-bg-">
-        
+    <div class="absolute z-2">
+        ${sessionScope.role}
     </div>
     <div id="carousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -45,7 +45,7 @@
                 <img src="assets/img/venue/slide1.jpg" class="d-block w-100">
             </div>
             <div class="carousel-item">
-                <img src="assets/img/venue/slide2.jpg" class="d-block w-100">
+                <img src="assets/img/venue/slide2.jpeg" class="d-block w-100">
             </div>
             <div class="carousel-item">
                 <img src="assets/img/venue/slide3.jpg" class="d-block w-100">

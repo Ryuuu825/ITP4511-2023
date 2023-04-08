@@ -21,7 +21,7 @@ import ict.db.VenueTimeslotDAO;
 public class TestAccount {
 
     public static void main(String[] args) {
-        String dbUrl = "jdbc:mysql://localhost:3306/ITP4511_ASM_DB";
+        String dbUrl = "jdbc:mysql://localhost:3306/ITP4511_ASM_DB?tinyInt1isBit=false";
         String dbUser = "root";
         String dbPassword = "";
         UserDAO udb = new UserDAO(dbUrl, dbUser, dbPassword);
@@ -33,13 +33,13 @@ public class TestAccount {
         VenueTimeslotDAO vtdb = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
 //        udb.dropTable();
 //        db.dropTable();
-        adb.createTable();
-        udb.createTable();
-        vdb.createTable();
-        tdb.createTable();
-        vtdb.createTable();
-        bdb.createTable();
-        gdb.createTable();
+//        adb.createTable();
+//        udb.createTable();
+//        vdb.createTable();
+//        tdb.createTable();
+//        vtdb.createTable();
+//        bdb.createTable();
+//        gdb.createTable();
 //        adb.addRecord("ben", "123", 3);
 //        adb.addRecord("ken", "123", 3);
 //        adb.addRecord("user", "123", 1);
@@ -47,7 +47,8 @@ public class TestAccount {
 //        udb.addRecord(1, "Ben", "Poon", "210426767@stu.vtc.edu.hk", "62723020");
 //        udb.addRecord(2, "Ken", "Lee", "210426767@stu.vtc.edu.hk", "62723020");
 //        udb.addRecord(3, "User", "Lam", "210426767@stu.vtc.edu.hk", "62723020");
-//        Account acc = adb.queryRecordById(3);
+            Account acc = adb.queryRecordByUsername("ben");
+            System.out.println(acc.getId());
 //        acc.toString();
 //        acc.setPassword("456");
 //        adb.editRecord(acc);

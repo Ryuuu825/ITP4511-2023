@@ -44,17 +44,21 @@ public class AccountDAO extends BaseDAO {
         return isSuccess;
     }
 
-    public boolean isVaildAccount(String username, String pwd) {
+    public String isVaildAccount(String username, String pwd) {
         ArrayList<Object> params = new ArrayList<>();
         params.add(username);
         params.add(pwd);
         String sql = "SELECT * FROM account WHERE username=? and password=?";
-        boolean isVaild = false;
+        String role = null;
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        Account acc = null;
         if (!ls.isEmpty()) {
-            isVaild = true;
+            acc = new Account();
+            System.out.println(ls.get(0).get("role"));
+            acc.setRole((int)ls.get(0).get("role"));
+            role = acc.getRoleString();
         }
-        return isVaild;
+        return role;
     }
 
     public Account queryRecordById(int id) {
