@@ -26,5 +26,9 @@ public class BaseDAO {
     public BaseDAO() {
         this.dbUtil = new DbUtil(dbUrl, dbUser, dbPassword);
     }
+
+    public String getLastError() {
+        return dbUtil.getErrorMsg();
+    } 
     
 }
