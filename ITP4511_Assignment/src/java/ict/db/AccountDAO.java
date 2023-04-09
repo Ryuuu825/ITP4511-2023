@@ -5,7 +5,9 @@
 package ict.db;
 
 import ict.bean.Account;
+import ict.bean.Booking;
 import ict.bean.User;
+import ict.bean.Venue;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -55,7 +57,7 @@ public class AccountDAO extends BaseDAO {
         if (!ls.isEmpty()) {
             acc = new Account();
             System.out.println(ls.get(0).get("role"));
-            acc.setRole((int)ls.get(0).get("role"));
+            acc.setRole((int) ls.get(0).get("role"));
             role = acc.getRoleString();
         }
         return role;
@@ -98,10 +100,28 @@ public class AccountDAO extends BaseDAO {
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         boolean isSuccess = false;
+
         //delete releted user records
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         User u = userDB.queryRecordByAccountId(id);
-        isSuccess = userDB.delRecord(u.getId());
+        //delete releted user records
+        BookingDAO bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
+        VenueDAO venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
+        ArrayList<Booking> bs = bookingDB.queryByUserId(id);
+        for (Booking b : bs) {
+            isSuccess = bookingDB.delRecord(b.getId());
+        }
+        ArrayList<Venue> vs = venueDB.queryByUserId(id);
+        
+        for (Venue v : vs) {
+            v.setUserId(0);
+            isSuccess = venueDB.editRecord(v);
+        }
+        
+        if (isSuccess) {
+            isSuccess = userDB.delRecord(u.getId());
+        }
+
         if (isSuccess == true) {
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         }

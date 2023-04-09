@@ -101,6 +101,30 @@ public class VenueDAO extends BaseDAO {
         return v;
     }
 
+    public ArrayList<Venue> queryByUserId(int userId) {
+        String sql = "SELECT * FROM venue WHERE userId = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(userId);
+        Venue v = null;
+        ArrayList<Venue> vs = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            v = new Venue();
+            v.setId((int) m.get("id"));
+            v.setName((String) m.get("name"));
+            v.setLocation((String) m.get("location"));
+            v.setAddress((String) m.get("address"));
+            v.setCapacity((int) m.get("capacity"));
+            v.setType((int) m.get("type"));
+            v.setImg((String) m.get("img"));
+            v.setDescription((String) m.get("description"));
+            v.setUserId((int) m.get("userId"));
+            v.setHourlyRate((double) m.get("hourlyRate"));
+            vs.add(v);
+        }
+        return vs;
+    }
+
     public boolean delRecord(int id) {
         String sql = "DELETE FROM venue WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();
@@ -122,8 +146,9 @@ public class VenueDAO extends BaseDAO {
     }
 
     public boolean editRecord(Venue v) {
+
         String sql = "UPDATE venue "
-                + "SET name = ?, location = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = ?, hourlyRate = ? "
+                + "SET name = ?, location = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = null, hourlyRate = ? "
                 + "WHERE id = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(v.getName());
@@ -134,7 +159,12 @@ public class VenueDAO extends BaseDAO {
         params.add(v.getImg());
         params.add(v.getId());
         params.add(v.getDescription());
-        params.add(v.getUserId());
+        if (v.getId() != 0) {
+            sql = "UPDATE venue "
+                    + "SET name = ?, location = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = ?, hourlyRate = ? "
+                    + "WHERE id = ?";
+            params.add(v.getUserId());
+        }
         params.add(v.getHourlyRate());
         boolean isSuccess = false;
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);

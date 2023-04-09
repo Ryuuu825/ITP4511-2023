@@ -90,20 +90,20 @@
             <li class="nav-item nav-hover">
                 <a class="text-white mx-3" href="#">
                     <!-- Browse Spaces -->
-                    Browse Spaces
+                    Venue
                 </a>
             </li>
             <li class="nav-item border-start nav-hover">
                 <a class="text-white mx-3" href="venueInfo.jsp">
                     <!-- Browse Spaces -->
-                    Find venues
+                    Timeslot
                 </a>
             </li>
             <li class="nav-item border-start nav-hover">
-                <a class="text-white mx-3 px-3" href="login.jsp"> Login </a>
+                <a class="text-white mx-3" href="login.jsp"> Booking </a>
             </li>
             <li class="nav-item border bg-light rounded-1 py-1">
-                <a class="mx-3 text-dark" href="register.jsp"> Sign Up </a>
+                <a class="mx-3 text-dark" href="login.jsp"> Sign Out </a>
             </li>
         </ul>
     </header>

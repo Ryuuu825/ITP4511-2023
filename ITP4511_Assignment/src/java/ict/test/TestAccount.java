@@ -31,6 +31,10 @@ public class TestAccount {
         BookingDAO bdb = new BookingDAO(dbUrl, dbUser, dbPassword);
         VenueDAO vdb = new VenueDAO(dbUrl, dbUser, dbPassword);
         VenueTimeslotDAO vtdb = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+//        Account acc = adb.queryRecordById(12);
+//        acc.setPassword("123");
+//        adb.editRecord(acc);
+        adb.delRecord(3);
 //        udb.dropTable();
 //        db.dropTable();
 //        adb.createTable();
@@ -47,8 +51,8 @@ public class TestAccount {
 //        udb.addRecord(1, "Ben", "Poon", "210426767@stu.vtc.edu.hk", "62723020");
 //        udb.addRecord(2, "Ken", "Lee", "210426767@stu.vtc.edu.hk", "62723020");
 //        udb.addRecord(3, "User", "Lam", "210426767@stu.vtc.edu.hk", "62723020");
-            Account acc = adb.queryRecordByUsername("ben");
-            System.out.println(acc.getId());
+//            Account acc = adb.queryRecordByUsername("ben");
+//            System.out.println(acc.getId());
 //        acc.toString();
 //        acc.setPassword("456");
 //        adb.editRecord(acc);

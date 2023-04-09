@@ -32,27 +32,27 @@
     </head>
 
     <body class="relative overflow-x-hidden">
-        <header class="fixed z-3 w-full flex flex-row items-center p-3">
-            <div
-                class="title text-3xl uppercase ml-12 mr-auto font-extrabold text-white"
-                >
-                Event Point Limited
+        <header class="fixed z-3 w-full flex flex-row items-center p-3 shadow-xl">
+            <div class="title text-3xl uppercase ml-12 mr-auto font-extrabold text-white">
+                <a href="index.jsp" class="hover:text-white">
+                    Event Point Limited
+                </a>
             </div>
             <ul class="nav justify-content-end font-semibold flex align-items-center mr-5">
                 <li class="nav-item">
-                    <a class="text-white mx-3" href="#">
+                    <a class="text-white mx-3 hover:text-lg" href="#">
                         <!-- Browse Spaces -->
                         Browse Spaces
                     </a>
                 </li>
                 <li class="nav-item border-l">
-                    <a class="text-white mx-3" href="#">
+                    <a class="text-white mx-3 hover:text-lg" href="VenueManagement.jsp">
                         <!-- Browse Spaces -->
                         Find venues
                     </a>
                 </li>
                 <li class="nav-item border-l">
-                    <a class="text-white mx-3 pr-3" href="login.jsp"> Login </a>
+                    <a class="text-white mx-3 px-3 hover:text-lg" href="login.jsp"> Login </a>
                 </li>
                 <li class="nav-item border bg-light rounded-sm py-1">
                     <a class=" mx-3 text-dark" href="register.jsp"> Sign Up </a>

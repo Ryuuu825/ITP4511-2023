@@ -82,7 +82,7 @@ public class VenueTimeslotDAO extends BaseDAO {
             sql = "UPDATE venue_timeslot SET bookingId = ?, date = ? WHERE venueId = ? and timeslotId = ?";
             params.add(vt.getBookingId());
         } else {
-            sql = "UPDATE venue_timeslot SET bookingId = null date = ? WHERE venueId = ? and timeslotId = ?";
+            sql = "UPDATE venue_timeslot SET bookingId = null, date = ? WHERE venueId = ? and timeslotId = ?";
         }
         params.add(vt.getDate());
         params.add(vt.getVenueId());
@@ -149,7 +149,7 @@ public class VenueTimeslotDAO extends BaseDAO {
             vt.setBookingId((int) m.get("bookingId"));
             vt.setVenueId((int) m.get("venueId"));
             vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate((LocalDate) m.get("date"));
+            vt.setDate(((Date)m.get("date")).toLocalDate());
             vts.add(vt);
         }
         return vts;
@@ -166,7 +166,7 @@ public class VenueTimeslotDAO extends BaseDAO {
             vt.setBookingId((int) m.get("bookingId"));
             vt.setVenueId((int) m.get("venueId"));
             vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate((LocalDate) m.get("date"));
+            vt.setDate(((Date)m.get("date")).toLocalDate());
             vts.add(vt);
         }
         return vts;
@@ -183,7 +183,7 @@ public class VenueTimeslotDAO extends BaseDAO {
             vt.setBookingId((int) m.get("bookingId"));
             vt.setVenueId((int) m.get("venueId"));
             vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate((LocalDate) m.get("date"));
+            vt.setDate(((Date)m.get("date")).toLocalDate());
             vts.add(vt);
         }
         return vts;
@@ -199,7 +199,7 @@ public class VenueTimeslotDAO extends BaseDAO {
             vt.setBookingId((int) m.get("bookingId"));
             vt.setVenueId((int) m.get("venueId"));
             vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate((LocalDate) m.get("date"));
+            vt.setDate(((Date)m.get("date")).toLocalDate());
             vts.add(vt);
         }
         return vts;

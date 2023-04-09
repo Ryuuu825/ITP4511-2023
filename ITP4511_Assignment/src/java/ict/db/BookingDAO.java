@@ -33,15 +33,13 @@ public class BookingDAO extends BaseDAO{
         dbUtil.executeByPreparedStatement(sql);
     }
 
-    public boolean addRecord(int userId, int venueId, int timeslotId, int approvalStatus, int attendanceStatus) {
+    public boolean addRecord(int userId, int approvalStatus, int attendanceStatus) {
         boolean isSuccess = false;
         ArrayList<Object> params = new ArrayList<>();
         params.add(userId);
-        params.add(venueId);
-        params.add(timeslotId);
         params.add(approvalStatus);
         params.add(attendanceStatus);
-        String sql = "INSERT INTO booking (userId, venueId, timeslotId, approvalStatus, attendanceStatus) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO booking (userId, approvalStatus, attendanceStatus) VALUES (?,?,?)";
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
@@ -56,8 +54,6 @@ public class BookingDAO extends BaseDAO{
             b = new Booking();
             b.setId((int) m.get("id"));
             b.setUserId((int) m.get("userId"));
-            b.setVenueId((int) m.get("venueId"));
-            b.setTimeslotId((int) m.get("timeslotId"));
             b.setApprovalStatus((int) m.get("approvalStatus"));
             b.setAttendanceStatus((int) m.get("attendanceStatus"));
         }
@@ -75,8 +71,6 @@ public class BookingDAO extends BaseDAO{
             b = new Booking();
             b.setId((int) m.get("id"));
             b.setUserId((int) m.get("userId"));
-            b.setVenueId((int) m.get("venueId"));
-            b.setTimeslotId((int) m.get("timeslotId"));
             b.setApprovalStatus((int) m.get("approvalStatus"));
             b.setAttendanceStatus((int) m.get("attendanceStatus"));
             bs.add(b);
@@ -113,12 +107,10 @@ public class BookingDAO extends BaseDAO{
 
     public boolean editRecord(Booking b) {
         String sql = "UPDATE booking "
-                + "SET userId = ?, venueId = ?, timeslotId = ?, approvalStatus = ?, attendanceStatus = ?"
+                + "SET userId = ?, approvalStatus = ?, attendanceStatus = ?"
                 + "WHERE id = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(b.getUserId());
-        params.add(b.getVenueId());
-        params.add(b.getTimeslotId());
         params.add(b.getApprovalStatus());
         params.add(b.getAttendanceStatus());
         params.add(b.getId());
@@ -131,4 +123,23 @@ public class BookingDAO extends BaseDAO{
         String sql = "DROP TABLE booking";
         dbUtil.executeByPreparedStatement(sql);
     }
+
+    public ArrayList<Booking> queryByUserId(int userId) {
+        String sql = "SELECT * FROM booking WHERE userId=?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(userId);
+        Booking b = null;
+        ArrayList<Booking> bs = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            b = new Booking();
+            b.setId((int) m.get("id"));
+            b.setUserId((int) m.get("userId"));
+            b.setApprovalStatus((int) m.get("approvalStatus"));
+            b.setAttendanceStatus((int) m.get("attendanceStatus"));
+            bs.add(b);
+        }
+        return bs;
+    }
+
 }
