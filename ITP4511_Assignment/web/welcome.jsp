@@ -16,7 +16,7 @@
             rel="stylesheet"
             integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
             crossorigin="anonymous"
-        />
+            />
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
@@ -35,23 +35,24 @@
         <header class="fixed z-3 w-full flex flex-row items-center p-3">
             <div
                 class="title text-3xl uppercase ml-12 mr-auto font-extrabold text-white"
-            >
+                >
                 Event Point Limited
             </div>
             <ul class="nav justify-content-end font-semibold flex align-items-center mr-5">
-                <li class="nav-item">
-                    <a class="text-white mx-3" href="#">
-
-                    </a>
-                </li>
                 <li class="nav-item">
                     <a class="text-white mx-3" href="#">
                         <!-- Browse Spaces -->
                         Browse Spaces
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="text-white mx-3" href="login.jsp"> Login </a>
+                <li class="nav-item border-l">
+                    <a class="text-white mx-3" href="#">
+                        <!-- Browse Spaces -->
+                        Find venues
+                    </a>
+                </li>
+                <li class="nav-item border-l">
+                    <a class="text-white mx-3 pr-3" href="login.jsp"> Login </a>
                 </li>
                 <li class="nav-item border bg-light rounded-sm py-1">
                     <a class=" mx-3 text-dark" href="register.jsp"> Sign Up </a>
@@ -65,25 +66,25 @@
                     id="carousel"
                     class="carousel slide"
                     data-bs-ride="carousel"
-                >
+                    >
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <img
                                 src="assets/img/venue/slide1.jpg"
                                 class="d-block h-screen w-screen object-cover"
-                            />
+                                />
                         </div>
                         <div class="carousel-item">
                             <img
                                 src="assets/img/venue/slide2.jpeg"
                                 class="d-block h-screen w-screen object-cover"
-                            />
+                                />
                         </div>
                         <div class="carousel-item">
                             <img
                                 src="assets/img/venue/slide3.jpg"
                                 class="d-block h-screen w-screen object-cover"
-                            />
+                                />
                         </div>
                     </div>
                 </div>
@@ -94,21 +95,21 @@
             <div class="absolute w-full h-full mask">
                 <div
                     class="absolute bottom-50 w-9/12 h-[5rem] bg-gray-100 flex items-center justify-center left-[13%]"
-                >
+                    >
                     <input type="text" class="mx-auto" />
                 </div>
 
                 <div class="absolute bottom-20 left-10 text-5xl font-bold">
                     <div
-                        class="text-gray-200 mb-3"
+                        class="text-white mb-3"
                         style="font-size: 5rem; font-weight: 700"
-                    >
+                        >
                         Find a venue.
                     </div>
                     <div
-                        class="text-gray-200 -mb-2"
+                        class="text-white -mb-2"
                         style="font-size: 3rem; font-weight: 700"
-                    >
+                        >
                         Unleash your event potential.
                     </div>
                 </div>

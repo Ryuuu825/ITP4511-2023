@@ -1,10 +1,10 @@
-<!-- <%-- 
-   Document   : login
+<%-- 
+   Document   : registerResult
    Created on : 2023年4月8日, 下午2:57:20
    Author     : jyuba
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%> -->
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,14 +28,6 @@
 <style>
     .navbar-link:hover {
         color: #205295 !important;
-    }
-
-    .wrong .fa-check {
-        display: none;
-    }
-
-    .good .fa-times {
-        display: none;
     }
 </style>
 <script>
