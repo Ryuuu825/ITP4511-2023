@@ -134,8 +134,10 @@ public class VenueDAO extends BaseDAO {
         //delete releted venue_timeslot records
         VenueTimeslotDAO vtsDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
         ArrayList<VenueTimeslot> vts = vtsDB.queryRocordByVenueId(id);
-        for (VenueTimeslot vt : vts) {
-            isSuccess = vtsDB.delRecord(vt.getId());
+        if (vts.size() != 0) {
+            for (VenueTimeslot vt : vts) {
+                isSuccess = vtsDB.delRecord(vt.getId());
+            }
         }
 
         //delete releted user records

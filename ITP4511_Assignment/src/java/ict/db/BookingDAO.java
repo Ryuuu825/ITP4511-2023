@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author jyuba
  */
-public class BookingDAO extends BaseDAO{
+public class BookingDAO extends BaseDAO {
 
     public BookingDAO(String dbUrl, String dbUser, String dbPassword) {
         super(dbUrl, dbUser, dbPassword);
@@ -87,16 +87,20 @@ public class BookingDAO extends BaseDAO{
         //delete releted guest records
         VenueTimeslotDAO vtsDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
         ArrayList<VenueTimeslot> vts = vtsDB.queryRocordByBookingId(id);
-        for (VenueTimeslot vt : vts) {
-            vt.setBookingId(0);
-            isSuccess = vtsDB.editRecord(vt);
+        if (vts.size() != 0) {
+            for (VenueTimeslot vt : vts) {
+                vt.setBookingId(0);
+                isSuccess = vtsDB.editRecord(vt);
+            }
         }
-        
+
         //delete releted guest records
         GuestDAO gDB = new GuestDAO(dbUrl, dbUser, dbPassword);
         ArrayList<Guest> gs = gDB.queryRecordByBookingId(id);
-        for (Guest ts : gs) {
-            isSuccess = gDB.delRecord(ts.getId());
+        if (gs.size() != 0) {
+            for (Guest ts : gs) {
+                isSuccess = gDB.delRecord(ts.getId());
+            }
         }
 
         if (isSuccess) {

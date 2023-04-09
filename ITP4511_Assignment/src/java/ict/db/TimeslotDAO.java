@@ -136,14 +136,16 @@ public class TimeslotDAO extends BaseDAO {
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         boolean isSuccess = false;
-        
+
         //delete releted venue_timeslot records
         VenueTimeslotDAO vtsDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
         ArrayList<VenueTimeslot> vts = vtsDB.queryRocordByVenueId(id);
-        for (VenueTimeslot vt : vts) {
-            isSuccess = vtsDB.delRecord(vt.getId());
+        if (vts.size() != 0) {
+            for (VenueTimeslot vt : vts) {
+                isSuccess = vtsDB.delRecord(vt.getId());
+            }
         }
-        
+
         if (isSuccess) {
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         }
