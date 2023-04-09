@@ -108,19 +108,22 @@ public class AccountDAO extends BaseDAO {
         BookingDAO bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
         VenueDAO venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
         ArrayList<Booking> bs = bookingDB.queryByUserId(id);
-        for (Booking b : bs) {
-            isSuccess = bookingDB.delRecord(b.getId());
-        }
         ArrayList<Venue> vs = venueDB.queryByUserId(id);
-        
-        for (Venue v : vs) {
-            v.setUserId(0);
-            isSuccess = venueDB.editRecord(v);
+
+        if (bs.size() != 0) {
+            for (Booking b : bs) {
+                isSuccess = bookingDB.delRecord(b.getId());
+            }
         }
         
-        if (isSuccess) {
-            isSuccess = userDB.delRecord(u.getId());
+        if (vs.size() != 0) {
+            for (Venue v : vs) {
+                v.setUserId(0);
+                isSuccess = venueDB.editRecord(v);
+            }
         }
+
+        isSuccess = userDB.delRecord(u.getId());
 
         if (isSuccess == true) {
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);

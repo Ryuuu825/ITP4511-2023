@@ -34,7 +34,7 @@ public class TestAccount {
 //        Account acc = adb.queryRecordById(12);
 //        acc.setPassword("123");
 //        adb.editRecord(acc);
-        adb.delRecord(3);
+        adb.delRecord(2);
 //        udb.dropTable();
 //        db.dropTable();
 //        adb.createTable();

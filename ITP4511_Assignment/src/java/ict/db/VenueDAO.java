@@ -146,7 +146,6 @@ public class VenueDAO extends BaseDAO {
     }
 
     public boolean editRecord(Venue v) {
-
         String sql = "UPDATE venue "
                 + "SET name = ?, location = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = null, hourlyRate = ? "
                 + "WHERE id = ?";
@@ -157,15 +156,15 @@ public class VenueDAO extends BaseDAO {
         params.add(v.getCapacity());
         params.add(v.getType());
         params.add(v.getImg());
-        params.add(v.getId());
         params.add(v.getDescription());
-        if (v.getId() != 0) {
+        if (v.getUserId() != 0) {
             sql = "UPDATE venue "
                     + "SET name = ?, location = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = ?, hourlyRate = ? "
                     + "WHERE id = ?";
             params.add(v.getUserId());
         }
         params.add(v.getHourlyRate());
+        params.add(v.getId());
         boolean isSuccess = false;
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
