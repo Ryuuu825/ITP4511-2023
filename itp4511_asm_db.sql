@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-04-07 18:29:53
+-- 產生時間： 2023-04-09 16:21:21
 -- 伺服器版本： 10.4.24-MariaDB
 -- PHP 版本： 8.1.6
 
@@ -69,14 +69,14 @@ CREATE TABLE `booking` (
 
 INSERT INTO `booking` (`id`, `userId`, `approvalStatus`, `attendanceStatus`) VALUES
 (1, 3, 1, 1),
-(2, 3, 1, 1),
+(2, 5, 1, 1),
 (3, 3, 1, 1),
 (4, 3, 2, 1),
 (5, 3, 1, 1),
-(6, 3, 3, 2),
+(6, 7, 3, 2),
 (7, 3, 1, 1),
 (8, 3, 1, 1),
-(9, 3, 1, 1);
+(9, 9, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -219,7 +219,7 @@ CREATE TABLE `venue` (
   `type` tinyint(2) NOT NULL,
   `img` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `userId` int(11) NOT NULL,
+  `userId` int(11) DEFAULT NULL,
   `hourlyRate` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
