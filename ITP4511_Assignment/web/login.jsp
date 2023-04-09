@@ -26,7 +26,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
 </head>
 <style>
-    .navbar-brand:hover {
+    .navbar-link:hover {
         color: #205295 !important;
     }
 </style>
@@ -72,13 +72,13 @@
                     <img src="assets/img/bg-login.png" alt="Venue" class="img-fluid object-fit-cover rounded-start-3" />
                 </div>
                 <div class="flex-grow-1">
-                    <nav class="py-4">
+                    <div class="py-4">
                         <div class="container-fluid">
-                            <a title="Back to home page" class="navbar-brand text-gary-800 fw-bold fs-5"
+                            <a title="Back to home page" class="navbar-link text-gary-800 fw-bold fs-5"
                                 href="index.jsp">
                                 <i class="bi bi-house-door-fill pe-2"></i>Home</a>
                         </div>
-                    </nav>
+                    </div>
                     <div class="card-body">
                         <h1 class="text-sm-start ps-4 mb-4 fw-bold">Sign in</h1>
                         <form method="post" action="handleLogin" class="px-4">
