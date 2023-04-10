@@ -175,22 +175,8 @@
     
                             </tbody>
                         </table>
-                        <div class="pagination flex flex-row justify-center absolute bottom-0 w-full">
-                            <% 
-                            int totalPages = java.lang.Integer.parseInt(request.getAttribute("totalPages").toString());
-                            int currentPage = java.lang.Integer.parseInt(request.getAttribute("currentPage").toString());
-
-                            for (int i = 1; i <= totalPages; i++) {
-                                if (i != currentPage) {
-                            %>
-
-                                <a href="users.jsp?page=<%= i %><% if (request.getParameter("id") != null) { %>&id=<%= request.getParameter("id") %><% } %>" class="mx-3 underline"><%= i %></a>
-
-                            <% } else { %>
-                                <span class="mx-3 disabled text-primary font-bold"><%= i %></span>
-                            <% } } %>
-                        </div>
-
+   
+                        <ict:paginationpagenumber queryString="<%= request.getQueryString() %>" />
                     </div>
                 </div>
     

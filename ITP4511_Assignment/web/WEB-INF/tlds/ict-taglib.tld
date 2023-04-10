@@ -43,4 +43,19 @@
             Show message / error message if it stored in the session
         </description>
     </tag>
+
+    <tag>
+        <name>paginationpagenumber</name>
+        <tag-class>ict.tag.PaginationPageSelectTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            Show message / error message if it stored in the session
+        </description>
+        <attribute>
+            <name>queryString</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>
