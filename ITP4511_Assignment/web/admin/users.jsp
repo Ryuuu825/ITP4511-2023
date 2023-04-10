@@ -14,12 +14,12 @@
         <%@ page import="java.util.Enumeration" %>
 
         <jsp:useBean id="userAccounts" class="java.util.ArrayList<UserAccount>" scope="request" />
+        <jsp:useBean id="ua" class="ict.bean.view.UserAccount" scope="request" />
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>JSP Page</title>
 
-        <script src="https://cdn.tailwindcss.com"></script>
 
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
@@ -31,6 +31,10 @@
             integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
             crossorigin="anonymous"></script>
 
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
+
+        <script src="https://cdn.tailwindcss.com"></script>
 
         <style>
             body {
@@ -51,10 +55,31 @@
 
             .btn-danger:hover {
                 background-color: #b92c3a !important;
-            } 
+            }   
 
+            .box {
+                width: var(--mutate-width-1, 35%);
+                transition: width 1s ease-in-out;
+            }
+
+            .usertable {
+                width: var(--mutate-width-2, 65%);
+                transition: width 1s ease-in-out;
+            }
 
         </style>
+
+        <script>
+            // setInterval(() => {
+            //     document.documentElement.style.setProperty('--mutate-width-1', '35%');
+            // }, 1);
+
+            // setInterval(() => {
+            //     document.documentElement.style.setProperty('--mutate-width-2', '65%');
+            // }, 1);
+
+
+        </script>
     </head>
 
     <body class="h-screen w-screen">
@@ -66,7 +91,7 @@
                 </h1>
             </div>
             <ul
-                class="nav justify-content-end font-semibold flex align-items-center mr-5 ml-auto">
+                class="nav justify-content-end font-medium flex align-items-center mr-5 ml-auto">
                 <li class="nav-item mx-3">
                     <a class="text-white" href="#"> Users </a>
                 </li>
@@ -101,68 +126,93 @@
                 session.removeAttribute("error");
             } %>
 
-
-            <div class="usertable border w-full bg-white h-full p-3">
-                <div class="search">
-                    <div class="searchbar flex flex-row items-center">
-                        <div class="w-full border rounded-sm flex flex-row p-2 ">
-                            <svg fill="none" stroke="currentColor" stroke-width="1.5"
-                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                            aria-hidden="true" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z">
-                            </path>
-                            </svg>
-                            <input class="w-full focus:outline-none ml-5"
-                                type="text"
-                                placeholder="Search" />
-                            </div>
-                        <button class="btn-primary text-white rounded-sm p-2 ml-2" type="button">
-                            Search
-                        </button>
+            <div class="flex flex-row h-75">
+                <div class="usertable border w-full bg-white p-3 "
+                    style="<% if (ua.getAccount() == null) { %> width: 100%  <%  } else { %> margin-right: 2rem;  <% } %> ">
+                    <div class="search">
+                        <div class="searchbar flex flex-row items-center">
+                            <div class="w-full border rounded-sm flex flex-row p-2 ">
+                                <svg fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z">
+                                </path>
+                                </svg>
+                                <input class="w-full focus:outline-none ml-5"
+                                    type="text"
+                                    placeholder="Search" />
+                                </div>
+                            <button class="btn btn-primary text-white rounded-sm p-2 ml-2 h-full" type="button">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+    
+                    <div class="mt-3">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col" >Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% 
+                                    for (UserAccount userAccount : userAccounts) {
+                                        User user = userAccount.getUser();
+                                        Account account = userAccount.getAccount();
+                                %>
+    
+                                <tr>
+                                    <th><%= account.getId() %></th>
+                                    <td><%= account.getUsername() %></td>
+                                    <td><%= user.getEmail() %></td>
+                                    <td><%= account.getRoleString() %></td>
+                                    <td >
+                                        <a href="users.jsp?id=<%= user.getId() %>" class="underline">View</a>
+                                    </td>
+                                    <td>
+                                        <form action="<%= request.getContextPath() %>/api/admin/users" method="POST"
+                                                onsubmit="return confirm('Are you sure you want to delete this user?')"
+                                            >
+                                            <input type="hidden" name="id" value="<%= account.getId() %>" />
+                                            <input type="hidden" name="action" value="delete" />
+                                            <button type="submit" class="mx-3 border btn btn-danger px-3 py-1 text-white">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+    
+                                <% } %>
+    
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+    
+                <% if (ua.getAccount() != null) { %>
 
-                <div class="mt-3">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Role</th>
-                                <th scope="col" >Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% 
-                                for (UserAccount userAccount : userAccounts) {
-                                    User user = userAccount.getUser();
-                                    Account account = userAccount.getAccount();
-                            %>
+                <div class="h-full border bg-white box overflow-hidden" >
+                    <div class="title text-center text-2xl font-semibold mt-4 pb-3 border-b mb-2 mx-2">
+                        User - 
+                        <span class="font-extrabold text-3xl text-black">
+                            <%= ua.getAccount().getUsername() %>
+                        </span>
+                    </div>
 
-                            <tr>
-                                <th><%= account.getId() %></th>
-                                <td><%= account.getUsername() %></td>
-                                <td><%= user.getEmail() %></td>
-                                <td><%= account.getRoleString() %></td>
-                                <td >
-                                    <a href="user.jsp?id=<%= user.getId() %>" class="underline">View</a>
-                                </td>
-                                <td>
-                                    <form action="<%= request.getContextPath() %>/api/admin/users" method="POST" >
-                                        <input type="hidden" name="id" value="<%= account.getId() %>" />
-                                        <input type="hidden" name="action" value="delete" />
-                                        <button type="submit" class="mx-3 border btn-danger px-3 py-1 text-white">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
+                    <div class="userform px-3 py-2">
+                        <form action="/api/admin/user" method="post">
+                            <input type="hidden" name="id" value="<%= ua.getAccount().getId() %>" />
+                            <input type="hidden" name="action" value="update" />
+                        </form>
 
-                            <% } %>
-
-                        </tbody>
-                    </table>
+                        <ict:useUpdateForm action="/api/admin/user" id="<%= ua.getAccount().getId() %>" class="UserAccount" />
+                    </div>
                 </div>
+                <% } %>
             </div>
     </body>
 </html>

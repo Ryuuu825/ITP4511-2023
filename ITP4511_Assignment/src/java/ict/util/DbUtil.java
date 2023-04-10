@@ -28,6 +28,7 @@ public class DbUtil {
 
 
     private static ArrayList<String> errorMsgs = new ArrayList<>();
+    private static boolean hasError = false;
 
     public DbUtil(String dburl, String dbUser, String dbPassword) {
         this.dburl = dburl;
@@ -38,6 +39,7 @@ public class DbUtil {
     public Connection getConnection() throws IOException, SQLException {
         try {
             Class.forName("com.mysql.jdbc.Driver");
+            hasError = false;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -77,21 +79,24 @@ public class DbUtil {
         } catch (SQLException e) {
             while (e != null) {
                 e.printStackTrace();
+                hasError = true;
 
                 // Error:com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Cannot delete or update a parent row: a foreign key constraint fails (`itp4511_asm_db`.`venue`, CONSTRAINT `venue_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`))|#]
                 // remove all the content after the (), where it show the database structure
                 // errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + "<br/>" + e.getSQLState();
                 String errorMsg = e.getMessage();
-                errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
+                if (errorMsg.contains("(")) {
+                    errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
+                }
                 errorMsgs.add(errorMsg);
-
-                System.out.println("errorMsg: " + errorMsg);
-                System.out.println("errorMsgs: " + errorMsgs.size());
 
                 e = e.getNextException();
             }
         } catch (IOException e) {
+            String errorMsg = e.getMessage();
+            errorMsgs.add(errorMsg);
             e.printStackTrace();
+            hasError = true;
         }
         return ls;
     }
@@ -121,23 +126,22 @@ public class DbUtil {
             cnnt.close();
         } catch (SQLException e) {
             while (e != null) {
-                System.out.println("SQLState: " + e.getSQLState());
                 e.printStackTrace();
+                hasError = true;
                 // Error:com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Cannot delete or update a parent row: a foreign key constraint fails (`itp4511_asm_db`.`venue`, CONSTRAINT `venue_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`))|#]
                 // remove all the content after the (), where it show the database structure
                 // errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + "<br/>" + e.getSQLState();
                 String errorMsg = e.getMessage();
-                errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
+                if (errorMsg.contains("(")) {
+                    errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
+                }
                 errorMsgs.add(errorMsg);
-
-                System.out.println("errorMsg: " + errorMsg);
-                System.out.println("errorMsgs: " + errorMsgs.size());
-
 
                 e = e.getNextException();
             }
         } catch (IOException e) {
             e.printStackTrace();
+            hasError = true;
         }
         return isSuccess;
     }
@@ -161,27 +165,28 @@ public class DbUtil {
                 e.printStackTrace();
 
                 String errorMsg = e.getMessage();
-                errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
+                if (errorMsg.contains("(")) {
+                    errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
+                }
                 errorMsgs.add(errorMsg);
 
 
                 e = e.getNextException();
+                hasError = true;
             }
         } catch (IOException e) {
+
             e.printStackTrace();
+            hasError = true;
         }
     }
 
     public String getErrorMsg() {
-        
         String errorMsg = errorMsgs.get(errorMsgs.size() - 1);
-
-        // auto clear the errorMsgs, if the size is more than 10
-        // prevent the errorMsgs arraylist from growing too large
-        if (errorMsgs.size() > 10) {
-            errorMsgs.clear();
-        }
-
         return errorMsg;
+    }
+
+    public boolean hasErrorAtLastOperation() {
+        return hasError;
     }
 }

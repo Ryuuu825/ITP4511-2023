@@ -30,5 +30,9 @@ public class BaseDAO {
     public String getLastError() {
         return dbUtil.getErrorMsg();
     } 
+
+    public boolean hasError() {
+        return dbUtil.hasErrorAtLastOperation();
+    }
     
 }

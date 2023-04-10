@@ -16,7 +16,7 @@ import ict.bean.view.UserAccount;
 import ict.db.AccountDAO;
 import ict.db.UserDAO;
 
-@WebServlet(name = "UsersAccountController", urlPatterns = {"/api/admin/users"})
+@WebServlet(name = "UsersAccountController", urlPatterns = {"/api/admin/users" , "/api/admin/user/"})
 public class UsersAccountController extends HttpServlet{
     private AccountDAO accountDB;
     private UserDAO userDB;
@@ -26,7 +26,6 @@ public class UsersAccountController extends HttpServlet{
     protected void doGet(HttpServletRequest req , HttpServletResponse res) throws ServletException, IOException {
 
         ArrayList<UserAccount> userAccounts = new ArrayList<>();
-
 
         String redirectedFrom = req.getParameter("redirectedFrom");
         if (redirectedFrom == null) {
@@ -38,6 +37,12 @@ public class UsersAccountController extends HttpServlet{
 
         // return the list of usersaccount
         ArrayList<User> users = userDB.queryRecord();
+
+        if (userDB.hasError()) {
+            HttpSession session = req.getSession();
+            session.setAttribute("error", "Query users unsuccessfully!" + "<br>Database trace:<br>" + 
+                "<div style='color:red' class='ml-5'>" + userDB.getLastError() + "</div>");
+        }
 
         for (User user : users) {
             UserAccount userAccount = new UserAccount(user, accountDB.queryRecordById(user.getId()));
@@ -52,6 +57,23 @@ public class UsersAccountController extends HttpServlet{
         }
 
         req.setAttribute("userAccounts", userAccounts);
+
+        // see if specific id is given
+        String id = req.getParameter("id");
+
+        if (req.getAttribute("ua") != null) {
+            req.removeAttribute("ua");
+        }
+
+        if (id != null) {
+            UserAccount userAccount = new UserAccount(userDB.queryRecordById(Integer.parseInt(id)), accountDB.queryRecordById(Integer.parseInt(id)));
+
+            // mask the password
+            String password = userAccount.getAccount().getPassword();
+            userAccount.getAccount().setPassword(password.replaceAll(".", "*"));
+
+            req.setAttribute("ua", userAccount);
+        }
         
         // redirect back to redirectedFrom
         RequestDispatcher rd = getServletContext().getRequestDispatcher(redirectedFrom);
@@ -73,8 +95,6 @@ public class UsersAccountController extends HttpServlet{
         redirectedFrom = redirectedFrom.replace("'", "").replace("\"", "");
 
         if (action.equals("delete")) {
-
-            System.out.println("deleting" + Integer.parseInt(req.getParameter("id")));
 
             boolean result = accountDB.delRecord(Integer.parseInt(req.getParameter("id")));
 
