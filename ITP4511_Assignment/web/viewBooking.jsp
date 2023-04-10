@@ -4,8 +4,13 @@
    Author     : jyuba
 --%>
 
+<%@page import="ict.bean.view.DateTimeslots"%>
+<%@page import="ict.bean.view.VenueTimeslots"%>
 <%@page import="ict.bean.view.BookingDTO"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="ict.bean.Venue"%>
+<%@page import="ict.bean.Timeslot"%>
+<%@page import="ict.bean.Guest"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib.tld" prefix="ict" %>
 
@@ -34,16 +39,21 @@
 
         });
     </script>
+
+    <jsp:useBean scope="request" id="bookingDTO" class="ict.bean.view.BookingDTO" />
     <%
-        BookingDTO booking = (BookingDTO) request.getAttribute("BookingDTO");
+        String memberName = bookingDTO.getMember().getFirstName() + " " + bookingDTO.getMember().getLastName();
+        String memberPhone = bookingDTO.getMember().getPhone();
+        String memberEmail = bookingDTO.getMember().getEmail();
+
+        ArrayList<ArrayList<Guest>> guests = bookingDTO.getGuestLists();
+        ArrayList<VenueTimeslots> venueTimeslotses = bookingDTO.getVenueTimeslotses();
     %>
-    <%--<jsp:useBean scope="request" id="bookings" class="java.util.ArrayList<BookingDTO>" />--%>
 
     <body style="background-color: #f2f2f2;">
         <header class="z-3 w-100 d-flex flex-row align-items-center justify-content-between p-3"
                 style="background-color: #144272; height: 5rem;">
-            <div class="title text-uppercase ms-3 me-auto fw-bold text-white"
-                 style="font-size: 1.5rem;line-height: 2rem;">
+            <div class="title text-uppercase ms-3 me-auto fw-bold text-white" style="font-size: 1.5rem;line-height: 2rem;">
                 <a href="index.jsp" class="text-white text-decoration-none">
                     Event Point Limited
                 </a>
@@ -70,10 +80,158 @@
             </ul>
         </header>
         <section class="p-5">
-            <div class="fw-bold text-uppercase fs-5 my-3">Bookings</div>
-            <div class="bg-white p-3 border">
-                <div class="table-responsive text-nowrap mt-3 fs-6">
-                    <%--<ict:bookingTable bookings="<%=bookings%>" />--%>
+            <div class="fw-bold fs-5 my-3"><a href="searchBookings">Bookings </a>/ <span
+                    class="text-decoration-underline">Details</span></div>
+            <div class="row">
+                <div class="col-md-8 mb-4">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Member Info</h5>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="firstName" disabled class="form-control border active"
+                                                   value="<%=memberName%>" />
+                                            <label class="form-label" for="firstName">Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="phone" disabled class="form-control border active"
+                                                   value="<%=memberPhone%>" />
+                                            <label class="form-label" for="phone">Phone</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="email" disabled class="form-control border active"
+                                           value="<%=memberEmail%>" />
+                                    <label class="form-label" for="email">Email</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%
+                        for (int i = 1; i <= venueTimeslotses.size(); i++) {
+                            Venue v = venueTimeslotses.get(i - 1).getVenue();
+                            String venueName = v.getName();
+                            int capacity = v.getCapacity();
+                            String venueType = v.getTypeString();
+                            String venueAddress = v.getAddress();
+                            String hourlyRate = "HK$ " + v.getHourlyRate() + " per hour";
+                    %>
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Booked Venue <%=i%></h5>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="venueName" disabled class="form-control border active"
+                                           value="<%=venueName%>" />
+                                    <label class="form-label" for="venueName">Name</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-outline mb-4">
+                                            <input type="text" id="capacity" disabled class="form-control border active"
+                                                   value="<%=capacity%>" />
+                                            <label class="form-label" for="capacity">Capacity</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-outline mb-4">
+                                            <input type="text" id="type" disabled class="form-control border active"
+                                                   value="<%=venueType%>" />
+                                            <label class="form-label" for="type">Type</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-outline mb-4">
+                                            <input type="text" id="hourlyRate" disabled class="form-control border active"
+                                                   value="<%=hourlyRate%>" />
+                                            <label class="form-label" for="hourlyRate">HourlyRate</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Message input -->
+                                <div class="form-outline">
+                                    <textarea class="form-control border active" disabled id="address"
+                                              rows="2"><%=venueAddress%></textarea>
+                                    <label class="form-label" for="address">Address</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-header">
+                            <h5 class="mb-0">Timeslot</h5>
+                        </div>
+                        <div class="card-body">
+                            <%
+                                ArrayList<DateTimeslots> dtss = venueTimeslotses.get(i - 1).getDateTimeslots();
+                                for (DateTimeslots dts : dtss) {
+                                    String date = dts.getDate().toString();
+                            %>
+                            <div class="card-title">
+                                <h6 class="mb-0"><%=date%></h6>
+                            </div>
+                            <div class="d-flex flex-row justify-content-start mb-2 px-4 py-2">
+                                <%
+                                    ArrayList<Timeslot> tss = dts.getTimeslots();
+                                    for (Timeslot ts : tss) {
+                                        String startTime = ts.getStartTime().toString();
+                                        String endTime = ts.getEndTime().toString();
+                                        System.out.println(startTime);
+                                %>
+                                <label class="border px-2 me-2 border-2 border-primary text-primary rounded-pill">
+                                    <%=startTime %> - <%=endTime %>
+                                </label>
+                                <%
+                                    }
+                                %>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+                    <% }%>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                    Products
+                                    <span>$53.98</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Shipping
+                                    <span>Gratis</span>
+                                </li>
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                    <div>
+                                        <strong>Total amount</strong>
+                                        <strong>
+                                            <p class="mb-0">(including VAT)</p>
+                                        </strong>
+                                    </div>
+                                    <span><strong>$53.98</strong></span>
+                                </li>
+                            </ul>
+
+                            <button type="button" class="btn btn-primary btn-lg btn-block">
+                                Make purchase
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

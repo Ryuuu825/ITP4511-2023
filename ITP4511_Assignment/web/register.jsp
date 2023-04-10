@@ -301,7 +301,7 @@
                                                     <li class="requirements big-letter">
                                                         <i class="fas fa-check text-success me-2"></i>
                                                         <i class="fas fa-times text-danger me-3"></i>
-                                                        Your password must have at least 1 big letter.</li>
+                                                        Your password must have at least 1 upper letter.</li>
                                                     <li class="requirements num">
                                                         <i class="fas fa-check text-success me-2"></i>
                                                         <i class="fas fa-times text-danger me-3"></i>

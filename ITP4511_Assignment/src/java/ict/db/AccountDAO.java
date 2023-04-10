@@ -59,7 +59,6 @@ public class AccountDAO extends BaseDAO {
             acc = new Account();
             acc.setRole((int) ls.get(0).get("role"));
             role = acc.getRoleString();
-            System.out.println(role);
         }
         return role;
     }

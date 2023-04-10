@@ -103,7 +103,6 @@ public class LoginController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("ict.servlet.LoginController.init()");
         String dbUser = this.getServletContext().getInitParameter("dbUser");
         String dbPassword = this.getServletContext().getInitParameter("dbPassword");
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");

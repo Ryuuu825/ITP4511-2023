@@ -11,6 +11,7 @@ import ict.bean.User;
 import ict.bean.Venue;
 import ict.bean.VenueTimeslot;
 import ict.bean.view.BookingDTO;
+import ict.bean.view.VenueTimeslots;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
@@ -167,27 +168,11 @@ public class BookingDAO extends BaseDAO {
             for (Booking b : bookings) {
                 bdto = new BookingDTO();
                 bdto.setBooking(b);
-                vts = venueTimeslotDB.queryRocordByBookingId(b.getId());
-
-                if (vts.size() != 0) {
-                    vs = new ArrayList<>();
-                    tss = new ArrayList<>();
-                    gss = new ArrayList<>();
-                    for (VenueTimeslot vt : vts) {
-                        Venue v = venueDB.queryRecordById(vt.getVenueId());
-                        vs.add(v);
-                        Timeslot ts = timeslotDB.queryRecordById(vt.getTimeslotId());
-                        tss.add(ts);
-                        ArrayList<Guest> gs = guestDB.queryRecordByBooking(b.getId(), vt.getVenueId());
-                        gss.add(gs);
-                    }
-                }
-
-                bdto.setVenues(vs);
+                ArrayList<VenueTimeslots> vts1 = venueTimeslotDB.queryRocordToVenueTimeslotsList(b.getId());
+                bdto.setVenueTimeslotses(vts1);
                 bdto.setGuestLists(gss);
-                bdto.setTimeslots(tss);
                 User u = userDB.queryRecordById(b.getUserId());
-                bdto.setMember(u.getFirstName() + " " + u.getLastName());
+                bdto.setMember(u);
                 bdtos.add(bdto);
             }
         }
@@ -209,27 +194,11 @@ public class BookingDAO extends BaseDAO {
         if (b != null) {
             bdto = new BookingDTO();
             bdto.setBooking(b);
-            vts = venueTimeslotDB.queryRocordByBookingId(b.getId());
-
-            if (vts.size() != 0) {
-                vs = new ArrayList<>();
-                tss = new ArrayList<>();
-                gss = new ArrayList<>();
-                for (VenueTimeslot vt : vts) {
-                    Venue v = venueDB.queryRecordById(vt.getVenueId());
-                    vs.add(v);
-                    Timeslot ts = timeslotDB.queryRecordById(vt.getTimeslotId());
-                    tss.add(ts);
-                    ArrayList<Guest> gs = guestDB.queryRecordByBooking(b.getId(), vt.getVenueId());
-                    gss.add(gs);
-                }
-            }
-
-            bdto.setVenues(vs);
+            ArrayList<VenueTimeslots> vts1 = venueTimeslotDB.queryRocordToVenueTimeslotsList(b.getId());
+            bdto.setVenueTimeslotses(vts1);
             bdto.setGuestLists(gss);
-            bdto.setTimeslots(tss);
             User u = userDB.queryRecordById(b.getUserId());
-            bdto.setMember(u.getFirstName() + " " + u.getLastName());
+            bdto.setMember(u);
         }
         return bdto;
     }

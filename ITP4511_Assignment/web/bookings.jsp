@@ -35,9 +35,8 @@
         });
     </script>
     <%
-        ArrayList<BookingDTO> bookings = (ArrayList<BookingDTO>) request.getAttribute("BookingDTOs");
+        ArrayList<BookingDTO> bookings = (ArrayList<BookingDTO>) request.getAttribute("bookingDTOs");
     %>
-    <%--<jsp:useBean scope="request" id="bookings" class="java.util.ArrayList<BookingDTO>" />--%>
 
     <body style="background-color: #f2f2f2;">
         <header class="z-3 w-100 d-flex flex-row align-items-center justify-content-between p-3"
@@ -70,7 +69,7 @@
             </ul>
         </header>
         <section class="p-5">
-            <div class="fw-bold text-uppercase fs-5 my-3">Bookings</div>
+            <div class="fw-bold fs-5 my-3">Bookings</div>
             <div class="bg-white p-3 border">
                 <div class="table-responsive text-nowrap mt-3 fs-6">
                     <ict:bookingTable bookings="<%=bookings%>" />

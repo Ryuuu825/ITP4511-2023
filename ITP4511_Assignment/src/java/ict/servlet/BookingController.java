@@ -106,22 +106,21 @@ public class BookingController extends HttpServlet {
             BookingDTO b = bookingDB.queryRecordToDTOByBookingId(bid);
             if (b.getBooking().getId() == bid) {
                 RequestDispatcher rd;
-                req.setAttribute("BookingDTO", b);
+                req.setAttribute("bookingDTO", b);
                 rd = getServletContext().getRequestDispatcher("/viewBooking.jsp");
                 rd.forward(req, resp);
             }
         } else {
             ArrayList<BookingDTO> bdtos = bookingDB.queryRecordToDTO();
             RequestDispatcher rd;
-            req.setAttribute("BookingDTOs", bdtos);
-            rd = getServletContext().getRequestDispatcher("/bookingManagement.jsp");
+            req.setAttribute("bookingDTOs", bdtos);
+            rd = getServletContext().getRequestDispatcher("/bookings.jsp");
             rd.forward(req, resp);
         }
     }
 
     @Override
     public void init() throws ServletException {
-        System.out.println("ict.servlet.LoginController.init()");
         String dbUser = this.getServletContext().getInitParameter("dbUser");
         String dbPassword = this.getServletContext().getInitParameter("dbPassword");
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");

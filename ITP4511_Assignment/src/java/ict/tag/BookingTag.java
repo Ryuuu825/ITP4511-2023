@@ -47,11 +47,11 @@ public class BookingTag extends SimpleTagSupport {
                 System.out.println("wei" + booking);
                 out.print("<tr>");
                 out.print("<th scope = \"row\">" + booking.getBooking().getId() + "</th>");
-                out.print("<td>" + booking.getMember() + "</td>");
-                out.print("<td>" + booking.getVenues().size() + "</td>");
+                out.print("<td>" + booking.getMember().getFirstName()+" "+ booking.getMember().getLastName()+ "</td>");
+                out.print("<td>" + booking.getVenueTimeslotses().size() + "</td>");
                 out.print("<td>" + booking.getBooking().getAmount() + "</td>");
                 out.print("<td class=\""+ color[booking.getBooking().getStatus()-1] +"\">" + status[booking.getBooking().getStatus()-1] + "</td>");
-                out.print("<td><a href=\"viewBooking?bookingId=" + booking.getBooking().getId() + "\">View</a></td>");
+                out.print("<td><a class=\"btn btn-link btn-rounded btn-sm\" role=\"button\" href=\"viewBooking?bookingId=" + booking.getBooking().getId() + "\">View</a></td>");
                 out.print("</tr>");
             }
             out.print("</tbody></table>");
