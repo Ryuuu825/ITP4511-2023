@@ -34,4 +34,13 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+
+    <tag>
+        <name>result</name>
+        <tag-class>ict.tag.ResultMsgTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            Show message / error message if it stored in the session
+        </description>
+    </tag>
 </taglib>

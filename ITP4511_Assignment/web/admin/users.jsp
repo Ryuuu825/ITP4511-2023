@@ -106,25 +106,9 @@
 
         <div class="content p-12 flex flex-col h-full" style="background-color: #f3f3f3">
             <div class="title uppercase text-xl font-bold my-3">Users</div>
-            <% 
-                if (session.getAttribute("message") != null) {
-            %>
-                <div class="alert alert-success" role="alert">
-                    <%= session.getAttribute("message") %>
-                </div>
-            <%   
-                session.removeAttribute("message");
-            } %>
+            <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 
-            <% 
-                if (session.getAttribute("error") != null) {
-            %>
-                <div class="alert alert-danger" role="alert">
-                    <%= session.getAttribute("error") %>
-                </div>
-            <%   
-                session.removeAttribute("error");
-            } %>
+            <ict:result />
 
             <div class="flex flex-row h-75">
                 <div class="usertable border w-full bg-white p-3 "
@@ -209,7 +193,6 @@
                             <input type="hidden" name="action" value="update" />
                         </form>
 
-                        <ict:useUpdateForm action="/api/admin/user" id="<%= ua.getAccount().getId() %>" class="UserAccount" />
                     </div>
                 </div>
                 <% } %>
