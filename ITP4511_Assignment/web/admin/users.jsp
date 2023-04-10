@@ -20,7 +20,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>JSP Page</title>
 
-
+        <script src="https://cdn.tailwindcss.com"></script>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -34,7 +34,6 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
 
-        <script src="https://cdn.tailwindcss.com"></script>
 
         <style>
             body {
@@ -104,13 +103,14 @@
             </ul>
         </nav>
 
-        <div class="content p-12 flex flex-col h-full" style="background-color: #f3f3f3">
+        <div class="content p-12 flex flex-col h-[90%] mb-3" style="background-color: #f3f3f3">
             <div class="title uppercase text-xl font-bold my-3">Users</div>
             <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 
             <ict:result />
 
-            <div class="flex flex-row h-75">
+
+            <div class="flex flex-row h-full">
                 <div class="usertable border w-full bg-white p-3 "
                     style="<% if (ua.getAccount() == null) { %> width: 100%  <%  } else { %> margin-right: 2rem;  <% } %> ">
                     <div class="search">
@@ -133,7 +133,7 @@
                         </div>
                     </div>
     
-                    <div class="mt-3">
+                    <div class="mt-3 h-[90%] flex flex-col relative">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -156,7 +156,7 @@
                                     <td><%= account.getUsername() %></td>
                                     <td><%= user.getEmail() %></td>
                                     <td><%= account.getRoleString() %></td>
-                                    <td >
+                                    <td>
                                         <a href="users.jsp?id=<%= user.getId() %>" class="underline">View</a>
                                     </td>
                                     <td>
@@ -171,9 +171,26 @@
                                 </tr>
     
                                 <% } %>
+
     
                             </tbody>
                         </table>
+                        <div class="pagination flex flex-row justify-center absolute bottom-0 w-full">
+                            <% 
+                            int totalPages = java.lang.Integer.parseInt(request.getAttribute("totalPages").toString());
+                            int currentPage = java.lang.Integer.parseInt(request.getAttribute("currentPage").toString());
+
+                            for (int i = 1; i <= totalPages; i++) {
+                                if (i != currentPage) {
+                            %>
+
+                                <a href="users.jsp?page=<%= i %><% if (request.getParameter("id") != null) { %>&id=<%= request.getParameter("id") %><% } %>" class="mx-3 underline"><%= i %></a>
+
+                            <% } else { %>
+                                <span class="mx-3 disabled text-primary font-bold"><%= i %></span>
+                            <% } } %>
+                        </div>
+
                     </div>
                 </div>
     

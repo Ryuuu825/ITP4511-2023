@@ -189,4 +189,14 @@ public class DbUtil {
     public boolean hasErrorAtLastOperation() {
         return hasError;
     }
+
+    public int getTotalRecords(String table ) {
+        int totalRecords = 0;
+        String sql = "SELECT COUNT(*) FROM " + table;
+        ArrayList<Map<String, Object>> ls = findRecord(sql, new ArrayList<>());
+        if (ls.size() > 0) {
+            totalRecords = Integer.parseInt(ls.get(0).get("COUNT(*)").toString());
+        }
+        return totalRecords;
+    }
 }

@@ -35,4 +35,9 @@ public class BaseDAO {
         return dbUtil.hasErrorAtLastOperation();
     }
     
+    public int getTotalRecords() {
+        // determin the table name from the class name ( runtime reflection)
+        String tableName = this.getClass().getSimpleName().toLowerCase().replace("dao", "");
+        return dbUtil.getTotalRecords(tableName);
+    }
 }

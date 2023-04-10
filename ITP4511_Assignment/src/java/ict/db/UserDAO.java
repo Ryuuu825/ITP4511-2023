@@ -146,6 +146,29 @@ public class UserDAO extends BaseDAO{
         return us;
     }
 
+    public ArrayList<User> queryRecord(int limit, int offset) {
+        User u = null;
+        String sql = "SELECT * FROM user LIMIT ? OFFSET ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(limit);
+        params.add(offset);
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        ArrayList<User> us = new ArrayList<>();
+
+        for (Map<String, Object> m : ls) {
+            u = new User();
+            u.setId((int) m.get("id"));
+            u.setAccountId((int) m.get("accountId"));
+            u.setEmail((String) m.get("email"));
+            u.setFirstName((String) m.get("firstName"));
+            u.setLastName((String) m.get("lastName"));
+            u.setPhone((String) m.get("phone"));
+            us.add(u);
+        }
+
+        return us;
+    }
+
     public boolean delRecord(int id) {
         String sql = "DELETE FROM user WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();

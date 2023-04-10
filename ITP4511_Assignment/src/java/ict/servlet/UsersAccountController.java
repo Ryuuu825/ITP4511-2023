@@ -15,11 +15,14 @@ import ict.bean.User;
 import ict.bean.view.UserAccount;
 import ict.db.AccountDAO;
 import ict.db.UserDAO;
+import ict.util.DbUtil;
 
 @WebServlet(name = "UsersAccountController", urlPatterns = {"/api/admin/users" , "/api/admin/user/"})
 public class UsersAccountController extends HttpServlet{
     private AccountDAO accountDB;
     private UserDAO userDB;
+
+    private static final int RECORD_PER_PAGE = 6;
 
 
     @Override
@@ -35,14 +38,29 @@ public class UsersAccountController extends HttpServlet{
         // remove '' from the string
         redirectedFrom = redirectedFrom.replace("'", "").replace("\"", "");
 
+        String page = req.getParameter("page");
+
+        if (page == null) {
+            page = "1"; 
+        }
+
         // return the list of usersaccount
-        ArrayList<User> users = userDB.queryRecord();
+        ArrayList<User> users = userDB.queryRecord( RECORD_PER_PAGE , (Integer.parseInt(page) - 1) * 5 );
+
+        // get the total number of records
+        int totalRecords = userDB.getTotalRecords();
+
+        // store number of page the front-end should display
+        int totalPages = (int) Math.ceil((double) totalRecords / (double) RECORD_PER_PAGE);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("currentPage", page);
 
         if (userDB.hasError()) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Query users unsuccessfully!" + "<br>Database trace:<br>" + 
                 "<div style='color:red' class='ml-5'>" + userDB.getLastError() + "</div>");
         }
+
 
         for (User user : users) {
             UserAccount userAccount = new UserAccount(user, accountDB.queryRecordById(user.getId()));
