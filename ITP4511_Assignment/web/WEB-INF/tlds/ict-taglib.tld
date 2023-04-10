@@ -58,4 +58,19 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    
+    <tag>
+        <name>statusButton</name>
+        <tag-class>ict.tag.BookingStatusTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            different style button for booking status
+        </description>
+        <attribute>
+            <name>status</name>
+            <required>true</required>
+            <type>java.lang.Integer</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>

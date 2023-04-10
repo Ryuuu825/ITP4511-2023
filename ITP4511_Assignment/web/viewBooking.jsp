@@ -88,7 +88,7 @@
                 <div class="col-md-8 mb-4">
                     <div class="card mb-4">
                         <div class="card-header py-3">
-                            <h5 class="mb-0">Member Info</h5>
+                            <h5 class="mb-0">Member Information</h5>
                         </div>
                         <div class="card-body">
                             <div>
@@ -201,7 +201,7 @@
                         </div>
                     </div>
                     <%
-                            subTotals[i-1] = subTotal;
+                            subTotals[i - 1] = subTotal;
                         }
                     %>
                 </div>
@@ -220,23 +220,21 @@
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                                     <%=venue.getName()%>
-                                    <span>HK$ <%=subTotals[i] %></span>
+                                    <span>HK$ <%=subTotals[i]%></span>
                                 </li>
                                 <%
                                     }
                                 %>
                                 <li
-                                    class="border border-top list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                    class="border-top list-group-item d-flex justify-content-between align-items-center px-0 my-3">
                                     <div>
                                         <strong>Total amount</strong>
                                     </div>
-                                    <span class="fs-5"><strong>HK$ <%=Arrays.stream(subTotals).sum() %></strong></span>
+                                    <span class="fs-5"><strong>HK$ <%=Arrays.stream(subTotals).sum()%></strong></span>
                                 </li>
                             </ul>
 
-                            <button type="button" class="btn btn-primary btn-lg btn-block">
-                                Make purchase
-                            </button>
+                            <ict:statusButton status="<%=bookingDTO.getBooking().getStatus()%>"/>
                         </div>
                     </div>
                 </div>

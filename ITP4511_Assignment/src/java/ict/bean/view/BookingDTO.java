@@ -6,9 +6,7 @@ package ict.bean.view;
 
 import ict.bean.Booking;
 import ict.bean.Guest;
-import ict.bean.Timeslot;
 import ict.bean.User;
-import ict.bean.Venue;
 import java.util.ArrayList;
 
 /**
