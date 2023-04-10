@@ -4,12 +4,6 @@
  */
 package ict.servlet;
 
-import ict.bean.Booking;
-import ict.bean.Guest;
-import ict.bean.Timeslot;
-import ict.bean.User;
-import ict.bean.Venue;
-import ict.bean.VenueTimeslot;
 import ict.bean.view.BookingDTO;
 import ict.db.AccountDAO;
 import ict.db.BookingDAO;
@@ -32,16 +26,12 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "BookingController", urlPatterns = {"/searchBookings", "/editBookingRecord"})
+@WebServlet(name = "BookingController", urlPatterns = {"/searchBookings", "/editBookingRecord", "/viewBooking"})
 public class BookingController extends HttpServlet {
 
     private AccountDAO accountDB;
     private UserDAO userDB;
-    private VenueTimeslotDAO venueTimeslotDB;
     private BookingDAO bookingDB;
-    private GuestDAO guestDB;
-    private VenueDAO venueDB;
-    private TimeslotDAO timeslotDB;
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -110,45 +100,23 @@ public class BookingController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ArrayList<BookingDTO> bdtos = new ArrayList<>();
-        ArrayList<Booking> bookings = bookingDB.queryRecord();
-        ArrayList<VenueTimeslot> vts = null;
-        ArrayList<ArrayList<Guest>> gss = null;
-        ArrayList<Venue> vs = null;
-        ArrayList<Timeslot> tss = null;
-        BookingDTO bdto = null;
-        if (bookings.size() != 0) {
-            for (Booking b : bookings) {
-                bdto = new BookingDTO();
-                bdto.setBooking(b);
-                vts = venueTimeslotDB.queryRocordByBookingId(b.getId());
-
-                if (vts.size() != 0) {
-                    vs = new ArrayList<>();
-                    tss = new ArrayList<>();
-                    gss = new ArrayList<>();
-                    for (VenueTimeslot vt : vts) {
-                        Venue v = venueDB.queryRecordById(vt.getVenueId());
-                        vs.add(v);
-                        Timeslot ts = timeslotDB.queryRecordById(vt.getTimeslotId());
-                        tss.add(ts);
-                        ArrayList<Guest> gs = guestDB.queryRecordByBooking(b.getId(), vt.getVenueId());
-                        gss.add(gs);
-                    }
-                }
-
-                bdto.setVenues(vs);
-                bdto.setGuestLists(gss);
-                bdto.setTimeslots(tss);
-                User u = userDB.queryRecordById(b.getUserId());
-                bdto.setMember(u.getFirstName() + " " + u.getLastName());
-                bdtos.add(bdto);
+        String bookingId = req.getParameter("bookingId");
+        if (bookingId != null) {
+            int bid = Integer.parseInt(bookingId);
+            BookingDTO b = bookingDB.queryRecordToDTOByBookingId(bid);
+            if (b.getBooking().getId() == bid) {
+                RequestDispatcher rd;
+                req.setAttribute("BookingDTO", b);
+                rd = getServletContext().getRequestDispatcher("/viewBooking.jsp");
+                rd.forward(req, resp);
             }
+        } else {
+            ArrayList<BookingDTO> bdtos = bookingDB.queryRecordToDTO();
+            RequestDispatcher rd;
+            req.setAttribute("BookingDTOs", bdtos);
+            rd = getServletContext().getRequestDispatcher("/bookingManagement.jsp");
+            rd.forward(req, resp);
         }
-        RequestDispatcher rd;
-        req.setAttribute("BookingDTOs", bdtos);
-        rd = getServletContext().getRequestDispatcher("/bookingManagement.jsp");
-        rd.forward(req, resp);
     }
 
     @Override
@@ -159,11 +127,7 @@ public class BookingController extends HttpServlet {
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");
         accountDB = new AccountDAO(dbUrl, dbUser, dbPassword);
         userDB = new UserDAO(dbUrl, dbUser, dbPassword);
-        venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
         bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
-        guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
-        venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
-        timeslotDB = new TimeslotDAO(dbUrl, dbUser, dbPassword);
     }
 
 }
