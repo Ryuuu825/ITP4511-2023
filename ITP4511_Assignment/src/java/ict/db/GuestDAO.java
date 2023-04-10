@@ -147,6 +147,7 @@ public class GuestDAO extends BaseDAO {
         String sql = "SELECT * FROM guest WHERE bookingId=? and venueId=?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(bookingId);
+        params.add(venueId);
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         ArrayList<Guest> gs = new ArrayList<>();
         for (Map<String, Object> m : ls) {

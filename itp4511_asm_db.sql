@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-04-10 09:42:06
+-- 產生時間： 2023-04-10 09:49:41
 -- 伺服器版本： 10.4.24-MariaDB
 -- PHP 版本： 8.1.6
 
@@ -59,24 +59,24 @@ INSERT INTO `account` (`id`, `username`, `password`, `role`) VALUES
 CREATE TABLE `booking` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `approvalStatus` tinyint(1) NOT NULL,
-  `attendanceStatus` tinyint(1) NOT NULL
+  `amount` decimal(10,2) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- 傾印資料表的資料 `booking`
 --
 
-INSERT INTO `booking` (`id`, `userId`, `approvalStatus`, `attendanceStatus`) VALUES
-(1, 3, 1, 1),
-(2, 5, 1, 1),
-(3, 3, 1, 1),
-(4, 3, 2, 1),
-(5, 3, 1, 1),
-(6, 7, 3, 2),
-(7, 3, 1, 1),
-(8, 3, 1, 1),
-(9, 9, 1, 1);
+INSERT INTO `booking` (`id`, `userId`, `amount`, `status`) VALUES
+(1, 3, '1.00', 1),
+(2, 5, '1.00', 1),
+(3, 3, '1.00', 1),
+(4, 3, '2.00', 1),
+(5, 3, '1.00', 1),
+(6, 7, '3.00', 2),
+(7, 3, '1.00', 1),
+(8, 3, '1.00', 1),
+(9, 9, '1.00', 1);
 
 -- --------------------------------------------------------
 

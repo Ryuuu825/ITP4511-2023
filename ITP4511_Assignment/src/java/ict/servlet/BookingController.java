@@ -126,6 +126,7 @@ public class BookingController extends HttpServlet {
                 if (vts.size() != 0) {
                     vs = new ArrayList<>();
                     tss = new ArrayList<>();
+                    gss = new ArrayList<>();
                     for (VenueTimeslot vt : vts) {
                         Venue v = venueDB.queryRecordById(vt.getVenueId());
                         vs.add(v);
