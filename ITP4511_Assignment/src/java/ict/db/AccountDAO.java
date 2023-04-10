@@ -114,7 +114,7 @@ public class AccountDAO extends BaseDAO {
         ArrayList<Guest> gs = guestDB.queryRecordByUserId(id);
         if (gs.size() != 0) {
             for (Guest g : gs) {
-                isSuccess = venueDB.delRecord(g.getId());
+                isSuccess = guestDB.delRecord(g.getId());
             }
         }
         
