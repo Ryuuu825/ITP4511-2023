@@ -8,6 +8,7 @@
 <%@page import="ict.bean.view.VenueTimeslots"%>
 <%@page import="ict.bean.view.BookingDTO"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Arrays"%>
 <%@page import="ict.bean.Venue"%>
 <%@page import="ict.bean.Timeslot"%>
 <%@page import="ict.bean.Guest"%>
@@ -48,6 +49,7 @@
 
         ArrayList<ArrayList<Guest>> guests = bookingDTO.getGuestLists();
         ArrayList<VenueTimeslots> venueTimeslotses = bookingDTO.getVenueTimeslotses();
+        double[] subTotals = new double[venueTimeslotses.size()];
     %>
 
     <body style="background-color: #f2f2f2;">
@@ -116,6 +118,8 @@
                         </div>
                     </div>
                     <%
+                        //subTotal for each venueTimeslots
+                        double subTotal = 0;
                         for (int i = 1; i <= venueTimeslotses.size(); i++) {
                             Venue v = venueTimeslotses.get(i - 1).getVenue();
                             String venueName = v.getName();
@@ -181,13 +185,13 @@
                             <div class="d-flex flex-row justify-content-start mb-2 px-4 py-2">
                                 <%
                                     ArrayList<Timeslot> tss = dts.getTimeslots();
+                                    subTotal += tss.size() * v.getHourlyRate();
                                     for (Timeslot ts : tss) {
                                         String startTime = ts.getStartTime().toString();
                                         String endTime = ts.getEndTime().toString();
-                                        System.out.println(startTime);
                                 %>
                                 <label class="border px-2 me-2 border-2 border-primary text-primary rounded-pill">
-                                    <%=startTime %> - <%=endTime %>
+                                    <%=startTime%> - <%=endTime%>
                                 </label>
                                 <%
                                     }
@@ -196,7 +200,10 @@
                             <% } %>
                         </div>
                     </div>
-                    <% }%>
+                    <%
+                            subTotals[i-1] = subTotal;
+                        }
+                    %>
                 </div>
 
                 <div class="col-md-4 mb-4">
@@ -206,24 +213,24 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
+                                <%
+                                    for (int i = 0; i < venueTimeslotses.size(); i++) {
+                                        Venue venue = venueTimeslotses.get(i).getVenue();
+                                %>
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                                    Products
-                                    <span>$53.98</span>
+                                    <%=venue.getName()%>
+                                    <span>HK$ <%=subTotals[i] %></span>
                                 </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    Shipping
-                                    <span>Gratis</span>
-                                </li>
+                                <%
+                                    }
+                                %>
                                 <li
-                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                    class="border border-top list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                                     <div>
                                         <strong>Total amount</strong>
-                                        <strong>
-                                            <p class="mb-0">(including VAT)</p>
-                                        </strong>
                                     </div>
-                                    <span><strong>$53.98</strong></span>
+                                    <span class="fs-5"><strong>HK$ <%=Arrays.stream(subTotals).sum() %></strong></span>
                                 </li>
                             </ul>
 
