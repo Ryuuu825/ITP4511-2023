@@ -7,11 +7,7 @@ package ict.servlet;
 import ict.bean.view.BookingDTO;
 import ict.db.AccountDAO;
 import ict.db.BookingDAO;
-import ict.db.GuestDAO;
-import ict.db.TimeslotDAO;
 import ict.db.UserDAO;
-import ict.db.VenueDAO;
-import ict.db.VenueTimeslotDAO;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
@@ -54,53 +50,13 @@ public class BookingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        if ("login".equalsIgnoreCase(action)) {
-            String username = req.getParameter("username");
-            String password = req.getParameter("password");
-            String role = accountDB.isVaildAccount(username, password);
-            if (role != null) {
-                HttpSession session = req.getSession();
-                session.setAttribute("role", role);
-                resp.sendRedirect("index.jsp");
-            } else {
-                RequestDispatcher rd;
-                req.setAttribute("error", "Username or password incorrect!");
-                rd = getServletContext().getRequestDispatcher("/login.jsp");
-                rd.forward(req, resp);
-            }
-        } else if ("register".equalsIgnoreCase(action)) {
-            String username = req.getParameter("username");
-            String password = req.getParameter("password");
-            String firstName = req.getParameter("firstName");
-            String lastName = req.getParameter("lastName");
-            String email = req.getParameter("email");
-            String phone = req.getParameter("phone");
-            boolean isSuccess = false;
-            isSuccess = accountDB.addRecord(username, password, 1);
-            if (isSuccess) {
-                int accountId = accountDB.queryRecordByUsername(username).getId();
-                isSuccess = userDB.addRecord(accountId, firstName, lastName, email, phone);
-                if (isSuccess) {
-                    resp.sendRedirect("registerResult.jsp");
-                } else {
-                    accountDB.delRecord(accountId);
-                    RequestDispatcher rd;
-                    req.setAttribute("error", "User information invalid.\nCreate account unsuccessfully!");
-                    rd = getServletContext().getRequestDispatcher("/register.jsp");
-                    rd.forward(req, resp);
-                }
-            } else {
-                RequestDispatcher rd;
-                req.setAttribute("error", "Username had existed!");
-                rd = getServletContext().getRequestDispatcher("/register.jsp");
-                rd.forward(req, resp);
-            }
-        }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String bookingId = req.getParameter("bookingId");
+        String searchKeys = req.getParameter("search");
+        ArrayList<BookingDTO> bdtos = null;
         if (bookingId != null) {
             int bid = Integer.parseInt(bookingId);
             BookingDTO b = bookingDB.queryRecordToDTOByBookingId(bid);
@@ -110,13 +66,15 @@ public class BookingController extends HttpServlet {
                 rd = getServletContext().getRequestDispatcher("/viewBooking.jsp");
                 rd.forward(req, resp);
             }
+        } else if (searchKeys != null && !searchKeys.equals("")) {
+            bdtos = bookingDB.queryRecordToDTOByKeyword(searchKeys);
         } else {
-            ArrayList<BookingDTO> bdtos = bookingDB.queryRecordToDTO();
-            RequestDispatcher rd;
-            req.setAttribute("bookingDTOs", bdtos);
-            rd = getServletContext().getRequestDispatcher("/bookings.jsp");
-            rd.forward(req, resp);
+            bdtos = bookingDB.queryRecordToDTO();
         }
+        RequestDispatcher rd;
+        req.setAttribute("bookingDTOs", bdtos);
+        rd = getServletContext().getRequestDispatcher("/bookings.jsp");
+        rd.forward(req, resp);
     }
 
     @Override

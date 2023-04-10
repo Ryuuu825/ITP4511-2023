@@ -6,9 +6,7 @@ package ict.db;
 
 import ict.bean.Booking;
 import ict.bean.Guest;
-import ict.bean.Timeslot;
 import ict.bean.User;
-import ict.bean.Venue;
 import ict.bean.VenueTimeslot;
 import ict.bean.view.BookingDTO;
 import ict.bean.view.VenueTimeslots;
@@ -133,6 +131,28 @@ public class BookingDAO extends BaseDAO {
         }
         return bs;
     }
+    
+    public ArrayList<Booking> queryRecordByKeywords(String keywords) {
+        String sql = "SELECT booking.*, user.firstName, user.lastName FROM user "
+                + "JOIN booking ON booking.userId = user.id "
+                + "WHERE booking.id = ? or user.firstname LIKE ? or user.lastname LIKE ? ";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(keywords);
+        params.add("%"+keywords+"%");
+        params.add("%"+keywords+"%");
+        Booking b = null;
+        ArrayList<Booking> bs = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            b = new Booking();
+            b.setId((int) m.get("id"));
+            b.setUserId((int) m.get("userId"));
+            b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
+            b.setStatus((int) m.get("status"));
+            bs.add(b);
+        }
+        return bs;
+    }
 
     public ArrayList<Booking> queryRecord() {
         String sql = "SELECT * FROM booking";
@@ -154,15 +174,31 @@ public class BookingDAO extends BaseDAO {
     public ArrayList<BookingDTO> queryRecordToDTO() {
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
-        GuestDAO guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
-        VenueDAO venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
-        TimeslotDAO timeslotDB = new TimeslotDAO(dbUrl, dbUser, dbPassword);
         ArrayList<BookingDTO> bdtos = new ArrayList<>();
         ArrayList<Booking> bookings = queryRecord();
-        ArrayList<VenueTimeslot> vts = null;
         ArrayList<ArrayList<Guest>> gss = null;
-        ArrayList<Venue> vs = null;
-        ArrayList<Timeslot> tss = null;
+        BookingDTO bdto = null;
+        if (bookings.size() != 0) {
+            for (Booking b : bookings) {
+                bdto = new BookingDTO();
+                bdto.setBooking(b);
+                ArrayList<VenueTimeslots> vts1 = venueTimeslotDB.queryRocordToVenueTimeslotsList(b.getId());
+                bdto.setVenueTimeslotses(vts1);
+                bdto.setGuestLists(gss);
+                User u = userDB.queryRecordById(b.getUserId());
+                bdto.setMember(u);
+                bdtos.add(bdto);
+            }
+        }
+        return bdtos;
+    }
+    
+    public ArrayList<BookingDTO> queryRecordToDTOByKeyword(String keyword) {
+        UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
+        VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+        ArrayList<BookingDTO> bdtos = new ArrayList<>();
+        ArrayList<Booking> bookings = queryRecordByKeywords(keyword);
+        ArrayList<ArrayList<Guest>> gss = null;
         BookingDTO bdto = null;
         if (bookings.size() != 0) {
             for (Booking b : bookings) {
@@ -182,14 +218,8 @@ public class BookingDAO extends BaseDAO {
     public BookingDTO queryRecordToDTOByBookingId(int bookingId) {
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
-        GuestDAO guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
-        VenueDAO venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
-        TimeslotDAO timeslotDB = new TimeslotDAO(dbUrl, dbUser, dbPassword);
         Booking b = queryRecordById(bookingId);
-        ArrayList<VenueTimeslot> vts = null;
         ArrayList<ArrayList<Guest>> gss = null;
-        ArrayList<Venue> vs = null;
-        ArrayList<Timeslot> tss = null;
         BookingDTO bdto = null;
         if (b != null) {
             bdto = new BookingDTO();

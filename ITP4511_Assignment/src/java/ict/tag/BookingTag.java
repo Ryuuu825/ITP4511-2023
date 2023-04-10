@@ -44,7 +44,6 @@ public class BookingTag extends SimpleTagSupport {
             out.print("</thead>");
             out.print("<tbody>");
             for (BookingDTO booking : bookings) {
-                System.out.println("wei" + booking);
                 out.print("<tr>");
                 out.print("<th scope = \"row\">" + booking.getBooking().getId() + "</th>");
                 out.print("<td>" + booking.getMember().getFirstName()+" "+ booking.getMember().getLastName()+ "</td>");
