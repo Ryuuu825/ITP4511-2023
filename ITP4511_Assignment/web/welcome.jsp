@@ -46,7 +46,7 @@
                     </a>
                 </li>
                 <li class="nav-item border-l">
-                    <a class="text-white mx-3 hover:text-lg" href="VenueManagement.jsp">
+                    <a class="text-white mx-3 hover:text-lg" href="#">
                         <!-- Browse Spaces -->
                         Find venues
                     </a>

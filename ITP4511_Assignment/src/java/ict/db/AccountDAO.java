@@ -6,6 +6,7 @@ package ict.db;
 
 import ict.bean.Account;
 import ict.bean.Booking;
+import ict.bean.Guest;
 import ict.bean.User;
 import ict.bean.Venue;
 import java.util.ArrayList;
@@ -56,9 +57,9 @@ public class AccountDAO extends BaseDAO {
         Account acc = null;
         if (!ls.isEmpty()) {
             acc = new Account();
-            System.out.println(ls.get(0).get("role"));
             acc.setRole((int) ls.get(0).get("role"));
             role = acc.getRoleString();
+            System.out.println(role);
         }
         return role;
     }
@@ -107,15 +108,22 @@ public class AccountDAO extends BaseDAO {
         //delete releted user records
         BookingDAO bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
         VenueDAO venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
-        ArrayList<Booking> bs = bookingDB.queryByUserId(id);
-        ArrayList<Venue> vs = venueDB.queryByUserId(id);
-
+        GuestDAO guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
+        ArrayList<Booking> bs = bookingDB.queryRecordByUserId(id);
+        ArrayList<Venue> vs = venueDB.queryRecordByUserId(id);
+        ArrayList<Guest> gs = guestDB.queryRecordByUserId(id);
+        if (gs.size() != 0) {
+            for (Guest g : gs) {
+                isSuccess = venueDB.delRecord(g.getId());
+            }
+        }
+        
         if (bs.size() != 0) {
             for (Booking b : bs) {
                 isSuccess = bookingDB.delRecord(b.getId());
             }
         }
-        
+
         if (vs.size() != 0) {
             for (Venue v : vs) {
                 v.setUserId(0);

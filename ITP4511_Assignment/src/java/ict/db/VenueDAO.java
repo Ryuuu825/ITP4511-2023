@@ -40,7 +40,7 @@ public class VenueDAO extends BaseDAO {
 
     public boolean addRecord(String name, String location, String address, int capacity, int type, String img, String description, int userId, double hourlyRate) {
         boolean isSuccess = false;
-        if (queryByName(name) == null) {
+        if (queryRecordByName(name) == null) {
             ArrayList<Object> params = new ArrayList<>();
             params.add(name);
             params.add(location);
@@ -57,7 +57,7 @@ public class VenueDAO extends BaseDAO {
         return isSuccess;
     }
 
-    public Venue queryById(int id) {
+    public Venue queryRecordById(int id) {
         String sql = "SELECT * FROM venue WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
@@ -79,7 +79,7 @@ public class VenueDAO extends BaseDAO {
         return v;
     }
 
-    public Venue queryByName(String name) {
+    public Venue queryRecordByName(String name) {
         String sql = "SELECT * FROM venue WHERE name LIKE ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add("%" + name + "%");
@@ -101,7 +101,7 @@ public class VenueDAO extends BaseDAO {
         return v;
     }
 
-    public ArrayList<Venue> queryByUserId(int userId) {
+    public ArrayList<Venue> queryRecordByUserId(int userId) {
         String sql = "SELECT * FROM venue WHERE userId = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(userId);
@@ -124,7 +124,7 @@ public class VenueDAO extends BaseDAO {
         }
         return vs;
     }
-
+    
     public boolean delRecord(int id) {
         String sql = "DELETE FROM venue WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();

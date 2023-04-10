@@ -4,9 +4,22 @@
  */
 package ict.servlet;
 
+import ict.bean.Booking;
+import ict.bean.Guest;
+import ict.bean.Timeslot;
+import ict.bean.User;
+import ict.bean.Venue;
+import ict.bean.VenueTimeslot;
+import ict.bean.view.BookingDTO;
 import ict.db.AccountDAO;
+import ict.db.BookingDAO;
+import ict.db.GuestDAO;
+import ict.db.TimeslotDAO;
 import ict.db.UserDAO;
+import ict.db.VenueDAO;
+import ict.db.VenueTimeslotDAO;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,11 +32,16 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "loginController", urlPatterns = {"/handleLogin", "/handleRegister"})
-public class LoginController extends HttpServlet {
+@WebServlet(name = "BookingController", urlPatterns = {"/searchBookings", "/editBookingRecord"})
+public class BookingController extends HttpServlet {
 
     private AccountDAO accountDB;
     private UserDAO userDB;
+    private VenueTimeslotDAO venueTimeslotDB;
+    private BookingDAO bookingDB;
+    private GuestDAO guestDB;
+    private VenueDAO venueDB;
+    private TimeslotDAO timeslotDB;
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -53,13 +71,7 @@ public class LoginController extends HttpServlet {
             if (role != null) {
                 HttpSession session = req.getSession();
                 session.setAttribute("role", role);
-                if (role.equals("SeniorManager")) {
-                    resp.sendRedirect("admin/index.jsp");
-                }else if (role.equals("Staff")) {
-                    resp.sendRedirect("searchBookings");
-                }else {
-                    resp.sendRedirect("venueInfo.jsp");
-                }
+                resp.sendRedirect("index.jsp");
             } else {
                 RequestDispatcher rd;
                 req.setAttribute("error", "Username or password incorrect!");
@@ -98,7 +110,44 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        ArrayList<BookingDTO> bdtos = new ArrayList<>();
+        ArrayList<Booking> bookings = bookingDB.queryRecord();
+        ArrayList<VenueTimeslot> vts = null;
+        ArrayList<ArrayList<Guest>> gss = null;
+        ArrayList<Venue> vs = null;
+        ArrayList<Timeslot> tss = null;
+        BookingDTO bdto = null;
+        if (bookings.size() != 0) {
+            for (Booking b : bookings) {
+                bdto = new BookingDTO();
+                bdto.setBooking(b);
+                vts = venueTimeslotDB.queryRocordByBookingId(b.getId());
+
+                if (vts.size() != 0) {
+                    vs = new ArrayList<>();
+                    tss = new ArrayList<>();
+                    for (VenueTimeslot vt : vts) {
+                        Venue v = venueDB.queryRecordById(vt.getVenueId());
+                        vs.add(v);
+                        Timeslot ts = timeslotDB.queryRecordById(vt.getTimeslotId());
+                        tss.add(ts);
+                        ArrayList<Guest> gs = guestDB.queryRecordByBooking(b.getId(), vt.getVenueId());
+                        gss.add(gs);
+                    }
+                }
+
+                bdto.setVenues(vs);
+                bdto.setGuestLists(gss);
+                bdto.setTimeslots(tss);
+                User u = userDB.queryRecordById(b.getUserId());
+                bdto.setMember(u.getFirstName() + " " + u.getLastName());
+                bdtos.add(bdto);
+            }
+        }
+        RequestDispatcher rd;
+        req.setAttribute("BookingDTOs", bdtos);
+        rd = getServletContext().getRequestDispatcher("/bookingManagement.jsp");
+        rd.forward(req, resp);
     }
 
     @Override
@@ -109,6 +158,11 @@ public class LoginController extends HttpServlet {
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");
         accountDB = new AccountDAO(dbUrl, dbUser, dbPassword);
         userDB = new UserDAO(dbUrl, dbUser, dbPassword);
+        venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+        bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
+        guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
+        venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
+        timeslotDB = new TimeslotDAO(dbUrl, dbUser, dbPassword);
     }
 
 }

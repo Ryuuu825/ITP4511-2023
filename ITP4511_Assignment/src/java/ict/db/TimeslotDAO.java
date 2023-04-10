@@ -6,6 +6,7 @@ package ict.db;
 
 import ict.bean.Timeslot;
 import ict.bean.VenueTimeslot;
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Map;
@@ -53,8 +54,8 @@ public class TimeslotDAO extends BaseDAO {
             Map<String, Object> m = ls.get(0);
             ts = new Timeslot();
             ts.setId((int) m.get("id"));
-            ts.setStartTime((LocalTime) m.get("startTime"));
-            ts.setEndTime((LocalTime) m.get("endTime"));
+            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
         }
         return ts;
     }
@@ -70,8 +71,8 @@ public class TimeslotDAO extends BaseDAO {
         for (Map<String, Object> m : ls) {
             ts = new Timeslot();
             ts.setId((int) m.get("id"));
-            ts.setStartTime((LocalTime) m.get("startTime"));
-            ts.setEndTime((LocalTime) m.get("endTime"));
+            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
             tss.add(ts);
         }
         return tss;
@@ -88,8 +89,8 @@ public class TimeslotDAO extends BaseDAO {
         for (Map<String, Object> m : ls) {
             ts = new Timeslot();
             ts.setId((int) m.get("id"));
-            ts.setStartTime((LocalTime) m.get("startTime"));
-            ts.setEndTime((LocalTime) m.get("endTime"));
+            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
             tss.add(ts);
         }
         return tss;
@@ -108,8 +109,8 @@ public class TimeslotDAO extends BaseDAO {
         for (Map<String, Object> m : ls) {
             ts = new Timeslot();
             ts.setId((int) m.get("id"));
-            ts.setStartTime((LocalTime) m.get("startTime"));
-            ts.setEndTime((LocalTime) m.get("endTime"));
+            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
             tss.add(ts);
         }
         return tss;
@@ -124,8 +125,8 @@ public class TimeslotDAO extends BaseDAO {
         for (Map<String, Object> m : ls) {
             ts = new Timeslot();
             ts.setId((int) m.get("id"));
-            ts.setStartTime((LocalTime) m.get("startTime"));
-            ts.setEndTime((LocalTime) m.get("endTime"));
+            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
             tss.add(ts);
         }
         return tss;
@@ -169,4 +170,5 @@ public class TimeslotDAO extends BaseDAO {
         String sql = "DROP TABLE timeslot";
         dbUtil.executeByPreparedStatement(sql);
     }
+
 }

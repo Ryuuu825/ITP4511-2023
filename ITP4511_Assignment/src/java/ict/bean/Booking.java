@@ -13,21 +13,17 @@ import java.io.Serializable;
 public class Booking implements Serializable{
     private int id;
     private int userId;
-    private int venueId;
-    private int timeslotId;
-    private int approvalStatus;
-    private int attendanceStatus;
+    private int status;
+    private double amount;
 
     public Booking() {
     }
 
-    public Booking(int id, int userId, int venueId, int timeslotId, int approvalStatus, int attendanceStatus) {
+    public Booking(int id, int userId, int status, double amount) {
         this.id = id;
         this.userId = userId;
-        this.venueId = venueId;
-        this.timeslotId = timeslotId;
-        this.approvalStatus = approvalStatus;
-        this.attendanceStatus = attendanceStatus;
+        this.status = status;
+        this.amount = amount;
     }
 
     public int getId() {
@@ -46,41 +42,25 @@ public class Booking implements Serializable{
         this.userId = userId;
     }
 
-    public int getVenueId() {
-        return venueId;
+    public int getStatus() {
+        return status;
     }
 
-    public void setVenueId(int venueId) {
-        this.venueId = venueId;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public int getTimeslotId() {
-        return timeslotId;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setTimeslotId(int timeslotId) {
-        this.timeslotId = timeslotId;
-    }
-
-    public int getApprovalStatus() {
-        return approvalStatus;
-    }
-
-    public void setApprovalStatus(int approvalStatus) {
-        this.approvalStatus = approvalStatus;
-    }
-
-    public int getAttendanceStatus() {
-        return attendanceStatus;
-    }
-
-    public void setAttendanceStatus(int attendanceStatus) {
-        this.attendanceStatus = attendanceStatus;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
     @Override
     public String toString() {
-        return "Booking{" + "id=" + id + ", userId=" + userId + ", venueId=" + venueId + ", timeslotId=" + timeslotId + ", approvalStatus=" + approvalStatus + ", attendanceStatus=" + attendanceStatus + '}';
+        return "Booking{" + "id=" + id + ", userId=" + userId + ", status=" + status + ", amount=" + amount + '}';
     }
-    
+
 }
