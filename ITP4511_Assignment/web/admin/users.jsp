@@ -65,6 +65,10 @@
                 transition: width 1s ease-in-out;
             }
 
+            .btn-success {
+                background-color: #14a44d !important;
+            }
+
         </style>
 
         <script>
@@ -93,7 +97,7 @@
                         
                     </div>
                     <div class="modal-body">
-                        <p class="text-xl font-bold">Are you sure you want to delete this user?</p>
+                        <p class="">Are you sure you want to delete this user?</p>
 
                     </div>
                     <div class="modal-footer flex flex-row items-center">
@@ -146,7 +150,7 @@
 
 
             <div class="flex flex-row h-full">
-                <div class="usertable border w-full bg-white p-3 "
+                <div class="usertable border w-full bg-white p-3 card"
                     style="<% if (ua.getAccount() == null) { %> width: 100%  <%  } else { %> margin-right: 2rem;  <% } %> ">
                     <div class="search">
                         <form class="searchbar flex flex-row items-center" action="#">
@@ -224,45 +228,36 @@
     
                 <% if (ua.getAccount() != null) { %>
 
-                <div class="h-full border bg-white box overflow-hidden relative" >
-                    <div class="title text-center text-2xl font-semibold mt-4 pb-3 border-b mb-2 mx-2">
-                        User - 
-                        <span class="font-extrabold text-3xl text-black">
-                            <%= ua.getUser().getFirstName() %> <%= ua.getUser().getLastName() %>
-                        </span>
+                <div class="h-full box overflow-hidden relative card" >
+                    <div class="card-header text-xl mb-0" style="color:#4f4f4f">
+                        <%= ua.getUser().getFirstName() %> <%= ua.getUser().getLastName() %>
                     </div>
 
-                    <div class="userform px-3 py-2 h-max">
-                        <form action="<%= request.getContextPath() %>/api/admin/users" method="POST" id="updateForm">
+                    <div class="userform px-3 h-max card-body">
+                        <form action="<%= request.getContextPath() %>/api/admin/users" method="post" id="updateForm">
+
                             <input type="hidden" name="id" value="<%= ua.getAccount().getId() %>" />
                             <input type="hidden" name="action" value="update" />
 
-                            <div class="flex flex-row items-center">
-                                <label for="id" class="ml-1 mr-3">
-                                    ID
-                                </label>
-                                <input type="text" name="id" id="id" class="form-control w-[75%] my-2 ml-auto" value="<%= ua.getAccount().getId() %>" disabled />
+                            
+                            <div class="form-outline mb-4">
+                                <input type="text" name="username" id="username" required aria-required="true" class=" active form-control border" value="<%= ua.getAccount().getUsername() %>" />
+                                <label class="form-label" for="username">Username</label>
+                            </div>
+                                                        
+                            <div class="form-outline mb-4">
+                                <input type="email" name="email" id="email" required aria-required="true" class=" active form-control border" value="<%= ua.getUser().getEmail() %>" />
+                                <label class="form-label" for="email">Email</label>
                             </div>
 
-                            <div class="flex flex-row items-center">
-                                <label for="username" class="ml-1 mr-3">
-                                    Username
-                                </label>
-                                <input type="text" name="username" id="username" class="form-control w-[75%] my-2 ml-auto" value="<%= ua.getAccount().getUsername() %>" />
-                            </div>
+                            <div class="form-outline mb-4">
+                                <input type="password" name="password" id="password-input" required value=<%= ua.getAccount().getPassword() %>
+                                    aria-required="true" class="form-control border active" />
+                                <label class="form-label" for="password-input">Password</label>
+                            </div>  
 
-                            <div class="flex flex-row items-center">
-                                <label for="email" class="ml-1 mr-3">
-                                    Email
-                                </label>
-                                <input type="text" name="email" id="email" class="form-control w-[75%] my-2 ml-auto" value="<%= ua.getUser().getEmail() %>" />
-                            </div>
-
-                            <div class="flex flex-row items-center">
-                                <label for="role" class="ml-1 mr-3">
-                                    Role
-                                </label>
-                                <select name="role" id="role" class="form-control w-[75%] my-2 ml-auto">
+                            <div class="form-outline mb-3">
+                                <select name="role" id="role" class="form-control border active">
 
                                     <% 
                                         for (ict.bean.Account.roleEnum role : ict.bean.Account.roleEnum.values()) {
@@ -272,21 +267,16 @@
                                         </option>
                                     <% } %>
                                 </select>
+                                <label class="form-label" for="role">Role</label>
                             </div>
 
-                            <div class="flex flex-row items-center">
-                                <label for="password" class="ml-1 mr-3">
-                                    Password
-                                </label>
-                                <input type="password" name="password" id="password" class="form-control w-[75%] my-2 ml-auto" value=<%= ua.getAccount().getPassword() %> />
-                            </div>
-
+                         
                             <div class="flex flex-row absolute bottom-8 w-full">
                                 <a class="btn btn-primary ml-auto mr-2 " type="button" href="<%= request.getContextPath() %>/admin/users.jsp?id=<%= ua.getAccount().getId() %>">
                                     Reset
                                 </a>
                                 
-                                <button class="btn btn-primary mr-12" type="submit">
+                                <button class="btn btn-success mr-12 w-75" type="submit">
                                     Save 
                                 </button>
                             </div>
