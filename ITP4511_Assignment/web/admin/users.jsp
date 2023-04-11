@@ -148,14 +148,13 @@
         </ul>
     </header>
 
-        <div class="content p-10 flex flex-col h-[90%] mb-3" style="background-color: #f3f3f3">
+        <div class="content p-10 flex flex-col  mb-3 h-full" style="background-color: #f3f3f3">
             <div class="title uppercase text-xl font-bold my-3">Users</div>
             <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 
             <ict:result />
 
-
-            <div class="flex flex-row h-full">
+            <div class="flex flex-row h-[75%]">
                 <div class="usertable border w-full bg-white p-3 card"
                     style="<% if (ua.getAccount() == null) { %> width: 100%  <%  } else { %> margin-right: 2rem;  <% } %> ">
                     <div class="search">
