@@ -164,8 +164,12 @@ public class UsersAccountController extends HttpServlet{
             String maskPassword = originalPassword.replaceAll(".", "*");
 
             // if the password sent from frond-end is masked, then use the original password
-            if (password.equals(maskPassword)) {
+            if (password == null || password.equals(maskPassword)) {    
                 password = originalPassword;
+            }
+
+            if (role == null) {
+                role = Integer.toString(userAccount.getAccount().getRole());
             }
 
             accountDB.editRecord(new Account(
