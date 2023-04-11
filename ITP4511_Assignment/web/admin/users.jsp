@@ -80,6 +80,8 @@
             //     document.documentElement.style.setProperty('--mutate-width-2', '65%');
             // }, 1);
 
+            let formDisabled = true;
+
 
         </script>
     </head>
@@ -142,7 +144,7 @@
         </ul>
     </header>
 
-        <div class="content p-12 flex flex-col h-[90%] mb-3" style="background-color: #f3f3f3">
+        <div class="content p-10 flex flex-col h-[90%] mb-3" style="background-color: #f3f3f3">
             <div class="title uppercase text-xl font-bold my-3">Users</div>
             <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 
@@ -197,22 +199,20 @@
                                         Account account = userAccount.getAccount();
                                 %>
     
-                                <tr>
+                                <tr class="items-center justify-center ">
                                     <th><%= account.getId() %></th>
                                     <td><%= account.getUsername() %></td>
                                     <td><%= user.getEmail() %></td>
                                     <td><%= account.getRoleString() %></td>
                                     <td>
-                                        <a href="users.jsp?id=<%= user.getId() %><% if (request.getParameter("search") != null) { %>&search=<%=request.getParameter("search")%><% } %>" class="mx-3 border btn btn-primary px-3 py-1 text-white">Edit</a>
+                                        <a href="users.jsp?id=<%= user.getId() %><% if (request.getParameter("search") != null) { %>&search=<%=request.getParameter("search")%><% } %>" class="btn btn-primary btn-rounded btn-sm rounded-pill">VIEW</a>
                                     </td>
                                     <td>
                                         <form action="<%= request.getContextPath() %>/api/admin/users" method="POST" id="deleteForm">
                                             <input type="hidden" name="id" value="<%= account.getId() %>" />
                                             <input type="hidden" name="action" value="delete" />
-                                            
                                         </form>
-
-                                        <button class="mx-3 border btn btn-danger px-3 py-1 text-white" onclick="$('#errorModal').modal('show')">Delete</button>
+                                        <button class="btn btn-danger btn-rounded btn-sm rounded-pill" onclick="$('#errorModal').modal('show')">Delete</button>
                                     </td>
                                 </tr>
     
@@ -229,8 +229,26 @@
                 <% if (ua.getAccount() != null) { %>
 
                 <div class="h-full box overflow-hidden relative card" >
-                    <div class="card-header text-xl mb-0" style="color:#4f4f4f">
-                        <%= ua.getUser().getFirstName() %> <%= ua.getUser().getLastName() %>
+                    <div class="card-header text-xl mb-0 flex items-center justify-center relative py-[1rem]" style="color:#4f4f4f">
+                        <div class="absolute left-3 btn-secondary btn text-dark"
+                            onclick="(function() {
+                                // enable all the inputs
+                                $('.userform input').prop('disabled', !formDisabled);
+                                $('.userform select').prop('disabled', !formDisabled);
+                                $('.userform button').prop('disabled', !formDisabled);
+                                formDisabled = !formDisabled;
+                            })()
+                            ">
+                            Edit 
+                        </div>
+                        <div>
+                            <%= ua.getUser().getFirstName() %> <%= ua.getUser().getLastName() %>
+                        </div>
+                        <a class="absolute right-3 text-dark" href="<%=request.getContextPath()%>/admin/users.jsp">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </a>
                     </div>
 
                     <div class="userform px-3 h-max card-body">
@@ -239,25 +257,48 @@
                             <input type="hidden" name="id" value="<%= ua.getAccount().getId() %>" />
                             <input type="hidden" name="action" value="update" />
 
+                            <div class="row mb-4">
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <input type="text" name="fname" id="fname" required aria-required="true" class=" active form-control border" value="<%= ua.getUser().getFirstName() %>" disabled />
+                                        <label class="form-label" for="fname">First Name</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-outline">
+                                        <input type="text" name="lname" id="lname" required aria-required="true" class=" active form-control border" value="<%= ua.getUser().getLastName() %>" disabled />
+                                        <label class="form-label" for="lname">Last Name</label>
+                                    </div>
+                                </div>
+                              </div>
+                                                        
+                            <div class="form-outline mb-4">
+                                <input type="text" name="phone" id="phone" required aria-required="true" class=" active form-control border" value="<%= ua.getUser().getPhone() %>" disabled />
+                                <label class="form-label" for="phone">Phone</label>
+                            </div>
+
+                            <div class="border-bottom mb-4">
+
+                            </div>
                             
                             <div class="form-outline mb-4">
-                                <input type="text" name="username" id="username" required aria-required="true" class=" active form-control border" value="<%= ua.getAccount().getUsername() %>" />
+                                <input type="text" name="username" id="username" required aria-required="true" class=" active form-control border" value="<%= ua.getAccount().getUsername() %>"  disabled />
                                 <label class="form-label" for="username">Username</label>
                             </div>
                                                         
                             <div class="form-outline mb-4">
-                                <input type="email" name="email" id="email" required aria-required="true" class=" active form-control border" value="<%= ua.getUser().getEmail() %>" />
+                                <input type="email" name="email" id="email" required aria-required="true" class=" active form-control border" value="<%= ua.getUser().getEmail() %>"  disabled />
                                 <label class="form-label" for="email">Email</label>
                             </div>
 
                             <div class="form-outline mb-4">
                                 <input type="password" name="password" id="password-input" required value=<%= ua.getAccount().getPassword() %>
-                                    aria-required="true" class="form-control border active" />
+                                    aria-required="true" class="form-control border active"  disabled />
                                 <label class="form-label" for="password-input">Password</label>
                             </div>  
 
                             <div class="form-outline mb-3">
-                                <select name="role" id="role" class="form-control border active">
+                                <select name="role" id="role" class="form-control border active" disabled >
 
                                     <% 
                                         for (ict.bean.Account.roleEnum role : ict.bean.Account.roleEnum.values()) {
@@ -276,7 +317,7 @@
                                     Reset
                                 </a>
                                 
-                                <button class="btn btn-success mr-12 w-75" type="submit">
+                                <button class="btn btn-success mr-12 w-75" type="submit" disabled>
                                     Save 
                                 </button>
                             </div>
