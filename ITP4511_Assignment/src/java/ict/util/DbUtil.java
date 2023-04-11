@@ -73,7 +73,7 @@ public class DbUtil {
                 ResultSetMetaData metaData = rs.getMetaData();
                 int rowCount = metaData.getColumnCount();
                 for (int i = 0; i < rowCount; i++) {
-                    map.put(metaData.getColumnName(i + 1), rs.getObject(i + 1));
+                    map.put(metaData.getColumnLabel(i + 1), rs.getObject(i + 1));
                 }
                 ls.add(map);
             }

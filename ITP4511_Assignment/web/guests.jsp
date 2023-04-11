@@ -30,9 +30,6 @@
             line-height: 1.75rem;
         }
 
-        td {
-            vertical-align: middle;
-        }
     </style>
     <script>
         $(document).ready(function () {
@@ -49,14 +46,14 @@
 
             $("#search-button").click(function () {
                 var search = $("#search-input").val();
-                window.location.href = "viewGuests?bookingId=" + bookingId + "&search=" + search;
+                window.location.href = "viewGuests?action=search&bookingId=" + bookingId + "&search=" + search;
             });
 
             //key press enter
             $("#search-input").keypress(function (e) {
                 if (e.which == 13) {
                     var search = $("#search-input").val();
-                    window.location.href = "viewGuests?bookingId=" + bookingId + "&search=" + search;
+                    window.location.href = "viewGuests?search&bookingId=" + bookingId + "&search=" + search;
                 }
             });
 
@@ -88,7 +85,7 @@
             </div>
             <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
                 <li class="nav-item nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="#">
+                    <a class="text-white mx-3 text-decoration-none" href="viewVenue">
                         <!-- Browse Spaces -->
                         Venue
                     </a>
@@ -103,7 +100,7 @@
                     <a class="text-white mx-3 text-decoration-none" href="searchBookings"> Booking </a>
                 </li>
                 <li class="nav-item border bg-light rounded-1 py-1">
-                    <a class="mx-3 text-dark text-decoration-none" href="/logout"> Sign Out </a>
+                    <a class="mx-3 text-dark text-decoration-none" href="logout"> Sign Out </a>
                 </li>
             </ul>
         </header>
@@ -115,7 +112,7 @@
             <ict:result />
             <div class="bg-white p-3 border card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Guests</h5>
+                    <h5 class="m-2">Guests</h5>
                     <div class="input-group" style="width: 30%;">
                         <div class="form-outline">
                             <input id="search-input" type="search" class="form-control border rounded-start" />
@@ -127,7 +124,7 @@
                     </div>
                 </div>
                 <div class="table-responsive text-nowrap mt-3 fs-6">
-                    <ict:guestTable guests="<%=guests.getGuests()%>" />
+                    <ict:guestTable guests="<%=guests%>" />
                 </div>
             </div>
         </section>

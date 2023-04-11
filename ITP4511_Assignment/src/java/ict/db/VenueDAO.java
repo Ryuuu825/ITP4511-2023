@@ -4,8 +4,10 @@
  */
 package ict.db;
 
+import ict.bean.User;
 import ict.bean.Venue;
 import ict.bean.VenueTimeslot;
+import ict.bean.view.VenueDTO;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -79,6 +81,94 @@ public class VenueDAO extends BaseDAO {
         return v;
     }
 
+    public ArrayList<VenueDTO> queryRecordToDTO() {
+        String sql = "SELECT v.*, v.id as venueId, u.* "
+                + "FROM Venue v "
+                + "JOIN User u ON v.userId = u.id";
+        ArrayList<Object> params = new ArrayList<>();
+        Venue v = null;
+        User u = null;
+        VenueDTO vdto = null;
+        ArrayList<VenueDTO> vdtos = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        if (ls.size() != 0) {
+            for (Map<String, Object> m : ls) {
+                v = new Venue();
+                u = new User();
+                vdto = new VenueDTO();
+                v.setId((int) m.get("venueId"));
+                v.setName((String) m.get("name"));
+                v.setLocation((String) m.get("location"));
+                v.setAddress((String) m.get("address"));
+                v.setCapacity((int) m.get("capacity"));
+                v.setType((int) m.get("type"));
+                v.setImg((String) m.get("img"));
+                v.setDescription((String) m.get("description"));
+                v.setUserId((int) m.get("userId"));
+                v.setHourlyRate((double) m.get("hourlyRate"));
+                u.setId((int) m.get("userId"));
+                u.setAccountId((int) m.get("accountId"));
+                u.setEmail((String) m.get("email"));
+                u.setFirstName((String) m.get("firstName"));
+                u.setLastName((String) m.get("lastName"));
+                u.setPhone((String) m.get("phone"));
+                vdto.setUser(u);
+                vdto.setVenue(v);
+                vdtos.add(vdto);
+            }
+        }
+        return vdtos;
+    }
+
+    public ArrayList<VenueDTO> queryRecordToDTOByKeyword(String keyword) {
+        String sql = "SELECT v.id as venueId, v.*, u.*, u.id as userId "
+                + "FROM Venue v "
+                + "JOIN User u ON v.userId = u.id "
+                + "Where v.id = ? "
+                + "or v.location LIKE ? "
+                + "or v.name LIKE ? "
+                + "or u.firstName LIKE ? "
+                + "or u.lastName LIKE ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(keyword);
+        params.add("%" + keyword + "%");
+        params.add("%" + keyword + "%");
+        params.add("%" + keyword + "%");
+        params.add("%" + keyword + "%");
+        Venue v = null;
+        User u = null;
+        VenueDTO vdto = null;
+        ArrayList<VenueDTO> vdtos = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        if (ls.size() != 0) {
+            for (Map<String, Object> m : ls) {
+                v = new Venue();
+                u = new User();
+                vdto = new VenueDTO();
+                v.setId((int) m.get("venueId"));
+                v.setName((String) m.get("name"));
+                v.setLocation((String) m.get("location"));
+                v.setAddress((String) m.get("address"));
+                v.setCapacity((int) m.get("capacity"));
+                v.setType((int) m.get("type"));
+                v.setImg((String) m.get("img"));
+                v.setDescription((String) m.get("description"));
+                v.setUserId((int) m.get("userId"));
+                v.setHourlyRate((double) m.get("hourlyRate"));
+                u.setId((int) m.get("userId"));
+                u.setAccountId((int) m.get("accountId"));
+                u.setEmail((String) m.get("email"));
+                u.setFirstName((String) m.get("firstName"));
+                u.setLastName((String) m.get("lastName"));
+                u.setPhone((String) m.get("phone"));
+                vdto.setUser(u);
+                vdto.setVenue(v);
+                vdtos.add(vdto);
+            }
+        }
+        return vdtos;
+    }
+
     public Venue queryRecordByName(String name) {
         String sql = "SELECT * FROM venue WHERE name LIKE ?";
         ArrayList<Object> params = new ArrayList<>();
@@ -124,7 +214,7 @@ public class VenueDAO extends BaseDAO {
         }
         return vs;
     }
-    
+
     public boolean delRecord(int id) {
         String sql = "DELETE FROM venue WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();

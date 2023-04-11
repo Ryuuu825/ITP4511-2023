@@ -25,10 +25,19 @@ public class GuestListGuestDAO extends BaseDAO{
         return isSuccess;
     }
     
-    public boolean delRecordByGuestId(int id) {
+    public boolean delRecordByGuestId(int guestId) {
         String sql = "DELETE FROM guestlist_guest WHERE guestId=?";
         ArrayList<Object> params = new ArrayList<>();
-        params.add(id);
+        params.add(guestId);
+        boolean isSuccess = false;
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
+    
+    public boolean delRecordByGuestlistId(int guestlsitId) {
+        String sql = "DELETE FROM guestlist_guest WHERE guestlistId=?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(guestlsitId);
         boolean isSuccess = false;
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;

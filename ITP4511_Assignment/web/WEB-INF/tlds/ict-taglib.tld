@@ -39,12 +39,26 @@
         <tag-class>ict.tag.GuestTag</tag-class>
         <body-content>empty</body-content>
         <description>
-            A table showing all the guests records
+            A table showing all the guest records
         </description>
         <attribute>
             <name>guests</name>
             <required>true</required>
-            <type>java.util.ArrayList</type>
+            <type>ict.bean.GuestList</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>venueTable</name>
+        <tag-class>ict.tag.VenueTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            A table showing all the venue records
+        </description>
+        <attribute>
+            <name>venues</name>
+            <required>true</required>
+            <type>ict.bean.view.VenueDTO</type>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>

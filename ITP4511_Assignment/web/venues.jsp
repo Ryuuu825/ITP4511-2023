@@ -4,7 +4,7 @@
    Author     : jyuba
 --%>
 
-<%@page import="ict.bean.view.BookingDTO"%>
+<%@page import="ict.bean.view.VenueDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib.tld" prefix="ict" %>
@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookings</title>
+    <title>Venues</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
@@ -67,7 +67,7 @@
     });
 </script>
 <%
-        ArrayList<BookingDTO> bookings = (ArrayList<BookingDTO>) request.getAttribute("bookingDTOs");
+        ArrayList<VenueDTO> venues = (ArrayList<VenueDTO>) request.getAttribute("venueDTOs");
     %>
 
 <body style="background-color: #f2f2f2;">
@@ -81,6 +81,7 @@
         <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
             <li class="nav-item nav-hover">
                 <a class="text-white mx-3 text-decoration-none" href="viewVenue">
+                    <!-- Browse Spaces -->
                     Venue
                 </a>
             </li>
@@ -102,7 +103,7 @@
         <ict:result />
         <div class="card bg-white p-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="m-2">Bookings</h5>
+                <h5 class="m-2">Venues</h5>
                 <div class="input-group" style="width: 30%;">
                     <div class="form-outline">
                         <input id="search-input" type="search" class="form-control border rounded-start" />
@@ -115,7 +116,7 @@
             </div>
 
             <div class="table-responsive text-nowrap mt-3 fs-6">
-                <ict:bookingTable bookings="<%=bookings%>" />
+                <ict:venueTable venues="<%=venues %>" />
             </div>
         </div>
     </section>

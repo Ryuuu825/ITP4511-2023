@@ -5,6 +5,7 @@
 package ict.tag;
 
 import ict.bean.Guest;
+import ict.bean.GuestList;
 import ict.bean.view.BookingDTO;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,13 +20,13 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class GuestTag extends SimpleTagSupport {
 
-    private ArrayList<Guest> guests;
+    private GuestList guests;
 
-    public ArrayList<Guest> getGuests() {
+    public GuestList getGuests() {
         return guests;
     }
 
-    public void setGuests(ArrayList<Guest> guests) {
+    public void setGuests(GuestList guests) {
         this.guests = guests;
     }
 
@@ -41,13 +42,13 @@ public class GuestTag extends SimpleTagSupport {
             out.print("</tr>");
             out.print("</thead>");
             out.print("<tbody>");
-            for (int i=1;i<=guests.size();i++) {
-                Guest guest = guests.get(i-1);
-                out.print("<tr>");
+            for (int i=1;i<=guests.getGuests().size();i++) {
+                Guest guest = guests.getGuests().get(i-1);
+                out.print("<tr class=\"align-middle\">");
                 out.print("<th scope = \"row\">" + i + "</th>");
                 out.print("<td>" + guest.getName()+ "</td>");
                 out.print("<td>" + guest.getEmail()+ "</td>");
-                out.print("<td><a class=\"btn btn-danger btn-rounded btn-sm\" role=\"button\" href=\"delGuest?guestId=" + guest.getId() + "\">Delete</a></td>");
+                out.print("<td><a class=\"btn btn-danger btn-rounded btn-sm\" role=\"button\" href=\"delGuest?action=delete&bookingId="+guests.getBookingId()+"&guestId=" + guest.getId() + "\">Delete</a></td>");
                 out.print("</tr>");
             }
             out.print("</tbody></table>");

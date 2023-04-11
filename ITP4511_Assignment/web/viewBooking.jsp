@@ -63,7 +63,7 @@
             </div>
             <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
                 <li class="nav-item nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="#">
+                    <a class="text-white mx-3 text-decoration-none" href="viewVenue">
                         <!-- Browse Spaces -->
                         Venue
                     </a>
@@ -78,7 +78,7 @@
                     <a class="text-white mx-3 text-decoration-none" href="searchBookings"> Booking </a>
                 </li>
                 <li class="nav-item border bg-light rounded-1 py-1">
-                    <a class="mx-3 text-dark text-decoration-none" href="/logout"> Sign Out </a>
+                    <a class="mx-3 text-dark text-decoration-none" href="logout"> Sign Out </a>
                 </li>
             </ul>
         </header>
@@ -210,11 +210,11 @@
                     <div class="card mb-4">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Guest List</h5>
-                            <a type="button" href="viewGuests?bookingId=<%=bookingId%>" class="btn btn-link fs-7 rounded-pill">
+                            <a type="button" href="viewGuests?action=search&bookingId=<%=bookingId%>" class="btn btn-link fs-7 rounded-pill">
                                 View All Guests
                             </a>
                         </div>
-                        <div class="card-body" style="max-height: 60vh; overflow-y: scroll">
+                        <div class="card-body" style="max-height: 60vh; overflow-y: auto">
                             <div>
                                 <ul class="list-group list-group-light">
                                     <%
