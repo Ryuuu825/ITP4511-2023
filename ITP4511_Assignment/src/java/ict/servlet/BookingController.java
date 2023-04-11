@@ -65,6 +65,7 @@ public class BookingController extends HttpServlet {
                 req.setAttribute("bookingDTO", b);
                 rd = getServletContext().getRequestDispatcher("/viewBooking.jsp");
                 rd.forward(req, resp);
+                return;
             }
         } else if (searchKeys != null && !searchKeys.equals("")) {
             bdtos = bookingDB.queryRecordToDTOByKeyword(searchKeys);

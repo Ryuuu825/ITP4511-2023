@@ -17,7 +17,7 @@ public class BookingDTO {
 
     private Booking booking;
     private ArrayList<VenueTimeslots> venueTimeslotses;
-    private ArrayList<ArrayList<Guest>> guestLists;
+    private ArrayList<Guest> guestlist;
     private User member;
 
     public BookingDTO() {
@@ -38,15 +38,15 @@ public class BookingDTO {
     public void setVenueTimeslotses(ArrayList<VenueTimeslots> venueTimeslotses) {
         this.venueTimeslotses = venueTimeslotses;
     }
+
+    public ArrayList<Guest> getGuestlist() {
+        return guestlist;
+    }
+
+    public void setGuestlist(ArrayList<Guest> guestlist) {
+        this.guestlist = guestlist;
+    }
     
-    public ArrayList<ArrayList<Guest>> getGuestLists() {
-        return guestLists;
-    }
-
-    public void setGuestLists(ArrayList<ArrayList<Guest>> guestLists) {
-        this.guestLists = guestLists;
-    }
-
     public User getMember() {
         return member;
     }
@@ -54,4 +54,10 @@ public class BookingDTO {
     public void setMember(User member) {
         this.member = member;
     }
+
+    @Override
+    public String toString() {
+        return "BookingDTO{" + "booking=" + booking + ", venueTimeslotses=" + venueTimeslotses + ", guestlist=" + guestlist + ", member=" + member + '}';
+    }
+    
 }
