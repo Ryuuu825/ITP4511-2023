@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-04-11 09:37:47
+-- 產生時間： 2023-04-11 09:43:10
 -- 伺服器版本： 10.4.24-MariaDB
 -- PHP 版本： 8.1.6
 
@@ -2180,7 +2180,7 @@ ALTER TABLE `guestlist`
 -- 資料表索引 `guestlist_guest`
 --
 ALTER TABLE `guestlist_guest`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`id`,`guestlistId`,`guestId`),
   ADD KEY `guestlistId` (`guestlistId`),
   ADD KEY `guestId` (`guestId`);
 

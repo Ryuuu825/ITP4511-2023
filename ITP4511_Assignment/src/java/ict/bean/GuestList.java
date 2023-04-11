@@ -12,10 +12,9 @@ import java.util.ArrayList;
  *
  * @author jyuba
  */
-public class VenueGuestList implements Serializable{
+public class GuestList implements Serializable{
     private int id;
-    private int venueId;
-    private LocalDate date;
+    private LocalDate createDate;
     private ArrayList<Guest> guests;
 
     public int getId() {

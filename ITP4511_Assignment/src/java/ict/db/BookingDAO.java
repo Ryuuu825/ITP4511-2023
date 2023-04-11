@@ -87,7 +87,7 @@ public class BookingDAO extends BaseDAO {
 
         //delete releted guest records
         GuestDAO gDB = new GuestDAO(dbUrl, dbUser, dbPassword);
-        ArrayList<Guest> gs = gDB.queryRecordByBookingId(id);
+        ArrayList<GuestList> gs = gDB.queryRecordByBookingId(id);
         if (gs.size() != 0) {
             for (Guest ts : gs) {
                 isSuccess = gDB.delRecord(ts.getId());
