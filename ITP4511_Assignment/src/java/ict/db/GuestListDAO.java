@@ -1,5 +1,7 @@
 package ict.db;
 
+import ict.bean.Guest;
+import ict.bean.GuestList;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -13,9 +15,9 @@ import ict.bean.view.VenueTimeslots;
 import java.sql.Date;
 import java.sql.Time;
 
-public class VenueGuestListDAO extends BaseDAO {
+public class GuestListDAO extends BaseDAO {
 
-    public VenueGuestListDAO(String dbUrl, String dbUser, String dbPassword) {
+    public GuestListDAO(String dbUrl, String dbUser, String dbPassword) {
         super(dbUrl, dbUser, dbPassword);
     }
 
@@ -77,19 +79,17 @@ public class VenueGuestListDAO extends BaseDAO {
         return isSuccess;
     }
 
-    public boolean editRecord(VenueTimeslot vt) {
+    public boolean editRecord(GuestList gl) {
         boolean isSuccess = false;
         ArrayList<Object> params = new ArrayList<>();
         String sql;
-        if (vt.getBookingId() != 0) {
-            sql = "UPDATE venue_timeslot SET bookingId = ?, date = ? WHERE venueId = ? and timeslotId = ?";
-            params.add(vt.getBookingId());
+        if (gl.getBookingId() != 0) {
+            sql = "UPDATE guestlist SET bookingId = ? WHERE id = ?";
+            params.add(gl.getBookingId());
         } else {
-            sql = "UPDATE venue_timeslot SET bookingId = null, date = ? WHERE venueId = ? and timeslotId = ?";
+            sql = "UPDATE guestlist SET bookingId = null WHERE id = ?";
         }
-        params.add(vt.getDate());
-        params.add(vt.getVenueId());
-        params.add(vt.getTimeslotId());
+        params.add(gl.getId());
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
@@ -175,21 +175,35 @@ public class VenueGuestListDAO extends BaseDAO {
         return vts;
     }
 
-    public ArrayList<VenueTimeslot> queryRocordByBookingId(int bookingId) {
-        String sql = "SELECT * FROM venue_timeslot WHERE bookingId = ?";
+    public GuestList queryRocordByBookingId(int bookingId) {
+        String sql = "SELECT * FROM guestlist WHERE bookingId = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(bookingId);
-        ArrayList<VenueTimeslot> vts = new ArrayList<>();
+        GuestList gl = null;
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        if (ls.size() != 0) {
+            Map<String, Object> m = ls.get(0);
+            gl = new GuestList();
+            gl.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            gl.setId((int) m.get("id"));
+            gl.setBookingId((int) m.get("bookingId"));
+            gl.setGuests(queryGuestsByGuestListId(gl.getId()));
+        }
+        return gl;
+    }
+    
+    public ArrayList<Guest> queryGuestsByGuestListId(int guestlistId) {
+        String sql = "SELECT * FROM guestlist_guest WHERE guestlistId = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(guestlistId);
+        ArrayList<Guest> guests = new ArrayList<>();
+        GuestDAO gdb = new GuestDAO(dbUrl, dbUser, dbPassword);
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         for (Map<String, Object> m : ls) {
-            VenueTimeslot vt = new VenueTimeslot();
-            vt.setBookingId((int) m.get("bookingId"));
-            vt.setVenueId((int) m.get("venueId"));
-            vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate(((Date) m.get("date")).toLocalDate());
-            vts.add(vt);
+            int gid = (int) m.get("guestId");
+            guests.add(gdb.queryRecordById(gid));
         }
-        return vts;
+        return guests;
     }
 
     public ArrayList<VenueTimeslot> queryRocord() {

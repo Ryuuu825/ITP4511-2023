@@ -16,6 +16,7 @@ public class GuestList implements Serializable{
     private int id;
     private LocalDate createDate;
     private ArrayList<Guest> guests;
+    private int bookingId;
 
     public int getId() {
         return id;
@@ -25,28 +26,28 @@ public class GuestList implements Serializable{
         this.id = id;
     }
 
-    public int getVenueId() {
-        return venueId;
+    public LocalDate getCreateDate() {
+        return createDate;
     }
 
-    public void setVenueId(int venueId) {
-        this.venueId = venueId;
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
     }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
+    
     public ArrayList<Guest> getGuests() {
         return guests;
     }
 
     public void setGuests(ArrayList<Guest> guests) {
         this.guests = guests;
+    }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
     
 }

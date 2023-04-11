@@ -6,6 +6,7 @@ package ict.db;
 
 import ict.bean.Booking;
 import ict.bean.Guest;
+import ict.bean.GuestList;
 import ict.bean.User;
 import ict.bean.VenueTimeslot;
 import ict.bean.view.BookingDTO;
@@ -86,12 +87,11 @@ public class BookingDAO extends BaseDAO {
         }
 
         //delete releted guest records
-        GuestDAO gDB = new GuestDAO(dbUrl, dbUser, dbPassword);
-        ArrayList<GuestList> gs = gDB.queryRecordByBookingId(id);
-        if (gs.size() != 0) {
-            for (Guest ts : gs) {
-                isSuccess = gDB.delRecord(ts.getId());
-            }
+        GuestListDAO glDB = new GuestListDAO(dbUrl, dbUser, dbPassword);
+        GuestList gs = glDB.queryRocordByBookingId(id);
+        if (gs != null) {
+            gs.setBookingId(0);
+            isSuccess = glDB.editRecord(gs);
         }
 
         if (isSuccess) {
@@ -137,15 +137,15 @@ public class BookingDAO extends BaseDAO {
         }
         return bs;
     }
-    
+
     public ArrayList<Booking> queryRecordByKeywords(String keywords) {
         String sql = "SELECT booking.*, user.firstName, user.lastName FROM user "
                 + "JOIN booking ON booking.userId = user.id "
                 + "WHERE booking.id = ? or user.firstname LIKE ? or user.lastname LIKE ? ";
         ArrayList<Object> params = new ArrayList<>();
         params.add(keywords);
-        params.add("%"+keywords+"%");
-        params.add("%"+keywords+"%");
+        params.add("%" + keywords + "%");
+        params.add("%" + keywords + "%");
         Booking b = null;
         ArrayList<Booking> bs = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
@@ -178,7 +178,7 @@ public class BookingDAO extends BaseDAO {
         }
         return bs;
     }
-    
+
     public ArrayList<Booking> queryRecordByDate(String date) {
         String sql = "SELECT * FROM booking WHERE createDate=?";
         ArrayList<Object> params = new ArrayList<>();
@@ -197,7 +197,7 @@ public class BookingDAO extends BaseDAO {
         }
         return bs;
     }
-    
+
     public ArrayList<Booking> queryRecordBetweenDate(String startDate, String endDate) {
         String sql = "SELECT * FROM booking WHERE createDate >= ? and createDate <= ?";
         ArrayList<Object> params = new ArrayList<>();
@@ -239,7 +239,7 @@ public class BookingDAO extends BaseDAO {
         }
         return bdtos;
     }
-    
+
     public ArrayList<BookingDTO> queryRecordToDTOByKeyword(String keyword) {
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
