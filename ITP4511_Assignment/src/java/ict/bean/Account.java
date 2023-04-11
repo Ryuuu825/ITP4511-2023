@@ -17,7 +17,7 @@ public class Account implements Serializable {
     private String password;
     private int role;
 
-    private enum roleEnum {
+    public static enum roleEnum {
         Member,
         Staff,
         SeniorManager

@@ -54,17 +54,20 @@ public class DbUtil {
      * @return
      */
     public ArrayList<Map<String, Object>> findRecord(String sql, ArrayList<?> params) {
-        Connection cnnt = null;
+        java.sql.Connection cnnt = null;
         PreparedStatement pStmnt = null;
         ArrayList<Map<String, Object>> ls = new ArrayList<>();
         try {
             cnnt = getConnection();
+
             pStmnt = cnnt.prepareStatement(sql);
+
             for (int i = 0; i < params.size(); i++) {
                 pStmnt.setObject(i + 1, params.get(i));
             }
             ResultSet rs = null;
             rs = pStmnt.executeQuery();
+
             while (rs.next()) {
                 Map<String, Object> map = new HashMap<>();
                 ResultSetMetaData metaData = rs.getMetaData();
@@ -74,10 +77,13 @@ public class DbUtil {
                 }
                 ls.add(map);
             }
+
             pStmnt.close();
             cnnt.close();
         } catch (SQLException e) {
             while (e != null) {
+              
+
                 e.printStackTrace();
                 hasError = true;
 
@@ -114,11 +120,13 @@ public class DbUtil {
         boolean isSuccess = false;
         try {
             cnnt = getConnection();
+            cnnt.setAutoCommit(false);
             pStmnt = cnnt.prepareStatement(sql);
             for (int i = 0; i < params.size(); i++) {
                 pStmnt.setObject(i + 1, params.get(i));
             }
             int rowCount = pStmnt.executeUpdate();
+            cnnt.commit();
             if (rowCount >= 1) {
                 isSuccess = true;
             }
@@ -126,6 +134,14 @@ public class DbUtil {
             cnnt.close();
         } catch (SQLException e) {
             while (e != null) {
+                if ( cnnt != null) {
+                    try {
+                        System.err.print("Transaction is being rolled back");
+                        cnnt.rollback();
+                    } catch(SQLException excep) {
+                        excep.printStackTrace();
+                    }
+                }
                 e.printStackTrace();
                 hasError = true;
                 // Error:com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Cannot delete or update a parent row: a foreign key constraint fails (`itp4511_asm_db`.`venue`, CONSTRAINT `venue_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`))|#]
@@ -156,12 +172,22 @@ public class DbUtil {
         Connection cnnt = null;
         try {
             cnnt = getConnection();
+            cnnt.setAutoCommit(false);
             stmnt = cnnt.createStatement();
             stmnt.execute(sql);
+            cnnt.commit();
             stmnt.close();
             cnnt.close();
         } catch (SQLException e) {
             while (e != null) {
+                if ( cnnt != null) {
+                    try {
+                        System.err.print("Transaction is being rolled back");
+                        cnnt.rollback();
+                    } catch(SQLException excep) {
+                        excep.printStackTrace();
+                    }
+                }
                 e.printStackTrace();
 
                 String errorMsg = e.getMessage();

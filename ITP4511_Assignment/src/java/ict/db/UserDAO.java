@@ -169,6 +169,32 @@ public class UserDAO extends BaseDAO{
         return us;
     }
 
+    public ArrayList<User> queryRecordByKeywords(String keywords) {
+        User u = null;
+        String sql = "SELECT user.* FROM user inner join account on user.accountId = account.id WHERE account.username LIKE ? OR user.email LIKE ? OR user.id LIKE ? OR account.id LIKE ?";
+    
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(("%" + keywords + "%"));
+        params.add(("%" + keywords + "%"));
+        params.add(("%" + keywords + "%"));
+        params.add(("%" + keywords + "%"));
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        ArrayList<User> us = new ArrayList<>();
+        for (Map<String, Object> m : ls) {
+            u = new User();
+            u.setId((int) m.get("id"));
+            u.setAccountId((int) m.get("accountId"));
+            u.setEmail((String) m.get("email"));
+            u.setFirstName((String) m.get("firstName"));
+            u.setLastName((String) m.get("lastName"));
+            u.setPhone((String) m.get("phone"));
+            us.add(u);
+        }
+        return us;
+    }
+
+
+
     public boolean delRecord(int id) {
         String sql = "DELETE FROM user WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();
@@ -192,6 +218,8 @@ public class UserDAO extends BaseDAO{
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
+
+
 
     public void dropTable() {
         String sql = "DROP TABLE user";
