@@ -53,7 +53,7 @@ public class PaginationPageSelectTag extends SimpleTagSupport {
             int totalPages = java.lang.Integer.parseInt(pageContext.getRequest().getAttribute("totalPages").toString());
             int currentPage = java.lang.Integer.parseInt(pageContext.getRequest().getAttribute("currentPage").toString());
 
-            out.println("<div class=\"pagination flex flex-row justify-center absolute bottom-0 w-full\">");
+            out.println("<div class=\"pagination flex flex-row justify-center mt-auto w-full\">");
             for (int i = 1; i <= totalPages; i++) {
                 if (i != currentPage) {
                     // out.println("<a href="?page=<%= i %><% if (request.getParameter("id") != null) { %>&id=<%= request.getParameter("id") %><% } %>" class="mx-3 underline"><%= i %></a>");
