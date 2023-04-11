@@ -4,6 +4,8 @@
  */
 package ict.servlet;
 
+import ict.bean.Account;
+import ict.bean.User;
 import ict.db.AccountDAO;
 import ict.db.UserDAO;
 import java.io.IOException;
@@ -19,29 +21,11 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "loginController", urlPatterns = {"/handleLogin", "/handleRegister"})
+@WebServlet(name = "loginController", urlPatterns = {"/handleLogin", "/handleRegister", "/logout"})
 public class LoginController extends HttpServlet {
 
     private AccountDAO accountDB;
     private UserDAO userDB;
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        if (accountDB.delRecord(id)) {
-            resp.sendRedirect("index.jsp");
-        } else {
-            RequestDispatcher rd;
-            req.setAttribute("error", "Delete account(s) unsuccessfully!");
-            rd = getServletContext().getRequestDispatcher("/login.jsp");
-            rd.forward(req, resp);
-        }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,17 +33,8 @@ public class LoginController extends HttpServlet {
         if ("login".equalsIgnoreCase(action)) {
             String username = req.getParameter("username");
             String password = req.getParameter("password");
-            String role = accountDB.isVaildAccount(username, password);
-            if (role != null) {
-                HttpSession session = req.getSession();
-                session.setAttribute("role", role);
-                if (role.equals("SeniorManager")) {
-                    resp.sendRedirect("admin/index.jsp");
-                }else if (role.equals("Staff")) {
-                    resp.sendRedirect("searchBookings");
-                }else {
-                    resp.sendRedirect("venueInfo.jsp");
-                }
+            if (accountDB.isVaildAccount(username, password)) {
+                doLogin(req, resp);
             } else {
                 RequestDispatcher rd;
                 req.setAttribute("error", "Username or password incorrect!");
@@ -96,9 +71,31 @@ public class LoginController extends HttpServlet {
         }
     }
 
+    private void doLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String username = req.getParameter("username");
+        Account acc = accountDB.queryRecordByUsername(username);
+        User u = userDB.queryRecordByAccountId(acc.getId());
+        HttpSession session = req.getSession(true);
+        session.setAttribute("userInfo", u);
+        session.setAttribute("role", acc.getRoleString());
+        if (acc.getRoleString().equals("SeniorManager")) {
+            resp.sendRedirect("admin/index.jsp");
+        } else if (acc.getRoleString().equals("Staff")) {
+            resp.sendRedirect("searchBookings");
+        } else {
+            resp.sendRedirect("venueInfo.jsp");
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            session.removeAttribute("userInfo");
+            session.removeAttribute("role");
+            session.invalidate();
+        }
+        resp.sendRedirect("/login.jsp");
     }
 
     @Override

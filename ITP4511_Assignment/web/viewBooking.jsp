@@ -78,7 +78,7 @@
                     <a class="text-white mx-3 text-decoration-none" href="searchBookings"> Booking </a>
                 </li>
                 <li class="nav-item border bg-light rounded-1 py-1">
-                    <a class="mx-3 text-dark text-decoration-none" href="login.jsp"> Sign Out </a>
+                    <a class="mx-3 text-dark text-decoration-none" href="/logout"> Sign Out </a>
                 </li>
             </ul>
         </header>
