@@ -95,7 +95,7 @@ public class LoginController extends HttpServlet {
             session.removeAttribute("role");
             session.invalidate();
         }
-        resp.sendRedirect("/login.jsp");
+        resp.sendRedirect("login.jsp");
     }
 
     @Override

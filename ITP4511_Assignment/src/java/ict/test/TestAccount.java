@@ -31,7 +31,8 @@ public class TestAccount {
         BookingDAO bdb = new BookingDAO(dbUrl, dbUser, dbPassword);
         VenueDAO vdb = new VenueDAO(dbUrl, dbUser, dbPassword);
         VenueTimeslotDAO vtdb = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
-        gdb.createTable();
+        adb.delRecord(1);
+//        gdb.createTable();
 //        Account acc = adb.queryRecordById(12);
 //        acc.setPassword("123");
 //        adb.editRecord(acc);
