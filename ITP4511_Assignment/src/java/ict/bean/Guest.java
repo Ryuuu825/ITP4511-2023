@@ -13,16 +13,12 @@ import java.io.Serializable;
 public class Guest implements Serializable{
     private int id;
     private int userId;
-    private int venueId;
-    private int bookingId;
     private String name;
     private String email;
 
-    public Guest(int id, int userId, int venueId, int bookingId, String name, String email) {
+    public Guest(int id, int userId, String name, String email) {
         this.id = id;
         this.userId = userId;
-        this.venueId = venueId;
-        this.bookingId = bookingId;
         this.name = name;
         this.email = email;
     }
@@ -54,22 +50,6 @@ public class Guest implements Serializable{
         this.id = id;
     }
 
-    public int getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(int bookingId) {
-        this.bookingId = bookingId;
-    }
-
-    public int getVenueId() {
-        return venueId;
-    }
-
-    public void setVenueId(int venueId) {
-        this.venueId = venueId;
-    }
-
     public int getUserId() {
         return userId;
     }
@@ -80,6 +60,7 @@ public class Guest implements Serializable{
 
     @Override
     public String toString() {
-        return "Guest{" + "id=" + id + ", userId=" + userId + ", venueId=" + venueId + ", bookingId=" + bookingId + ", name=" + name + ", email=" + email + '}';
+        return "Guest{" + "id=" + id + ", userId=" + userId + ", name=" + name + ", email=" + email + '}';
     }
+
 }

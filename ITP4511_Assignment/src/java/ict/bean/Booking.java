@@ -5,6 +5,7 @@
 package ict.bean;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  *
@@ -15,6 +16,7 @@ public class Booking implements Serializable{
     private int userId;
     private int status;
     private double amount;
+    private LocalDate createDate;
 
     public Booking() {
     }
@@ -58,9 +60,17 @@ public class Booking implements Serializable{
         this.amount = amount;
     }
 
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
+    }
+
     @Override
     public String toString() {
-        return "Booking{" + "id=" + id + ", userId=" + userId + ", status=" + status + ", amount=" + amount + '}';
+        return "Booking{" + "id=" + id + ", userId=" + userId + ", status=" + status + ", amount=" + amount + ", createDate=" + createDate + '}';
     }
 
 }

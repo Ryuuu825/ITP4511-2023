@@ -22,25 +22,19 @@ public class GuestDAO extends BaseDAO {
         String sql = "CREATE TABLE IF NOT EXISTS guest ("
                 + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "userId INT(11) NOT NULL,"
-                + "bookingId INT(11) NULL,"
-                + "venueId INT(11) NULL,"
                 + "name varchar(50) NOT NULL,"
                 + "email varchar(50) NOT NULL,"
                 + "PRIMARY KEY (id),"
-                + "FOREIGN KEY (bookingId) REFERENCES booking(id),"
-                + "FOREIGN KEY (userId) REFERENCES user(id),"
-                + "FOREIGN KEY (venueId) REFERENCES venue(id)"
+                + "FOREIGN KEY (userId) REFERENCES user(id)"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
     }
 
-    public boolean addRecord(int userId, int bookingId, int venueId, String name, String email) {
+    public boolean addRecord(int userId, String name, String email) {
         boolean isSuccess = false;
-        if (!isExistedGuest(bookingId, name, email)) {
+        if (!isExistedGuest(name, email)) {
             ArrayList<Object> params = new ArrayList<>();
             params.add(userId);
-            params.add(bookingId);
-            params.add(venueId);
             params.add(name);
             params.add(email);
             String sql = "INSERT INTO guest (userId, bookingId, venueId, name, email) VALUES (?,?,?,?,?)";
@@ -50,12 +44,11 @@ public class GuestDAO extends BaseDAO {
         return isSuccess;
     }
 
-    public boolean isExistedGuest(int id, String name, String email) {
+    public boolean isExistedGuest(String name, String email) {
         ArrayList<Object> params = new ArrayList<>();
-        params.add(id);
         params.add(name);
         params.add(email);
-        String sql = "SELECT * FROM guest WHERE id=? and name=? and email=?";
+        String sql = "SELECT * FROM guest WHERE name=? and email=?";
         boolean isExisted = false;
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         if (!ls.isEmpty()) {
@@ -74,8 +67,6 @@ public class GuestDAO extends BaseDAO {
             g = new Guest();
             g.setId((int) m.get("id"));
             g.setUserId((int) m.get("userId"));
-            g.setVenueId((int) m.get("venueId"));
-            g.setBookingId((int) m.get("bookingId"));
             g.setName((String) m.get("name"));
             g.setEmail((String) m.get("email"));
         }
@@ -93,8 +84,6 @@ public class GuestDAO extends BaseDAO {
             g = new Guest();
             g.setId((int) m.get("id"));
             g.setUserId((int) m.get("userId"));
-            g.setVenueId((int) m.get("venueId"));
-            g.setBookingId((int) m.get("bookingId"));
             g.setName((String) m.get("name"));
             g.setEmail((String) m.get("email"));
             gs.add(g);
@@ -113,8 +102,6 @@ public class GuestDAO extends BaseDAO {
             g = new Guest();
             g.setId((int) m.get("id"));
             g.setUserId((int) m.get("userId"));
-            g.setVenueId((int) m.get("venueId"));
-            g.setBookingId((int) m.get("bookingId"));
             g.setName((String) m.get("name"));
             g.setEmail((String) m.get("email"));
             gs.add(g);
@@ -133,8 +120,6 @@ public class GuestDAO extends BaseDAO {
             g = new Guest();
             g.setId((int) m.get("id"));
             g.setUserId((int) m.get("userId"));
-            g.setVenueId((int) m.get("venueId"));
-            g.setBookingId((int) m.get("bookingId"));
             g.setName((String) m.get("name"));
             g.setEmail((String) m.get("email"));
             gs.add(g);
@@ -154,8 +139,6 @@ public class GuestDAO extends BaseDAO {
             g = new Guest();
             g.setId((int) m.get("id"));
             g.setUserId((int) m.get("userId"));
-            g.setVenueId((int) m.get("venueId"));
-            g.setBookingId((int) m.get("bookingId"));
             g.setName((String) m.get("name"));
             g.setEmail((String) m.get("email"));
             gs.add(g);
@@ -182,8 +165,6 @@ public class GuestDAO extends BaseDAO {
             g = new Guest();
             g.setId((int) m.get("id"));
             g.setUserId((int) m.get("userId"));
-            g.setVenueId((int) m.get("venueId"));
-            g.setBookingId((int) m.get("bookingId"));
             g.setName((String) m.get("name"));
             g.setEmail((String) m.get("email"));
             gs.add(g);
@@ -192,11 +173,9 @@ public class GuestDAO extends BaseDAO {
     }
 
     public boolean editRecord(Guest g) {
-        String sql = "UPDATE guest SET userId=?, bookingId=?, venueId=?, name=?, email=? WHERE id=?";
+        String sql = "UPDATE guest SET userId=?, name=?, email=? WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(g.getUserId());
-        params.add(g.getBookingId());
-        params.add(g.getVenueId());
         params.add(g.getName());
         params.add(g.getEmail());
         params.add(g.getId());

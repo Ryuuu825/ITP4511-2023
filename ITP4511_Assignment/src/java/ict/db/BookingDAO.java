@@ -11,6 +11,8 @@ import ict.bean.VenueTimeslot;
 import ict.bean.view.BookingDTO;
 import ict.bean.view.VenueTimeslots;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -30,6 +32,7 @@ public class BookingDAO extends BaseDAO {
                 + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "userId INT(11) NOT NULL,"
                 + "amount DECIMAL(10,2) NOT NULL,"
+                + "createDate DATE NOT NULL,"
                 + "status TINYINT(1) NOT NULL,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (userId) REFERENCES user(id)"
@@ -43,7 +46,8 @@ public class BookingDAO extends BaseDAO {
         params.add(userId);
         params.add(amount);
         params.add(status);
-        String sql = "INSERT INTO booking (userId, amount, status) VALUES (?,?,?)";
+        params.add(LocalDate.now());
+        String sql = "INSERT INTO booking (userId, amount, status, createDate) VALUES (?,?,?,?)";
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
@@ -60,6 +64,7 @@ public class BookingDAO extends BaseDAO {
             b.setUserId((int) m.get("userId"));
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
+            b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
         }
         return b;
     }
@@ -127,6 +132,7 @@ public class BookingDAO extends BaseDAO {
             b.setUserId((int) m.get("userId"));
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
+            b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
             bs.add(b);
         }
         return bs;
@@ -149,6 +155,7 @@ public class BookingDAO extends BaseDAO {
             b.setUserId((int) m.get("userId"));
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
+            b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
             bs.add(b);
         }
         return bs;
@@ -166,6 +173,46 @@ public class BookingDAO extends BaseDAO {
             b.setUserId((int) m.get("userId"));
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
+            b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            bs.add(b);
+        }
+        return bs;
+    }
+    
+    public ArrayList<Booking> queryRecordByDate(String date) {
+        String sql = "SELECT * FROM booking WHERE createDate=?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(date);
+        Booking b = null;
+        ArrayList<Booking> bs = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            b = new Booking();
+            b.setId((int) m.get("id"));
+            b.setUserId((int) m.get("userId"));
+            b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
+            b.setStatus((int) m.get("status"));
+            b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            bs.add(b);
+        }
+        return bs;
+    }
+    
+    public ArrayList<Booking> queryRecordBetweenDate(String startDate, String endDate) {
+        String sql = "SELECT * FROM booking WHERE createDate >= ? and createDate <= ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(startDate);
+        params.add(endDate);
+        Booking b = null;
+        ArrayList<Booking> bs = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            b = new Booking();
+            b.setId((int) m.get("id"));
+            b.setUserId((int) m.get("userId"));
+            b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
+            b.setStatus((int) m.get("status"));
+            b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
             bs.add(b);
         }
         return bs;
