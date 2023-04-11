@@ -69,6 +69,10 @@
                 background-color: #14a44d !important;
             }
 
+            td {
+                vertical-align: middle;
+            }
+
         </style>
 
         <script>
