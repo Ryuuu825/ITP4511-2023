@@ -30,19 +30,6 @@ public class BookingController extends HttpServlet {
     private BookingDAO bookingDB;
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        if (accountDB.delRecord(id)) {
-            resp.sendRedirect("index.jsp");
-        } else {
-            RequestDispatcher rd;
-            req.setAttribute("error", "Delete account(s) unsuccessfully!");
-            rd = getServletContext().getRequestDispatcher("/login.jsp");
-            rd.forward(req, resp);
-        }
-    }
-
-    @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPut(req, resp); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
