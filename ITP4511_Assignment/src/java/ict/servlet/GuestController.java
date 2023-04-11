@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "BookingController", urlPatterns = {"/delGuest", "/editBookingRecord", "/viewBooking"})
+@WebServlet(name = "GuestController", urlPatterns = {"/delGuest"})
 public class GuestController extends HttpServlet {
 
     private AccountDAO accountDB;

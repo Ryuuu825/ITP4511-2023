@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 public class Guest implements Serializable{
     private int id;
-    private int userId;
+    private int userId; //member userId
     private String name;
     private String email;
 

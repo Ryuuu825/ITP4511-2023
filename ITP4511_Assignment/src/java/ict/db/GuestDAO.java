@@ -32,23 +32,24 @@ public class GuestDAO extends BaseDAO {
 
     public boolean addRecord(int userId, String name, String email) {
         boolean isSuccess = false;
-        if (!isExistedGuest(name, email)) {
+        if (!isExistedGuest(userId, name, email)) {
             ArrayList<Object> params = new ArrayList<>();
             params.add(userId);
             params.add(name);
             params.add(email);
-            String sql = "INSERT INTO guest (userId, bookingId, venueId, name, email) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO guest (userId,  name, email) VALUES (?,?,?)";
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         }
         ;
         return isSuccess;
     }
 
-    public boolean isExistedGuest(String name, String email) {
+    public boolean isExistedGuest(int userId, String name, String email) {
         ArrayList<Object> params = new ArrayList<>();
+        params.add(userId);
         params.add(name);
         params.add(email);
-        String sql = "SELECT * FROM guest WHERE name=? and email=?";
+        String sql = "SELECT * FROM guest WHERE userId = ? and name=? and email=?";
         boolean isExisted = false;
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         if (!ls.isEmpty()) {
@@ -71,42 +72,6 @@ public class GuestDAO extends BaseDAO {
             g.setEmail((String) m.get("email"));
         }
         return g;
-    }
-
-    public ArrayList<Guest> queryRecordByBookingId(int bookingId) {
-        Guest g = null;
-        String sql = "SELECT * FROM guest WHERE bookingId=?";
-        ArrayList<Object> params = new ArrayList<>();
-        params.add(bookingId);
-        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        ArrayList<Guest> gs = new ArrayList<>();
-        for (Map<String, Object> m : ls) {
-            g = new Guest();
-            g.setId((int) m.get("id"));
-            g.setUserId((int) m.get("userId"));
-            g.setName((String) m.get("name"));
-            g.setEmail((String) m.get("email"));
-            gs.add(g);
-        }
-        return gs;
-    }
-
-    public ArrayList<Guest> queryRecordByVenueId(int venueId) {
-        Guest g = null;
-        String sql = "SELECT * FROM guest WHERE venueId=?";
-        ArrayList<Object> params = new ArrayList<>();
-        params.add(venueId);
-        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        ArrayList<Guest> gs = new ArrayList<>();
-        for (Map<String, Object> m : ls) {
-            g = new Guest();
-            g.setId((int) m.get("id"));
-            g.setUserId((int) m.get("userId"));
-            g.setName((String) m.get("name"));
-            g.setEmail((String) m.get("email"));
-            gs.add(g);
-        }
-        return gs;
     }
 
     public ArrayList<Guest> queryRecordByUserId(int userId) {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-04-10 20:18:59
+-- 產生時間： 2023-04-11 09:37:47
 -- 伺服器版本： 10.4.24-MariaDB
 -- PHP 版本： 8.1.6
 
@@ -60,6 +60,7 @@ CREATE TABLE `booking` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
+  `createDate` date NOT NULL DEFAULT current_timestamp(),
   `status` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -67,16 +68,16 @@ CREATE TABLE `booking` (
 -- 傾印資料表的資料 `booking`
 --
 
-INSERT INTO `booking` (`id`, `userId`, `amount`, `status`) VALUES
-(1, 3, '1800.00', 1),
-(2, 5, '300.00', 1),
-(3, 3, '1650.00', 5),
-(4, 3, '300.00', 1),
-(5, 3, '300.00', 4),
-(6, 7, '300.00', 2),
-(7, 3, '750.00', 1),
-(8, 3, '600.00', 3),
-(9, 9, '450.00', 1);
+INSERT INTO `booking` (`id`, `userId`, `amount`, `createDate`, `status`) VALUES
+(1, 3, '1800.00', '2023-04-11', 1),
+(2, 5, '300.00', '2023-04-11', 1),
+(3, 3, '1650.00', '2023-04-11', 5),
+(4, 3, '300.00', '2023-04-11', 1),
+(5, 3, '300.00', '2023-04-11', 4),
+(6, 7, '300.00', '2023-04-11', 2),
+(7, 3, '750.00', '2023-04-11', 1),
+(8, 3, '600.00', '2023-04-11', 3),
+(9, 9, '450.00', '2023-04-11', 1);
 
 -- --------------------------------------------------------
 
@@ -87,8 +88,6 @@ INSERT INTO `booking` (`id`, `userId`, `amount`, `status`) VALUES
 CREATE TABLE `guest` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `bookingId` int(11) DEFAULT NULL,
-  `venueId` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -97,87 +96,142 @@ CREATE TABLE `guest` (
 -- 傾印資料表的資料 `guest`
 --
 
-INSERT INTO `guest` (`id`, `userId`, `bookingId`, `venueId`, `name`, `email`) VALUES
-(1, 1, 1, 1, 'John Smith', 'john.smith@example.com'),
-(2, 2, 2, 2, 'Jane Doe', 'jane.doe@example.com'),
-(3, 3, 3, 3, 'David Johnson', 'david.johnson@example.com'),
-(4, 4, 4, 4, 'Sarah Williams', 'sarah.williams@example.com'),
-(5, 5, 5, 5, 'Michael Brown', 'michael.brown@example.com'),
-(6, 6, 6, 1, 'Emily Wilson', 'emily.wilson@example.com'),
-(7, 7, 7, 2, 'Daniel Lee', 'daniel.lee@example.com'),
-(8, 8, 8, 3, 'Samantha Chen', 'samantha.chen@example.com'),
-(9, 9, 9, 4, 'James Kim', 'james.kim@example.com'),
-(10, 10, 1, 5, 'Jennifer Lee', 'jennifer.lee@example.com'),
-(11, 1, 2, 1, 'Matthew Davis', 'matthew.davis@example.com'),
-(12, 2, 3, 2, 'Olivia Wilson', 'olivia.wilson@example.com'),
-(13, 3, 4, 3, 'Ethan Brown', 'ethan.brown@example.com'),
-(14, 4, 5, 4, 'Isabella Chen', 'isabella.chen@example.com'),
-(15, 5, 6, 5, 'Benjamin Kim', 'benjamin.kim@example.com'),
-(16, 6, 7, 1, 'Victoria Lee', 'victoria.lee@example.com'),
-(17, 7, 8, 2, 'Lucas Davis', 'lucas.davis@example.com'),
-(18, 8, 9, 3, 'Chloe Wilson', 'chloe.wilson@example.com'),
-(19, 9, 1, 4, 'Alexander Lee', 'alexander.lee@example.com'),
-(20, 10, 2, 5, 'Ava Chen', 'ava.chen@example.com'),
-(21, 1, 3, 1, 'William Kim', 'william.kim@example.com'),
-(22, 2, 4, 2, 'Sophia Lee', 'sophia.lee@example.com'),
-(23, 3, 5, 3, 'Daniel Davis', 'daniel.davis@example.com'),
-(24, 4, 6, 4, 'Mia Wilson', 'mia.wilson@example.com'),
-(25, 5, 7, 5, 'Matthew Brown', 'matthew.brown@example.com'),
-(26, 6, 8, 1, 'Olivia Chen', 'olivia.chen@example.com'),
-(27, 7, 9, 2, 'Ethan Kim', 'ethan.kim@example.com'),
-(28, 8, 1, 3, 'Isabella Lee', 'isabella.lee@example.com'),
-(29, 9, 2, 4, 'Benjamin Davis', 'benjamin.davis@example.com'),
-(30, 10, 3, 5, 'Victoria Wilson', 'victoria.wilson@example.com'),
-(31, 1, 4, 1, 'Lucas Brown', 'lucas.brown@example.com'),
-(32, 2, 5, 2, 'Chloe Chen', 'chloe.chen@example.com'),
-(33, 3, 6, 3, 'Alexander Kim', 'alexander.kim@example.com'),
-(34, 4, 7, 4, 'Ava Lee', 'ava.lee@example.com'),
-(35, 5, 8, 5, 'William Davis', 'william.davis@example.com'),
-(36, 6, 9, 1, 'Sophia Chen', 'sophia.chen@example.com'),
-(37, 7, 1, 2, 'Daniel Kim', 'daniel.kim@example.com'),
-(38, 8, 2, 3, 'Mia Lee', 'mia.lee@example.com'),
-(39, 9, 3, 4, 'Matthew Davis', 'matthew.davis@example.com'),
-(40, 10, 4, 5, 'Sophia Chen', 'sophia.chen@example.com'),
-(41, 1, 5, 1, 'Daniel Kim', 'daniel.kim@example.com'),
-(42, 2, 6, 2, 'Mia Lee', 'mia.lee@example.com'),
-(43, 3, 7, 3, 'Matthew Davis', 'matthew.davis@example.com'),
-(44, 4, 8, 4, 'Olivia Wilson', 'olivia.wilson@example.com'),
-(45, 5, 9, 5, 'Ethan Brown', 'ethan.brown@example.com'),
-(46, 6, 1, 1, 'Isabella Chen', 'isabella.chen@example.com'),
-(47, 7, 2, 2, 'Benjamin Kim', 'benjamin.kim@example.com'),
-(48, 8, 3, 3, 'Victoria Lee', 'victoria.lee@example.com'),
-(49, 9, 4, 4, 'Lucas Davis', 'lucas.davis@example.com'),
-(50, 10, 5, 5, 'Chloe Wilson', 'chloe.wilson@example.com'),
-(51, 1, 6, 1, 'Alexander Brown', 'alexander.brown@example.com'),
-(52, 2, 7, 2, 'Ava Chen', 'ava.chen@example.com'),
-(53, 3, 8, 3, 'William Kim', 'william.kim@example.com'),
-(54, 4, 9, 4, 'Sophia Lee', 'sophia.lee@example.com'),
-(55, 5, 1, 5, 'Daniel Davis', 'daniel.davis@example.com'),
-(56, 6, 2, 1, 'Mia Wilson', 'mia.wilson@example.com'),
-(57, 7, 3, 2, 'Matthew Brown', 'matthew.brown@example.com'),
-(58, 8, 4, 3, 'Olivia Chen', 'olivia.chen@example.com'),
-(59, 9, 5, 4, 'Ethan Kim', 'ethan.kim@example.com'),
-(60, 10, 6, 5, 'Isabella Lee', 'isabella.lee@example.com'),
-(61, 1, 7, 1, 'Benjamin Davis', 'benjamin.davis@example.com'),
-(62, 2, 8, 2, 'Victoria Wilson', 'victoria.wilson@example.com'),
-(63, 3, 9, 3, 'Lucas Brown', 'lucas.brown@example.com'),
-(64, 4, 1, 4, 'Chloe Chen', 'chloe.chen@example.com'),
-(65, 5, 2, 5, 'Alexander Kim', 'alexander.kim@example.com'),
-(66, 6, 3, 1, 'Ava Lee', 'ava.lee@example.com'),
-(67, 7, 4, 2, 'William Davis', 'william.davis@example.com'),
-(68, 8, 5, 3, 'Sophia Chen', 'sophia.chen@example.com'),
-(69, 9, 6, 4, 'Daniel Kim', 'daniel.kim@example.com'),
-(70, 10, 7, 5, 'Mia Lee', 'mia.lee@example.com'),
-(71, 1, 8, 1, 'Matthew Davis', 'matthew.davis@example.com'),
-(72, 2, 9, 2, 'Olivia Wilson', 'olivia.wilson@example.com'),
-(73, 3, 1, 3, 'Ethan Brown', 'ethan.brown@example.com'),
-(74, 4, 2, 4, 'Isabella Chen', 'isabella.chen@example.com'),
-(75, 5, 3, 5, 'Benjamin Kim', 'benjamin.kim@example.com'),
-(76, 6, 4, 1, 'Victoria Lee', 'victoria.lee@example.com'),
-(77, 7, 5, 2, 'Lucas Davis', 'lucas.davis@example.com'),
-(78, 8, 6, 3, 'Chloe Wilson', 'chloe.wilson@example.com'),
-(79, 9, 7, 4, 'Alexander Lee', 'alexander.lee@example.com'),
-(80, 10, 8, 5, 'Ava Chen', 'ava.chen@example');
+INSERT INTO `guest` (`id`, `userId`, `name`, `email`) VALUES
+(1, 1, 'John Smith', 'john.smith@example.com'),
+(2, 1, 'Jane Doe', 'jane.doe@example.com'),
+(3, 1, 'Bob Johnson', 'bob.johnson@example.com'),
+(4, 1, 'Sara Lee', 'sara.lee@example.com'),
+(5, 1, 'David Kim', 'david.kim@example.com'),
+(6, 1, 'Emily Chen', 'emily.chen@example.com'),
+(7, 1, 'Michael Wong', 'michael.wong@example.com'),
+(8, 1, 'Lisa Brown', 'lisa.brown@example.com'),
+(9, 1, 'Chris Davis', 'chris.davis@example.com'),
+(10, 1, 'Karen Lee', 'karen.lee@example.com'),
+(11, 2, 'John Smith', 'john.smith@example.com'),
+(12, 2, 'Jane Doe', 'jane.doe@example.com'),
+(13, 2, 'Bob Johnson', 'bob.johnson@example.com'),
+(14, 2, 'Sara Lee', 'sara.lee@example.com'),
+(15, 2, 'David Kim', 'david.kim@example.com'),
+(16, 2, 'Emily Chen', 'emily.chen@example.com'),
+(17, 2, 'Michael Wong', 'michael.wong@example.com'),
+(18, 2, 'Lisa Brown', 'lisa.brown@example.com'),
+(19, 2, 'Chris Davis', 'chris.davis@example.com'),
+(20, 2, 'Karen Lee', 'karen.lee@example.com'),
+(21, 3, 'John Smith', 'john.smith@example.com'),
+(22, 3, 'Jane Doe', 'jane.doe@example.com'),
+(23, 3, 'Bob Johnson', 'bob.johnson@example.com'),
+(24, 3, 'Sara Lee', 'sara.lee@example.com'),
+(25, 3, 'David Kim', 'david.kim@example.com'),
+(26, 3, 'Emily Chen', 'emily.chen@example.com'),
+(27, 3, 'Michael Wong', 'michael.wong@example.com'),
+(28, 3, 'Lisa Brown', 'lisa.brown@example.com'),
+(29, 3, 'Chris Davis', 'chris.davis@example.com'),
+(30, 3, 'Karen Lee', 'karen.lee@example.com'),
+(31, 4, 'John Smith', 'john.smith@example.com'),
+(32, 4, 'Jane Doe', 'jane.doe@example.com'),
+(33, 4, 'Bob Johnson', 'bob.johnson@example.com'),
+(34, 4, 'Sara Lee', 'sara.lee@example.com'),
+(35, 4, 'David Kim', 'david.kim@example.com'),
+(36, 4, 'Emily Chen', 'emily.chen@example.com'),
+(37, 5, 'Michael Wong', 'michael.wong@example.com'),
+(38, 5, 'Lisa Brown', 'lisa.brown@example.com'),
+(39, 5, 'Chris Davis', 'chris.davis@example.com'),
+(40, 5, 'Karen Lee', 'karen.lee@example.com'),
+(41, 6, 'John Smith', 'john.smith@example.com'),
+(42, 6, 'Jane Doe', 'jane.doe@example.com'),
+(43, 6, 'Bob Johnson', 'bob.johnson@example.com'),
+(44, 6, 'Sara Lee', 'sara.lee@example.com'),
+(45, 6, 'David Kim', 'david.kim@example.com'),
+(46, 6, 'Emily Chen', 'emily.chen@example.com'),
+(47, 6, 'Michael Wong', 'michael.wong@example.com'),
+(48, 6, 'Lisa Brown', 'lisa.brown@example.com'),
+(49, 6, 'Chris Davis', 'chris.davis@example.com'),
+(50, 6, 'Karen Lee', 'karen.lee@example.com');
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `guestlist`
+--
+
+CREATE TABLE `guestlist` (
+  `id` int(11) NOT NULL,
+  `createDate` date NOT NULL DEFAULT curdate(),
+  `bookingId` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 傾印資料表的資料 `guestlist`
+--
+
+INSERT INTO `guestlist` (`id`, `createDate`, `bookingId`) VALUES
+(1, '2023-04-11', 1),
+(2, '2023-04-11', 2),
+(3, '2023-04-11', 3),
+(4, '2023-04-11', 4),
+(5, '2023-04-11', 5),
+(6, '2023-04-11', 6),
+(7, '2023-04-11', 7),
+(8, '2023-04-11', 8),
+(9, '2023-04-11', 9);
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `guestlist_guest`
+--
+
+CREATE TABLE `guestlist_guest` (
+  `id` int(11) NOT NULL,
+  `guestlistId` int(11) NOT NULL,
+  `guestId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 傾印資料表的資料 `guestlist_guest`
+--
+
+INSERT INTO `guestlist_guest` (`id`, `guestlistId`, `guestId`) VALUES
+(1, 1, 1),
+(2, 1, 3),
+(3, 1, 5),
+(4, 1, 2),
+(5, 1, 4),
+(6, 1, 6),
+(7, 1, 8),
+(8, 1, 7),
+(9, 1, 9),
+(10, 1, 10),
+(11, 2, 11),
+(12, 2, 12),
+(13, 2, 13),
+(14, 2, 14),
+(15, 2, 15),
+(16, 2, 16),
+(17, 2, 17),
+(18, 2, 18),
+(19, 2, 19),
+(20, 2, 20),
+(21, 3, 21),
+(22, 3, 22),
+(23, 3, 23),
+(24, 3, 24),
+(25, 3, 25),
+(26, 3, 26),
+(27, 3, 27),
+(28, 3, 28),
+(29, 3, 29),
+(30, 3, 30),
+(31, 4, 31),
+(32, 4, 32),
+(33, 4, 33),
+(34, 4, 34),
+(35, 4, 35),
+(36, 4, 36),
+(37, 5, 37),
+(38, 5, 38),
+(39, 5, 39),
+(40, 5, 40);
 
 -- --------------------------------------------------------
 
@@ -2113,9 +2167,22 @@ ALTER TABLE `booking`
 --
 ALTER TABLE `guest`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `bookingId` (`bookingId`),
-  ADD KEY `userId` (`userId`),
-  ADD KEY `venueId` (`venueId`);
+  ADD KEY `userId` (`userId`);
+
+--
+-- 資料表索引 `guestlist`
+--
+ALTER TABLE `guestlist`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bookingId` (`bookingId`);
+
+--
+-- 資料表索引 `guestlist_guest`
+--
+ALTER TABLE `guestlist_guest`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `guestlistId` (`guestlistId`),
+  ADD KEY `guestId` (`guestId`);
 
 --
 -- 資料表索引 `timeslot`
@@ -2166,7 +2233,19 @@ ALTER TABLE `booking`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `guest`
 --
 ALTER TABLE `guest`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `guestlist`
+--
+ALTER TABLE `guestlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `guestlist_guest`
+--
+ALTER TABLE `guestlist_guest`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `timeslot`
@@ -2206,9 +2285,20 @@ ALTER TABLE `booking`
 -- 資料表的限制式 `guest`
 --
 ALTER TABLE `guest`
-  ADD CONSTRAINT `guest_ibfk_1` FOREIGN KEY (`bookingId`) REFERENCES `booking` (`id`),
-  ADD CONSTRAINT `guest_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `user` (`id`),
-  ADD CONSTRAINT `guest_ibfk_3` FOREIGN KEY (`venueId`) REFERENCES `venue` (`id`);
+  ADD CONSTRAINT `guest_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`);
+
+--
+-- 資料表的限制式 `guestlist`
+--
+ALTER TABLE `guestlist`
+  ADD CONSTRAINT `guestlist_ibfk_1` FOREIGN KEY (`bookingId`) REFERENCES `booking` (`id`);
+
+--
+-- 資料表的限制式 `guestlist_guest`
+--
+ALTER TABLE `guestlist_guest`
+  ADD CONSTRAINT `guestlist_guest_ibfk_1` FOREIGN KEY (`guestlistId`) REFERENCES `guestlist` (`id`),
+  ADD CONSTRAINT `guestlist_guest_ibfk_2` FOREIGN KEY (`guestId`) REFERENCES `guest` (`id`);
 
 --
 -- 資料表的限制式 `user`

@@ -39,7 +39,7 @@ public class BookingTag extends SimpleTagSupport {
             out.print("<table class=\"table text-center table-striped\">");
             out.print("<thead>");
             out.print("<tr>");
-            out.print("<th>ID</th><th>Member</th><th>No. of booked venues</th><th>Amount</th><th>Status</th><th>Details</th>");
+            out.print("<th>ID</th><th>Member</th><th>No. of booked venues</th><th>Amount</th><th>Create Date</th><th>Status</th><th>Details</th>");
             out.print("</tr>");
             out.print("</thead>");
             out.print("<tbody>");
@@ -49,7 +49,7 @@ public class BookingTag extends SimpleTagSupport {
                 out.print("<td>" + booking.getMember().getFirstName()+" "+ booking.getMember().getLastName()+ "</td>");
                 out.print("<td>" + booking.getVenueTimeslotses().size() + "</td>");
                 out.print("<td>" + booking.getBooking().getAmount() + "</td>");
-                out.print("<td>" + booking.getBooking().getDate() + "</td>");
+                out.print("<td>" + booking.getBooking().getCreateDate()+ "</td>");
                 out.print("<td class=\"text-"+ color[booking.getBooking().getStatus()-1] +"\">");
                 out.print("<label class=\"border border-2 rounded-pill px-3 py-1 border-"+color[booking.getBooking().getStatus()-1]+"\">");
                 out.print(status[booking.getBooking().getStatus()-1] + "</label></td>");

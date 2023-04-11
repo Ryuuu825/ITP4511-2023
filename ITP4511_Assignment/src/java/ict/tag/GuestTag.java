@@ -46,7 +46,7 @@ public class GuestTag extends SimpleTagSupport {
                 out.print("<th scope = \"row\">" + guest.getId() + "</th>");
                 out.print("<td>" + guest.getName()+ "</td>");
                 out.print("<td>" + guest.getEmail()+ "</td>");
-                out.print("<td><a class=\"btn btn-danger btn-rounded btn-sm\" role=\"button\" href=\"delGuest?bookingId=" + guest.getId() + "\">Delete</a></td>");
+                out.print("<td><a class=\"btn btn-danger btn-rounded btn-sm\" role=\"button\" href=\"delGuest?guestId=" + guest.getId() + "\">Delete</a></td>");
                 out.print("</tr>");
             }
             out.print("</tbody></table>");

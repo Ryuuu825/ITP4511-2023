@@ -21,11 +21,12 @@ public class Booking implements Serializable{
     public Booking() {
     }
 
-    public Booking(int id, int userId, int status, double amount) {
+    public Booking(int id, int userId, int status, double amount, LocalDate createDate) {
         this.id = id;
         this.userId = userId;
         this.status = status;
         this.amount = amount;
+        this.createDate = createDate;
     }
 
     public int getId() {
