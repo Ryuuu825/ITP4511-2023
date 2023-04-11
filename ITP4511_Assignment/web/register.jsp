@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Register</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
         integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
@@ -41,14 +41,17 @@
 </style>
 <script>
     $(document).ready(function () {
+        
         $(this).val() != "" ? $(this).addClass('active') : $(this).removeClass('active');
         $('#errorMsg').val() != "" ? $('#errorModal').modal('show') : $('#errorModal').modal('hide');
         $('.form-control').on('focus', function () {
             $(this).addClass('border-primary');
+            $(".form-label").addClass("bg-white");
             $(this).parent().find('.form-label').addClass('text-primary');
         });
         $('.form-control').on('blur', function () {
             $(this).removeClass('border-primary');
+            $(".form-label").removeClass("bg-white");
             $(this).val() != "" ? $(this).addClass('active') : $(this).removeClass('active');
             $(this).parent().find('.form-label').removeClass('text-primary');
         });

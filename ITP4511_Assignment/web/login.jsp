@@ -30,16 +30,18 @@
         color: #205295 !important;
     }
 </style>
-<% String error = (String) request.getAttribute("error"); %>
+<% String error = (String) request.getAttribute("error");%>
 <script>
     $(document).ready(function () {
         $(this).val() != "" ? $(this).addClass('active') : $(this).removeClass('active');
         $('#errorMsg').val() != "" ? $('#errorModal').modal('show') : $('#errorModal').modal('hide');
         $('.form-control').on('focus', function () {
+            $(".form-label").addClass("bg-white");
             $(this).addClass('border-primary');
         });
         $('.form-control').on('blur', function () {
             $(this).removeClass('border-primary');
+            $(".form-label").removeClass("bg-white");
             $(this).val() != "" ? $(this).addClass('active') : $(this).removeClass('active');
         });
     });

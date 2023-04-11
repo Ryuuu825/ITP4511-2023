@@ -25,7 +25,7 @@ public class GuestTag extends SimpleTagSupport {
         return guests;
     }
 
-    public void setGuest(ArrayList<Guest> guests) {
+    public void setGuests(ArrayList<Guest> guests) {
         this.guests = guests;
     }
 
@@ -37,13 +37,14 @@ public class GuestTag extends SimpleTagSupport {
             out.print("<table class=\"table text-center table-striped\">");
             out.print("<thead>");
             out.print("<tr>");
-            out.print("<th>ID</th><th>Member</th><th>No. of booked venues</th><th>Amount</th><th>Status</th><th>Details</th>");
+            out.print("<th>#</th><th>Name</th><th>Email</th><th>Action</th>");
             out.print("</tr>");
             out.print("</thead>");
             out.print("<tbody>");
-            for (Guest guest : guests) {
+            for (int i=1;i<=guests.size();i++) {
+                Guest guest = guests.get(i-1);
                 out.print("<tr>");
-                out.print("<th scope = \"row\">" + guest.getId() + "</th>");
+                out.print("<th scope = \"row\">" + i + "</th>");
                 out.print("<td>" + guest.getName()+ "</td>");
                 out.print("<td>" + guest.getEmail()+ "</td>");
                 out.print("<td><a class=\"btn btn-danger btn-rounded btn-sm\" role=\"button\" href=\"delGuest?guestId=" + guest.getId() + "\">Delete</a></td>");

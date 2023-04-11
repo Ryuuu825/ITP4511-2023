@@ -34,7 +34,20 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
-
+    <tag>
+        <name>guestTable</name>
+        <tag-class>ict.tag.GuestTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            A table showing all the guests records
+        </description>
+        <attribute>
+            <name>guests</name>
+            <required>true</required>
+            <type>java.util.ArrayList</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
     <tag>
         <name>result</name>
         <tag-class>ict.tag.ResultMsgTag</tag-class>

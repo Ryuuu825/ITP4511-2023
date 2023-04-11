@@ -4,10 +4,12 @@
  */
 package ict.servlet;
 
+import ict.bean.GuestList;
 import ict.bean.view.BookingDTO;
 import ict.db.AccountDAO;
 import ict.db.BookingDAO;
 import ict.db.GuestDAO;
+import ict.db.GuestListDAO;
 import ict.db.UserDAO;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,24 +25,17 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "GuestController", urlPatterns = {"/delGuest"})
+@WebServlet(name = "GuestController", urlPatterns = {"/delGuest", "/viewGuests"})
 public class GuestController extends HttpServlet {
 
     private AccountDAO accountDB;
     private UserDAO userDB;
     private GuestDAO guestDB;
+    private GuestListDAO guestListDAO;
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        if (accountDB.delRecord(id)) {
-            resp.sendRedirect("index.jsp");
-        } else {
-            RequestDispatcher rd;
-            req.setAttribute("error", "Delete account(s) unsuccessfully!");
-            rd = getServletContext().getRequestDispatcher("/login.jsp");
-            rd.forward(req, resp);
-        }
+        super.doDelete(req, resp);
     }
 
     @Override
@@ -55,19 +50,25 @@ public class GuestController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String guestId = req.getParameter("guestId");
+        String bookingId = req.getParameter("bookingId");
         String searchKeys = req.getParameter("search");
-        ArrayList<BookingDTO> bdtos = null;
-        if (guestId != null) {
-            int bid = Integer.parseInt(guestId);
-           
-        } else if (searchKeys != null && !searchKeys.equals("")) {
+        GuestList gl = null;
+        int bid = Integer.parseInt(bookingId);
+        if (bookingId != null && searchKeys != null && !searchKeys.equals("")) {
+            gl = guestListDAO.queryRocordByKeyword(bid, searchKeys);
+            RequestDispatcher rd;
+            req.setAttribute("guests", gl);
+            rd = getServletContext().getRequestDispatcher("/guests.jsp");
+            rd.forward(req, resp);
+            return;
         } else {
+            gl = guestListDAO.queryRocordByBookingId(bid);
+            RequestDispatcher rd;
+            req.setAttribute("guests", gl);
+            rd = getServletContext().getRequestDispatcher("/guests.jsp");
+            rd.forward(req, resp);
+            return;
         }
-        RequestDispatcher rd;
-        req.setAttribute("bookingDTOs", bdtos);
-        rd = getServletContext().getRequestDispatcher("/bookings.jsp");
-        rd.forward(req, resp);
     }
 
     @Override
@@ -75,9 +76,7 @@ public class GuestController extends HttpServlet {
         String dbUser = this.getServletContext().getInitParameter("dbUser");
         String dbPassword = this.getServletContext().getInitParameter("dbPassword");
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");
-        accountDB = new AccountDAO(dbUrl, dbUser, dbPassword);
-        userDB = new UserDAO(dbUrl, dbUser, dbPassword);
-        guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
+        guestListDAO = new GuestListDAO(dbUrl, dbUser, dbPassword);
     }
 
 }

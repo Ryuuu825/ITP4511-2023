@@ -73,6 +73,24 @@ public class GuestDAO extends BaseDAO {
         }
         return g;
     }
+    
+    public Guest queryRecordKeyword(int userId, String keyword) {
+        String sql = "SELECT * FROM guest WHERE userId = ? and name LIKE ? or email LIKE or";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(userId);
+        params.add("%"+keyword+"%");
+        params.add("%"+keyword+"%");
+        Guest g = null;
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            g = new Guest();
+            g.setId((int) m.get("id"));
+            g.setUserId((int) m.get("userId"));
+            g.setName((String) m.get("name"));
+            g.setEmail((String) m.get("email"));
+        }
+        return g;
+    }
 
     public ArrayList<Guest> queryRecordByUserId(int userId) {
         Guest g = null;
