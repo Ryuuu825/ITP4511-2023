@@ -154,7 +154,7 @@
 
             <ict:result />
 
-            <div class="flex flex-row h-[75%]">
+            <div class="flex flex-row h-[37rem]">
                 <div class="usertable border w-full bg-white p-3 card"
                     style="<% if (ua.getAccount() == null) { %> width: 100%  <%  } else { %> margin-right: 2rem;  <% } %> ">
                     <div class="search">

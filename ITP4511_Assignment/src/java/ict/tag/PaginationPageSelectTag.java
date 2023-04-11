@@ -37,7 +37,7 @@ public class PaginationPageSelectTag extends SimpleTagSupport {
                         newQueryString += query + "&";
                     }
                 }
-                this.queryString = newQueryString.substring(0, newQueryString.length() - 1);
+                this.queryString = newQueryString;
             }
         }
         
