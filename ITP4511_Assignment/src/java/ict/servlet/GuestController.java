@@ -5,11 +5,8 @@
 package ict.servlet;
 
 import ict.bean.GuestList;
-import ict.db.AccountDAO;
-import ict.db.GuestDAO;
 import ict.db.GuestListDAO;
 import ict.db.GuestListGuestDAO;
-import ict.db.UserDAO;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,23 +38,24 @@ public class GuestController extends HttpServlet {
         if ("delete".equalsIgnoreCase(action)) {
             int bid = Integer.parseInt(req.getParameter("bookingId"));
             int guestId = Integer.parseInt(req.getParameter("guestId"));
+            int vid = Integer.parseInt(req.getParameter("venueId"));
             if (guestListGuestDAO.delRecordByGuestId(guestId)) {
-                resp.sendRedirect("viewGuests?action=search&bookingId="+bid);
+                resp.sendRedirect("viewGuests?action=search&bookingId="+bid+"&venueId="+vid);
             };
         } else if ("search".equalsIgnoreCase(action)) {
             int bid = Integer.parseInt(req.getParameter("bookingId"));
+            int vid = Integer.parseInt(req.getParameter("venueId"));
             String searchKeys = req.getParameter("search");
             if (searchKeys != null && !searchKeys.equals("")) {
-                gl = guestListDAO.queryRocordByKeyword(bid, searchKeys);
+                gl = guestListDAO.queryRocordByKeyword(bid, vid, searchKeys);
 
             } else {
-                gl = guestListDAO.queryRocordByBookingId(bid);
+                gl = guestListDAO.queryRocordByBooking(bid, vid);
             }
             RequestDispatcher rd;
             req.setAttribute("guests", gl);
             rd = getServletContext().getRequestDispatcher("/guests.jsp");
             rd.forward(req, resp);
-            return;
         } else {
         }
     }

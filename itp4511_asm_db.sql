@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-04-11 09:43:10
+-- 產生時間： 2023-04-12 18:07:10
 -- 伺服器版本： 10.4.24-MariaDB
 -- PHP 版本： 8.1.6
 
@@ -157,23 +157,27 @@ INSERT INTO `guest` (`id`, `userId`, `name`, `email`) VALUES
 CREATE TABLE `guestlist` (
   `id` int(11) NOT NULL,
   `createDate` date NOT NULL DEFAULT curdate(),
-  `bookingId` int(11) DEFAULT NULL
+  `bookingId` int(11) NOT NULL,
+  `venueId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- 傾印資料表的資料 `guestlist`
 --
 
-INSERT INTO `guestlist` (`id`, `createDate`, `bookingId`) VALUES
-(1, '2023-04-11', 1),
-(2, '2023-04-11', 2),
-(3, '2023-04-11', 3),
-(4, '2023-04-11', 4),
-(5, '2023-04-11', 5),
-(6, '2023-04-11', 6),
-(7, '2023-04-11', 7),
-(8, '2023-04-11', 8),
-(9, '2023-04-11', 9);
+INSERT INTO `guestlist` (`id`, `createDate`, `bookingId`, `venueId`) VALUES
+(1, '2023-04-11', 1, 1),
+(2, '2023-04-11', 1, 2),
+(3, '2023-04-11', 2, 1),
+(4, '2023-04-11', 3, 2),
+(5, '2023-04-11', 3, 3),
+(6, '2023-04-11', 4, 4),
+(7, '2023-04-11', 5, 3),
+(8, '2023-04-11', 6, 4),
+(9, '2023-04-11', 7, 5),
+(10, '2023-04-11', 8, 1),
+(11, '2023-04-11', 8, 2),
+(12, '2023-04-11', 9, 3);
 
 -- --------------------------------------------------------
 
@@ -2174,7 +2178,8 @@ ALTER TABLE `guest`
 --
 ALTER TABLE `guestlist`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `bookingId` (`bookingId`);
+  ADD KEY `bookingId` (`bookingId`),
+  ADD KEY `venueId` (`venueId`);
 
 --
 -- 資料表索引 `guestlist_guest`
@@ -2236,12 +2241,6 @@ ALTER TABLE `guest`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `guestlist`
---
-ALTER TABLE `guestlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
 -- 使用資料表自動遞增(AUTO_INCREMENT) `guestlist_guest`
 --
 ALTER TABLE `guestlist_guest`
@@ -2291,7 +2290,8 @@ ALTER TABLE `guest`
 -- 資料表的限制式 `guestlist`
 --
 ALTER TABLE `guestlist`
-  ADD CONSTRAINT `guestlist_ibfk_1` FOREIGN KEY (`bookingId`) REFERENCES `booking` (`id`);
+  ADD CONSTRAINT `guestlist_ibfk_1` FOREIGN KEY (`bookingId`) REFERENCES `booking` (`id`),
+  ADD CONSTRAINT `guestlist_ibfk_2` FOREIGN KEY (`venueId`) REFERENCES `venue` (`id`);
 
 --
 -- 資料表的限制式 `guestlist_guest`

@@ -6,6 +6,7 @@ package ict.bean.view;
 
 import ict.bean.Booking;
 import ict.bean.Guest;
+import ict.bean.GuestList;
 import ict.bean.User;
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class BookingDTO {
 
     private Booking booking;
     private ArrayList<VenueTimeslots> venueTimeslotses;
-    private ArrayList<Guest> guestlist;
+    private ArrayList<GuestList> venueGuestlists;
     private User member;
 
     public BookingDTO() {
@@ -39,14 +40,14 @@ public class BookingDTO {
         this.venueTimeslotses = venueTimeslotses;
     }
 
-    public ArrayList<Guest> getGuestlist() {
-        return guestlist;
+    public ArrayList<GuestList> getVenueGuestlists() {
+        return venueGuestlists;
     }
 
-    public void setGuestlist(ArrayList<Guest> guestlist) {
-        this.guestlist = guestlist;
+    public void setVenueGuestlists(ArrayList<GuestList> venueGuestlists) {
+        this.venueGuestlists = venueGuestlists;
     }
-    
+
     public User getMember() {
         return member;
     }
@@ -57,7 +58,7 @@ public class BookingDTO {
 
     @Override
     public String toString() {
-        return "BookingDTO{" + "booking=" + booking + ", venueTimeslotses=" + venueTimeslotses + ", guestlist=" + guestlist + ", member=" + member + '}';
+        return "BookingDTO{" + "booking=" + booking + ", venueTimeslotses=" + venueTimeslotses + ", venueGuestlists=" + venueGuestlists + ", member=" + member + '}';
     }
-    
+
 }

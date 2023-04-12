@@ -35,33 +35,28 @@
         $(document).ready(function () {
             var params = new window.URLSearchParams(window.location.search);
             var bookingId = params.get('bookingId');
-
-            $(".form-control").focus(function () {
-                $(".form-label").addClass("bg-white");
-            });
-
-            $(".form-control").blur(function () {
-                $(".form-label").removeClass("bg-white");
-            });
+            var venueId = params.get('venueId');
 
             $("#search-button").click(function () {
                 var search = $("#search-input").val();
-                window.location.href = "viewGuests?action=search&bookingId=" + bookingId + "&search=" + search;
+                window.location.href = "viewGuests?action=search&bookingId=" + bookingId + "&venueId=" + venueId + "&search=" + search;
             });
 
             //key press enter
             $("#search-input").keypress(function (e) {
                 if (e.which == 13) {
                     var search = $("#search-input").val();
-                    window.location.href = "viewGuests?search&bookingId=" + bookingId + "&search=" + search;
+                    window.location.href = "viewGuests?search&bookingId=" + bookingId + "&venueId=" + venueId + "&search=" + search;
                 }
             });
 
-            $("#search-input").focus(function () {
+            $(".form-control").focus(function () {
+                $(this).parent().find($(".form-label")).addClass("bg-white");
                 $(this).addClass("border-2 border-primary active");
             });
 
-            $("#search-input").blur(function () {
+            $(".form-control").blur(function () {
+                $(this).parent().find($(".form-label")).removeClass("bg-white");
                 if ($(this).val() == "") {
                     $(this).removeClass("border-2 border-primary active");
                 } else {
@@ -71,8 +66,13 @@
         });
     </script>
     <%
+        String role = (String) session.getAttribute("role");
+        if (role == null) {
+            response.sendRedirect("");
+        }
         GuestList guests = (GuestList) request.getAttribute("guests");
         int bookingId = guests.getBookingId();
+        int venueId = guests.getVenueId();
     %>
 
     <body style="background-color: #f2f2f2;">
@@ -106,7 +106,7 @@
         </header>
         <section class="p-5">
             <div class="fw-bold fs-5 my-3"><a href="searchBookings">Bookings </a>> <span
-                    class=""><a href="searchBookings?bookingId=<%=bookingId%>">Details </a></span> > <span
+                    class=""><a href="searchBookings?bookingId=<%=bookingId%>&venueId=<%=venueId%>">Details </a></span> > <span
                     class="text-decoration-underline">View Guests</span>
             </div>
             <ict:result />
@@ -123,8 +123,32 @@
                         </button>
                     </div>
                 </div>
+                <% if ("Member".equalsIgnoreCase(role)) {%>
+                <form class="p-3 border-bottom" action="addGuest" method="post">
+                    <div class="row d-flex justify-content-between align-items-center ">
+                        <div class="col-md-5">
+                            <div class="form-outline">
+                                <input type="text" name="name" id="name" required
+                                       aria-required="true" class="form-control border" />
+                                <label class="form-label" for="name">Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-outline">
+                                <input type="email" name="email" id="email" class="form-control border" />
+                                <label class="form-label" for="email">Email address</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 my-1">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Add Guest
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <% }%>
                 <div class="table-responsive text-nowrap mt-3 fs-6">
-                    <ict:guestTable guests="<%=guests%>" />
+                    <ict:guestTable guests="<%=guests%>" role="<%=role%>"/>
                 </div>
             </div>
         </section>

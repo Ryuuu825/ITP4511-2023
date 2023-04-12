@@ -16,10 +16,11 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class BookingStatusTag extends SimpleTagSupport {
 
-    private String[] statusString = {"Pending Approval", "Approved", "Rejected", "Check in", "Check out"};
-    private String[] color = {"btn-warning", "btn-success", "btn-danger", "btn-primary", "btn-success"};
+    private String[] statusString = {"Pending Approval", "Approved", "Rejected", "Check in", "Check out", "Cancel"};
+    private String[] color = {"btn-warning", "btn-success", "btn-danger", "btn-primary", "btn-success", "btn-danger"};
 
     private int status;
+    private String role;
 
     public int getStatus() {
         return status;
@@ -29,6 +30,10 @@ public class BookingStatusTag extends SimpleTagSupport {
         this.status = status;
     }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public void doTag() throws JspException, IOException {
         try {
@@ -36,30 +41,39 @@ public class BookingStatusTag extends SimpleTagSupport {
             JspWriter out = pageContext.getOut();
             switch (status - 1) {
                 case 0:
-                    out.print("<button type=\"button\" class=\"btn btn-lg btn-success btn-block \">");
+                    if ("Member".equalsIgnoreCase(role)) {
+                        out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
+                        out.print("Update");
+                        out.print("</button>");
+                        out.print("<button type=\"submit\" class=\"btn btn-lg btn-danger btn-block \">");
+                        out.print("Cancel");
+                        out.print("</button>");
+                        break;
+                    }
+                    out.print("<button type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
                     out.print("Approved");
                     out.print("</button>");
-                    out.print("<button type=\"button\" class=\"btn btn-lg btn-block btn-danger \">");
+                    out.print("<button type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
                     out.print("Rejected");
                     out.print("</button>");
                     break;
                 case 1:
-                    out.print("<button type=\"button\" class=\"btn btn-lg btn-success btn-block \">");
+                    out.print("<button type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
                     out.print("Check in");
                     out.print("</button>");
                     break;
                 case 2:
-                    out.print("<button type=\"button\" disabled class=\"btn btn-lg btn-block btn-dark \">");
+                    out.print("<button type=\"submit\" disabled class=\"btn btn-lg btn-block btn-dark \">");
                     out.print("Rejected");
                     out.print("</button>");
                     break;
                 case 3:
-                    out.print("<button type=\"button\" class=\"btn btn-lg btn-success btn-block \">");
+                    out.print("<button type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
                     out.print("Check out");
                     out.print("</button>");
                     break;
                 default:
-                    out.print("<button type=\"button\" disabled class=\"btn btn-lg btn-block btn-dark \">");
+                    out.print("<button type=\"submit\" disabled class=\"btn btn-lg btn-block btn-dark \">");
                     out.print("Completed");
                     out.print("</button>");
             }

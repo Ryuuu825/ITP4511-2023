@@ -19,13 +19,18 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class BookingTag extends SimpleTagSupport {
 
     private ArrayList<BookingDTO> bookings;
-
+    private String role;
+    
     public ArrayList<BookingDTO> getBookings() {
         return bookings;
     }
 
     public void setBookings(ArrayList<BookingDTO> bookings) {
         this.bookings = bookings;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     private String[] status = {"Pending Approval", "Approved", "Rejected", "Check in", "Check out"};

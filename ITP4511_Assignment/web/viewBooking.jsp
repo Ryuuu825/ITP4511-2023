@@ -4,6 +4,7 @@
    Author     : jyuba
 --%>
 
+<%@page import="ict.bean.GuestList"%>
 <%@page import="ict.bean.view.DateTimeslots"%>
 <%@page import="ict.bean.view.VenueTimeslots"%>
 <%@page import="ict.bean.view.BookingDTO"%>
@@ -34,21 +35,37 @@
             font-size: 1.125rem;
             line-height: 1.75rem;
         }
+        
+        .summary-width {
+            width: calc(33.33% - 3rem);
+        }
     </style>
     <script>
         $(document).ready(function () {
-
+            $(window).scroll(function () {
+                if ($(this).scrollTop() >= $('#summary').height()) {
+                    $('#summary').parent().addClass("me-5");
+                    $('#summary').addClass("position-fixed end-0 top-0 mx-5 summary-width");
+                }else {
+                    $('#summary').parent().removeClass("me-5");
+                    $('#summary').removeClass("position-fixed end-0 top-0 mx-5 summary-width");
+                }
+            });
         });
     </script>
 
     <jsp:useBean scope="request" id="bookingDTO" class="ict.bean.view.BookingDTO" />
     <%
+        String role = (String)session.getAttribute("role");
+        if (role == null) {
+            response.sendRedirect("");
+        }
         int bookingId = bookingDTO.getBooking().getId();
         String memberName = bookingDTO.getMember().getFirstName() + " " + bookingDTO.getMember().getLastName();
         String memberPhone = bookingDTO.getMember().getPhone();
         String memberEmail = bookingDTO.getMember().getEmail();
 
-        ArrayList<Guest> guests = bookingDTO.getGuestlist();
+        ArrayList<GuestList> guests = bookingDTO.getVenueGuestlists();
         ArrayList<VenueTimeslots> venueTimeslotses = bookingDTO.getVenueTimeslotses();
         double[] subTotals = new double[venueTimeslotses.size()];
     %>
@@ -123,6 +140,7 @@
                         double subTotal = 0;
                         for (int i = 1; i <= venueTimeslotses.size(); i++) {
                             Venue v = venueTimeslotses.get(i - 1).getVenue();
+                            int venueId = v.getId();
                             String venueName = v.getName();
                             int capacity = v.getCapacity();
                             String venueType = v.getTypeString();
@@ -198,7 +216,13 @@
                                     }
                                 %>
                             </div>
-                            <% } %>
+                            <% }%>
+                        </div>
+                        <div class="card-header border-top d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Guest List</h5>
+                            <a type="button" href="viewGuests?action=search&bookingId=<%=bookingId%>&venueId=<%=venueId%>" class="btn btn-link fs-7 rounded-pill">
+                                View Guests
+                            </a>
                         </div>
                     </div>
                     <%
@@ -207,33 +231,7 @@
                     %>
                 </div>
                 <div class="col-md-4 mb-4">
-                    <div class="card mb-4">
-                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Guest List</h5>
-                            <a type="button" href="viewGuests?action=search&bookingId=<%=bookingId%>" class="btn btn-link fs-7 rounded-pill">
-                                View All Guests
-                            </a>
-                        </div>
-                        <div class="card-body" style="max-height: 60vh; overflow-y: auto">
-                            <div>
-                                <ul class="list-group list-group-light">
-                                    <%
-                                        for (int i = 0; i < guests.size(); i++) {
-                                            String guestName = guests.get(i).getName();
-                                            String guestEmail = guests.get(i).getEmail();
-                                    %>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <div class="fw-bold"><%=guestName%></div>
-                                        <span class="badge rounded-pill badge-success"><%=guestEmail%></span>
-                                    </li>
-                                    <%
-                                        }
-                                    %>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-4">
+                    <div class="card mb-4" id="summary">
                         <div class="card-header py-3">
                             <h5 class="mb-0">Summary</h5>
                         </div>
@@ -259,7 +257,7 @@
                                     <span class="fs-5"><strong>HK$ <%=Arrays.stream(subTotals).sum()%></strong></span>
                                 </li>
                             </ul>
-                            <ict:statusButton status="<%=bookingDTO.getBooking().getStatus()%>" />
+                            <ict:statusButton status="<%=bookingDTO.getBooking().getStatus()%>" role="<%=role%>"/>
                         </div>
                     </div>
                 </div>

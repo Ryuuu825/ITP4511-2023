@@ -33,6 +33,12 @@
             <type>ict.bean.view.BookingDTO</type>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>role</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
     <tag>
         <name>guestTable</name>
@@ -45,6 +51,12 @@
             <name>guests</name>
             <required>true</required>
             <type>ict.bean.GuestList</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>role</name>
+            <required>true</required>
+            <type>java.lang.String</type>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
@@ -97,6 +109,27 @@
             <name>status</name>
             <required>true</required>
             <type>java.lang.Integer</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>role</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    
+    <tag>
+        <name>navigation</name>
+        <tag-class>ict.tag.NavigationTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            Navigation for link tag
+        </description>
+        <attribute>
+            <name>role</name>
+            <required>true</required>
+            <type>java.lang.String</type>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>

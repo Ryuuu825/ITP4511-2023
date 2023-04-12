@@ -19,22 +19,21 @@ public class GuestListDAO extends BaseDAO {
         String sql = "CREATE TABLE IF NOT EXISTS guestlist ("
                 + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "createDate DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                + "bookingId INT(11) DEFAULT NULL,"
+                + "bookingId INT(11) NOT NULL,"
+                + "venueId INT(11) NOT NULL,"
                 + "PRIMARY KEY (id),"
-                + "FOREIGN KEY (bookingId) REFERENCES booking(id)"
+                + "FOREIGN KEY (bookingId) REFERENCES booking(id),"
+                + "FOREIGN KEY (venueId) REFERENCES venue(id)"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
     }
 
-    public boolean addRecord(int bookingId) {
+    public boolean addRecord(int bookingId, int venueId) {
         boolean isSuccess = false;
-        String sql = "INSERT INTO guestlist (bookingId) VALUES null";
+        String sql = "INSERT INTO guestlist (bookingId, venueId) VALUES (?, ?)";
         ArrayList<Object> params = new ArrayList<>();
         params.add(bookingId);
-        if (bookingId != 0) {
-            sql = "INSERT INTO guestlist (bookingId) VALUES (?)";
-            params.add(bookingId);
-        }
+        params.add(venueId);
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
@@ -47,26 +46,42 @@ public class GuestListDAO extends BaseDAO {
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
+    
+    public boolean delRecordByBookingId(int bookingId) {
+        boolean isSuccess = false;
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(bookingId);
+        String sql = "DELETE FROM guestlist WHERE bookingId=?";
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
+    
+    public boolean delRecordByBookingId(int bookingId, int venueId) {
+        boolean isSuccess = false;
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(bookingId);
+        params.add(venueId);
+        String sql = "DELETE FROM guestlist WHERE bookingId=? and venueId=?";
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
 
     public boolean editRecord(GuestList gl) {
         boolean isSuccess = false;
         ArrayList<Object> params = new ArrayList<>();
         String sql;
-        if (gl.getBookingId() != 0) {
-            sql = "UPDATE guestlist SET bookingId = ? WHERE id = ?";
-            params.add(gl.getBookingId());
-        } else {
-            sql = "UPDATE guestlist SET bookingId = null WHERE id = ?";
-        }
+        sql = "UPDATE guestlist SET bookingId = ?, venueId = ? WHERE id = ?";
+        params.add(gl.getBookingId());
+        params.add(gl.getVenueId());
         params.add(gl.getId());
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
 
-    public GuestList queryRocordByBookingId(int bookingId) {
-        String sql = "SELECT * FROM guestlist WHERE bookingId = ?";
+    public GuestList queryRecordById(int id) {
+        String sql = "SELECT * FROM guestlist WHERE id = ?";
         ArrayList<Object> params = new ArrayList<>();
-        params.add(bookingId);
+        params.add(id);
         GuestList gl = null;
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         if (ls.size() != 0) {
@@ -76,14 +91,48 @@ public class GuestListDAO extends BaseDAO {
             gl.setId((int) m.get("id"));
             gl.setBookingId((int) m.get("bookingId"));
             gl.setGuests(queryGuestsByGuestListId(gl.getId()));
+            gl.setVenueId((int) m.get("venueId"));
         }
         return gl;
     }
 
-    public GuestList queryRocordByKeyword(int bookingId, String keyword) {
+    public ArrayList<GuestList> queryRocordByBookingId(int bookingId) {
         String sql = "SELECT * FROM guestlist WHERE bookingId = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(bookingId);
+        GuestList gl = null;
+        ArrayList<GuestList> gls = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            gls.add(queryRecordById((int) m.get("id")));
+        }
+        return gls;
+    }
+
+    public GuestList queryRocordByBooking(int bookingId, int venueId) {
+        String sql = "SELECT * FROM guestlist WHERE bookingId = ? and venueId = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(bookingId);
+        params.add(venueId);
+        GuestList gl = null;
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        if (ls.size() != 0) {
+            Map<String, Object> m = ls.get(0);
+            gl = new GuestList();
+            gl.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            gl.setId((int) m.get("id"));
+            gl.setBookingId((int) m.get("bookingId"));
+            gl.setGuests(queryGuestsByGuestListId(gl.getId()));
+            gl.setVenueId((int) m.get("venueId"));
+        }
+        return gl;
+    }
+
+    public GuestList queryRocordByKeyword(int bookingId, int venueId, String keyword) {
+        String sql = "SELECT * FROM guestlist WHERE bookingId = ? and venueId = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(bookingId);
+        params.add(venueId);
         GuestList gl = null;
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         if (ls.size() != 0) {

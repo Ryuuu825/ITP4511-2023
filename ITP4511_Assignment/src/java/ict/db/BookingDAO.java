@@ -88,11 +88,7 @@ public class BookingDAO extends BaseDAO {
 
         //delete releted guest records
         GuestListDAO glDB = new GuestListDAO(dbUrl, dbUser, dbPassword);
-        GuestList gs = glDB.queryRocordByBookingId(id);
-        if (gs != null) {
-            gs.setBookingId(0);
-            isSuccess = glDB.editRecord(gs);
-        }
+        isSuccess = glDB.delRecordByBookingId(id);
 
         if (isSuccess) {
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);
@@ -224,7 +220,7 @@ public class BookingDAO extends BaseDAO {
         GuestListDAO guestListDAO = new GuestListDAO(dbUrl, dbUser, dbPassword);
         ArrayList<BookingDTO> bdtos = new ArrayList<>();
         ArrayList<Booking> bookings = queryRecord();
-        ArrayList<Guest> gl = null;
+        ArrayList<GuestList> gl = null;
         BookingDTO bdto = null;
         if (bookings.size() != 0) {
             for (Booking b : bookings) {
@@ -232,8 +228,8 @@ public class BookingDAO extends BaseDAO {
                 bdto.setBooking(b);
                 ArrayList<VenueTimeslots> vts1 = venueTimeslotDB.queryRocordToVenueTimeslotsList(b.getId());
                 bdto.setVenueTimeslotses(vts1);
-                gl = guestListDAO.queryRocordByBookingId(b.getId()).getGuests();
-                bdto.setGuestlist(gl);
+                gl = guestListDAO.queryRocordByBookingId(b.getId());
+                bdto.setVenueGuestlists(gl);
                 User u = userDB.queryRecordById(b.getUserId());
                 bdto.setMember(u);
                 bdtos.add(bdto);
@@ -248,7 +244,7 @@ public class BookingDAO extends BaseDAO {
         VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
         ArrayList<BookingDTO> bdtos = new ArrayList<>();
         ArrayList<Booking> bookings = queryRecordByKeywords(keyword);
-        ArrayList<Guest> gl = null;
+        ArrayList<GuestList> gl = null;
         BookingDTO bdto = null;
         if (bookings.size() != 0) {
             for (Booking b : bookings) {
@@ -256,8 +252,8 @@ public class BookingDAO extends BaseDAO {
                 bdto.setBooking(b);
                 ArrayList<VenueTimeslots> vts1 = venueTimeslotDB.queryRocordToVenueTimeslotsList(b.getId());
                 bdto.setVenueTimeslotses(vts1);
-                gl = guestListDAO.queryRocordByBookingId(b.getId()).getGuests();
-                bdto.setGuestlist(gl);
+                gl = guestListDAO.queryRocordByBookingId(b.getId());
+                bdto.setVenueGuestlists(gl);
                 User u = userDB.queryRecordById(b.getUserId());
                 bdto.setMember(u);
                 bdtos.add(bdto);
@@ -271,15 +267,15 @@ public class BookingDAO extends BaseDAO {
         VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
         GuestListDAO guestListDAO = new GuestListDAO(dbUrl, dbUser, dbPassword);
         Booking b = queryRecordById(bookingId);
-        ArrayList<Guest> gl = null;
+        ArrayList<GuestList> gl = null;
         BookingDTO bdto = null;
         if (b != null) {
             bdto = new BookingDTO();
             bdto.setBooking(b);
             ArrayList<VenueTimeslots> vts1 = venueTimeslotDB.queryRocordToVenueTimeslotsList(b.getId());
             bdto.setVenueTimeslotses(vts1);
-            gl = guestListDAO.queryRocordByBookingId(b.getId()).getGuests();
-            bdto.setGuestlist(gl);
+            gl = guestListDAO.queryRocordByBookingId(b.getId());
+            bdto.setVenueGuestlists(gl);
             User u = userDB.queryRecordById(b.getUserId());
             bdto.setMember(u);
         }
