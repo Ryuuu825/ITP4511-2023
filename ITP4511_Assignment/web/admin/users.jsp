@@ -85,8 +85,6 @@
             // }, 1);
 
             let formDisabled = true;
-
-
         </script>
     </head>
 
@@ -104,11 +102,11 @@
                     </div>
                     <div class="modal-body">
                         <p class="">Are you sure you want to delete this user?</p>
-
+                        <input type="hidden" id="deleteId" name="deleteId" value="" />
                     </div>
                     <div class="modal-footer flex flex-row items-center">
                         <button type="button" class="btn-danger btn" data-bs-dismiss="modal" aria-label="Close"
-                                onclick="$('#deleteForm').submit();">
+                                onclick="$('#deleteForm' + $('#deleteId').val()).submit();">
                             Delete
                         </button>
                         <button type="button" class="mx-3" data-bs-dismiss="modal" aria-label="Close"
@@ -212,20 +210,17 @@
                                     <td><%= user.getEmail()%></td>
                                     <td><%= account.getRoleString()%></td>
                                     <td>
-                                        <a href="users.jsp?id=<%= user.getId()%><% if (request.getParameter("search") != null) {%>&search=<%=request.getParameter("search")%><% }%>" class="btn btn-primary btn-rounded btn-sm rounded-pill">VIEW</a>
+                                        <a href="users.jsp?id=<%= user.getId()%><% if (request.getParameter("search") != null) {%>&search=<%=request.getParameter("search")%><% }%><% if (request.getParameter("page") != null) {%>&page=<%=request.getParameter("page")%><% }%>" class="btn btn-primary btn-rounded btn-sm rounded-pill">VIEW</a>
                                     </td>
                                     <td>
-                                        <form action="<%= request.getContextPath()%>/api/admin/users" method="POST" id="deleteForm">
+                                        <form action="<%= request.getContextPath()%>/api/admin/users" method="POST" id="deleteForm<%= account.getId()%>">
                                             <input type="hidden" name="id" value="<%= account.getId()%>" />
                                             <input type="hidden" name="action" value="delete" />
                                         </form>
-                                        <button class="btn btn-danger btn-rounded btn-sm rounded-pill" onclick="$('#errorModal').modal('show')">Delete</button>
+                                        <button class="btn btn-danger btn-rounded btn-sm rounded-pill" onclick="$('#errorModal').modal('show');$('#deleteId').val(<%= account.getId()%>)">Delete</button>
                                     </td>
                                 </tr>
-
                                 <% }%>
-
-
                             </tbody>
                         </table>
 

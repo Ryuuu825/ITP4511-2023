@@ -46,6 +46,35 @@ public class DbUtil {
         return (Connection) DriverManager.getConnection(dburl, dbUser, dbPassword);
     }
 
+
+    public boolean testConnectionWithDB() {
+
+        Connection cnnt = null;
+        try {
+            cnnt = getConnection();
+            cnnt.close();
+            return true;
+        } catch (SQLException e) {
+            while (e != null) {
+                e.printStackTrace();
+                hasError = true;
+                String errorMsg = e.getMessage();
+                if (errorMsg.contains("(")) {
+                    errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
+                }
+                errorMsgs.add(errorMsg);
+                e = e.getNextException();
+            }
+        } catch (IOException e) {
+            String errorMsg = e.getMessage();
+            errorMsgs.add(errorMsg);
+            e.printStackTrace();
+            hasError = true;
+        }
+        return false;
+
+    }
+
     /**
      * excute query statement
      *

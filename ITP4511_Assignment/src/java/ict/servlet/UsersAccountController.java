@@ -138,7 +138,7 @@ public class UsersAccountController extends HttpServlet{
 
             HttpSession session = req.getSession();
             if (result) {
-                session.setAttribute("message", "Delete account successfully!");
+                session.setAttribute("message", "Delete account successfully! (id:" + req.getParameter("id") + ")");
             } else {
                 session.setAttribute("error", "Delete account (id:" + req.getParameter("id")  + ") unsuccessfully!" + "<br>Database trace:<br>" + 
                     "<div style='color:red' class='ml-5'>" + accountDB.getLastError() + "</div>");

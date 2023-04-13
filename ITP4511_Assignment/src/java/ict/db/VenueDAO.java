@@ -215,6 +215,29 @@ public class VenueDAO extends BaseDAO {
         return vs;
     }
 
+    public ArrayList<Venue> queryRecord() {
+        String sql = "SELECT * FROM venue";
+        ArrayList<Object> params = new ArrayList<>();
+        Venue v = null;
+        ArrayList<Venue> vs = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            v = new Venue();
+            v.setId((int) m.get("id"));
+            v.setName((String) m.get("name"));
+            v.setLocation((String) m.get("location"));
+            v.setAddress((String) m.get("address"));
+            v.setCapacity((int) m.get("capacity"));
+            v.setType((int) m.get("type"));
+            v.setImg((String) m.get("img"));
+            v.setDescription((String) m.get("description"));
+            v.setUserId((int) m.get("userId"));
+            v.setHourlyRate((double) m.get("hourlyRate"));
+            vs.add(v);
+        }
+        return vs;
+    }
+    
     public boolean delRecord(int id) {
         String sql = "DELETE FROM venue WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();
