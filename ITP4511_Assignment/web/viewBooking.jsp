@@ -35,7 +35,7 @@
             font-size: 1.125rem;
             line-height: 1.75rem;
         }
-        
+
         .summary-width {
             width: calc(33.33% - 3rem);
         }
@@ -46,7 +46,7 @@
                 if ($(this).scrollTop() >= $('#summary').height()) {
                     $('#summary').parent().addClass("me-5");
                     $('#summary').addClass("position-fixed end-0 top-0 mx-5 summary-width");
-                }else {
+                } else {
                     $('#summary').parent().removeClass("me-5");
                     $('#summary').removeClass("position-fixed end-0 top-0 mx-5 summary-width");
                 }
@@ -56,7 +56,7 @@
 
     <jsp:useBean scope="request" id="bookingDTO" class="ict.bean.view.BookingDTO" />
     <%
-        String role = (String)session.getAttribute("role");
+        String role = (String) session.getAttribute("role");
         if (role == null) {
             response.sendRedirect("");
         }
@@ -64,6 +64,7 @@
         String memberName = bookingDTO.getMember().getFirstName() + " " + bookingDTO.getMember().getLastName();
         String memberPhone = bookingDTO.getMember().getPhone();
         String memberEmail = bookingDTO.getMember().getEmail();
+        int status = bookingDTO.getBooking().getStatus();
 
         ArrayList<GuestList> guests = bookingDTO.getVenueGuestlists();
         ArrayList<VenueTimeslots> venueTimeslotses = bookingDTO.getVenueTimeslotses();
@@ -257,7 +258,11 @@
                                     <span class="fs-5"><strong>HK$ <%=Arrays.stream(subTotals).sum()%></strong></span>
                                 </li>
                             </ul>
-                            <ict:statusButton status="<%=bookingDTO.getBooking().getStatus()%>" role="<%=role%>"/>
+                            <form method="post" action="updateBooking">
+                                <input type="hidden" name="bookingId" value="<%=bookingId%>">
+                                <input type="hidden" name="action" value="updateStatus">
+                                <ict:statusButton status="<%=status%>" role="<%=role%>" />
+                            </form>
                         </div>
                     </div>
                 </div>

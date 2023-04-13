@@ -276,4 +276,16 @@ public class BookingDAO extends BaseDAO {
         }
         return bdto;
     }
+    
+    public boolean updateStatus(int bookingId, int status) {
+        String sql = "UPDATE booking "
+                + "SET status = ? "
+                + "WHERE id = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(status);
+        params.add(bookingId);
+        boolean isSuccess = false;
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
 }

@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "BookingController", urlPatterns = {"/searchBookings", "/editBookingRecord", "/viewBooking"})
+@WebServlet(name = "BookingController", urlPatterns = {"/searchBookings", "/updateBooking", "/viewBooking"})
 public class BookingController extends HttpServlet {
 
     private AccountDAO accountDB;
@@ -37,6 +37,16 @@ public class BookingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
+        System.err.println(action);
+        if ("updateStatus".equalsIgnoreCase(action)) {
+            int bookingId = Integer.parseInt(req.getParameter("bookingId"));
+            System.err.println("bid:"+bookingId);
+            int status = Integer.parseInt(req.getParameter("status"));
+            System.err.println("status:"+bookingId);
+            if (bookingDB.updateStatus(bookingId, status)) {
+                resp.sendRedirect("searchBookings");
+            };
+        }
     }
 
     @Override

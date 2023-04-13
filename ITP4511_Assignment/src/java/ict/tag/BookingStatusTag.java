@@ -16,8 +16,8 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class BookingStatusTag extends SimpleTagSupport {
 
-    private String[] statusString = {"Pending Approval", "Approved", "Rejected", "Check in", "Check out", "Cancel"};
-    private String[] color = {"btn-warning", "btn-success", "btn-danger", "btn-primary", "btn-success", "btn-danger"};
+    private String[] statusString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancel", "Complete"};
+    private String[] color = {"btn-warning", "btn-danger", "btn-primary", "btn-success", "btn-danger", "btn-success"};
 
     private int status;
     private String role;
@@ -39,43 +39,34 @@ public class BookingStatusTag extends SimpleTagSupport {
         try {
             PageContext pageContext = (PageContext) getJspContext();
             JspWriter out = pageContext.getOut();
-            switch (status - 1) {
-                case 0:
-                    if ("Member".equalsIgnoreCase(role)) {
-                        out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
-                        out.print("Update");
+            if ("Member".equalsIgnoreCase(role)) {
+                out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
+                out.print("Update");
+                out.print("</button>");
+                out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-danger btn-block \">");
+                out.print("Cancel");
+                out.print("</button>");
+            } else {
+                switch (status) {
+                    case 1:
+                        out.print("<button name=\"status\" value=\"3\" type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
+                        out.print("Approve");
                         out.print("</button>");
-                        out.print("<button type=\"submit\" class=\"btn btn-lg btn-danger btn-block \">");
-                        out.print("Cancel");
+                        out.print("<button name=\"status\" value=\"2\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
+                        out.print("Reject");
                         out.print("</button>");
                         break;
-                    }
-                    out.print("<button type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
-                    out.print("Approved");
-                    out.print("</button>");
-                    out.print("<button type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
-                    out.print("Rejected");
-                    out.print("</button>");
-                    break;
-                case 1:
-                    out.print("<button type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
-                    out.print("Check in");
-                    out.print("</button>");
-                    break;
-                case 2:
-                    out.print("<button type=\"submit\" disabled class=\"btn btn-lg btn-block btn-dark \">");
-                    out.print("Rejected");
-                    out.print("</button>");
-                    break;
-                case 3:
-                    out.print("<button type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
-                    out.print("Check out");
-                    out.print("</button>");
-                    break;
-                default:
-                    out.print("<button type=\"submit\" disabled class=\"btn btn-lg btn-block btn-dark \">");
-                    out.print("Completed");
-                    out.print("</button>");
+                    case 3:
+                        out.print("<button name=\"status\" value=\"4\" type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
+                        out.print("Check in");
+                        out.print("</button>");
+                        break;
+                    case 5:
+                        out.print("<button name=\"status\" value=\"7\" type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
+                        out.print("Check out");
+                        out.print("</button>");
+                        break;
+                }
             }
         } catch (IOException ioe) {
             System.out.println("Error generating prime: " + ioe);
