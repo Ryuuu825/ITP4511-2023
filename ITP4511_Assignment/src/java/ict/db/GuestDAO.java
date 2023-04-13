@@ -25,7 +25,7 @@ public class GuestDAO extends BaseDAO {
                 + "name varchar(50) NOT NULL,"
                 + "email varchar(50) NOT NULL,"
                 + "PRIMARY KEY (id),"
-                + "FOREIGN KEY (userId) REFERENCES user(id)"
+                + "FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
     }
@@ -133,9 +133,7 @@ public class GuestDAO extends BaseDAO {
         String sql = "DELETE FROM guest WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
-        GuestListGuestDAO glgDB = new GuestListGuestDAO(dbUrl, dbUser, dbPassword);
         boolean isSuccess = false;
-        isSuccess = glgDB.delRecordByGuestId(id);
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }

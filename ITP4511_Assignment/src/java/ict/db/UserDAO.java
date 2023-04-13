@@ -5,6 +5,7 @@
 package ict.db;
 
 import ict.bean.User;
+import ict.bean.Venue;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class UserDAO extends BaseDAO{
                 + "email VARCHAR(50) NOT NULL,"
                 + "phone VARCHAR(15) NOT NULL,"
                 + "PRIMARY KEY (id),"
-                + "FOREIGN KEY (accountId) REFERENCES account(id)"
+                + "FOREIGN KEY (accountId) REFERENCES account(id) ON DELETE CASCADE"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
     }
@@ -200,6 +201,14 @@ public class UserDAO extends BaseDAO{
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         boolean isSuccess = false;
+        VenueDAO vdao = new VenueDAO(dbUrl, dbUser, dbPassword);
+        ArrayList<Venue> vs = vdao.queryRecordByUserId(id);
+        if (vs.size() != 0) {
+            for (Venue v : vs) {
+                v.setUserId(0);
+                isSuccess = vdao.editRecord(v);
+            }
+        }
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }

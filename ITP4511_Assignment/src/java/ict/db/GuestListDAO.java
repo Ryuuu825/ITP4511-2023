@@ -2,8 +2,6 @@ package ict.db;
 
 import ict.bean.Guest;
 import ict.bean.GuestList;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -22,8 +20,8 @@ public class GuestListDAO extends BaseDAO {
                 + "bookingId INT(11) NOT NULL,"
                 + "venueId INT(11) NOT NULL,"
                 + "PRIMARY KEY (id),"
-                + "FOREIGN KEY (bookingId) REFERENCES booking(id),"
-                + "FOREIGN KEY (venueId) REFERENCES venue(id)"
+                + "FOREIGN KEY (bookingId) REFERENCES booking(id) ON DELETE CASCADE,"
+                + "FOREIGN KEY (venueId) REFERENCES venue(id) ON DELETE CASCADE"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
     }
@@ -43,10 +41,14 @@ public class GuestListDAO extends BaseDAO {
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         String sql = "DELETE FROM guestlist WHERE id=?";
-        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        GuestListGuestDAO glgdao = new GuestListGuestDAO(dbUrl, dbUser, dbPassword);
+        isSuccess = glgdao.delRecordByGuestlistId(id);
+        if (isSuccess) {
+            isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        }
         return isSuccess;
     }
-    
+
     public boolean delRecordByBookingId(int bookingId) {
         boolean isSuccess = false;
         ArrayList<Object> params = new ArrayList<>();
@@ -55,7 +57,16 @@ public class GuestListDAO extends BaseDAO {
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
-    
+
+    public boolean delRecordByVenueId(int venueId) {
+        boolean isSuccess = false;
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(venueId);
+        String sql = "DELETE FROM guestlist WHERE venueId=?";
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
+
     public boolean delRecordByBookingId(int bookingId, int venueId) {
         boolean isSuccess = false;
         ArrayList<Object> params = new ArrayList<>();
@@ -94,6 +105,19 @@ public class GuestListDAO extends BaseDAO {
             gl.setVenueId((int) m.get("venueId"));
         }
         return gl;
+    }
+
+    public ArrayList<GuestList> queryRocordByVenueId(int venueId) {
+        String sql = "SELECT * FROM guestlist WHERE venueId = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(venueId);
+        GuestList gl = null;
+        ArrayList<GuestList> gls = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            gls.add(queryRecordById((int) m.get("id")));
+        }
+        return gls;
     }
 
     public ArrayList<GuestList> queryRocordByBookingId(int bookingId) {

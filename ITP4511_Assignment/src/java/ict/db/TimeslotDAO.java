@@ -5,7 +5,6 @@
 package ict.db;
 
 import ict.bean.Timeslot;
-import ict.bean.VenueTimeslot;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -137,19 +136,7 @@ public class TimeslotDAO extends BaseDAO {
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         boolean isSuccess = false;
-
-        //delete releted venue_timeslot records
-        VenueTimeslotDAO vtsDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
-        ArrayList<VenueTimeslot> vts = vtsDB.queryRocordByVenueId(id);
-        if (vts.size() != 0) {
-            for (VenueTimeslot vt : vts) {
-                isSuccess = vtsDB.delRecord(vt.getId());
-            }
-        }
-
-        if (isSuccess) {
-            isSuccess = dbUtil.updateByPreparedStatement(sql, params);
-        }
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
 

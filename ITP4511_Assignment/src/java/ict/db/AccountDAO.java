@@ -5,10 +5,7 @@
 package ict.db;
 
 import ict.bean.Account;
-import ict.bean.Booking;
-import ict.bean.Guest;
 import ict.bean.User;
-import ict.bean.Venue;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -101,32 +98,6 @@ public class AccountDAO extends BaseDAO {
         //delete releted user records
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         User u = userDB.queryRecordByAccountId(id);
-        //delete releted user records
-        BookingDAO bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
-        VenueDAO venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
-        GuestDAO guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
-        ArrayList<Booking> bs = bookingDB.queryRecordByUserId(id);
-        ArrayList<Venue> vs = venueDB.queryRecordByUserId(id);
-        ArrayList<Guest> gs = guestDB.queryRecordByUserId(id);
-        if (gs.size() != 0) {
-            for (Guest g : gs) {
-                isSuccess = guestDB.delRecord(g.getId());
-            }
-        }
-        
-        if (bs.size() != 0) {
-            for (Booking b : bs) {
-                isSuccess = bookingDB.delRecord(b.getId());
-            }
-        }
-
-        if (vs.size() != 0) {
-            for (Venue v : vs) {
-                v.setUserId(0);
-                isSuccess = venueDB.editRecord(v);
-            }
-        }
-
         isSuccess = userDB.delRecord(u.getId());
 
         if (isSuccess == true) {

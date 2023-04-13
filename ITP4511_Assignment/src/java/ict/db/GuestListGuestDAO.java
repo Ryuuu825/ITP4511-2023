@@ -10,12 +10,24 @@ import java.util.ArrayList;
  *
  * @author jyuba
  */
-public class GuestListGuestDAO extends BaseDAO{
+public class GuestListGuestDAO extends BaseDAO {
 
     public GuestListGuestDAO(String dbUrl, String dbUser, String dbPassword) {
         super(dbUrl, dbUser, dbPassword);
     }
-    
+
+    public void createTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS guestlist_guest ("
+                + "id INT(11) NOT NULL AUTO_INCREMENT,"
+                + "guestlistId INT(11) NOT NULL,"
+                + "guestId INT(11) NOT NULL,"
+                + "PRIMARY KEY (id),"
+                + "FOREIGN KEY (guestlistId) REFERENCES guestlist(id) ON DELETE CASCADE,"
+                + "FOREIGN KEY (guestId) REFERENCES guest(id) ON DELETE CASCADE"
+                + ")";
+        dbUtil.executeByPreparedStatement(sql);
+    }
+
     public boolean delRecord(int id) {
         String sql = "DELETE FROM guestlist_guest WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();
@@ -24,7 +36,7 @@ public class GuestListGuestDAO extends BaseDAO{
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
-    
+
     public boolean delRecordByGuestId(int guestId) {
         String sql = "DELETE FROM guestlist_guest WHERE guestId=?";
         ArrayList<Object> params = new ArrayList<>();
@@ -33,7 +45,7 @@ public class GuestListGuestDAO extends BaseDAO{
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
-    
+
     public boolean delRecordByGuestId(int bookingId, int venueId, int guestId) {
         String sql = "DELETE FROM guestlist_guest WHERE bookingId = ? and venueId = ? and guestId=?";
         ArrayList<Object> params = new ArrayList<>();
@@ -44,7 +56,7 @@ public class GuestListGuestDAO extends BaseDAO{
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
-    
+
     public boolean delRecordByGuestlistId(int guestlsitId) {
         String sql = "DELETE FROM guestlist_guest WHERE guestlistId=?";
         ArrayList<Object> params = new ArrayList<>();

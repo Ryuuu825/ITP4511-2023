@@ -6,7 +6,6 @@ package ict.db;
 
 import ict.bean.User;
 import ict.bean.Venue;
-import ict.bean.VenueTimeslot;
 import ict.bean.view.VenueDTO;
 import java.util.ArrayList;
 import java.util.Map;
@@ -32,9 +31,9 @@ public class VenueDAO extends BaseDAO {
                 + "type tinyint(2) NOT NULL,"
                 + "img varchar(255) NOT NULL,"
                 + "description varchar(255) NULL,"
-                + "userId INT(11) NOT NULL,"
+                + "userId INT(11) DEFAULT NULL,"
                 + "hourlyRate DOUBLE NOT NULL,"
-                + "FOREIGN KEY (userId) REFERENCES user(id),"
+                + "FOREIGN KEY (userId) REFERENCES user(id) ON DELECT SET NULL,"
                 + "PRIMARY KEY (id)"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
@@ -82,21 +81,19 @@ public class VenueDAO extends BaseDAO {
     }
 
     public ArrayList<VenueDTO> queryRecordToDTO() {
-        String sql = "SELECT v.*, v.id as venueId, u.* "
-                + "FROM Venue v "
-                + "JOIN User u ON v.userId = u.id";
+        String sql = "SELECT * FROM venue";
         ArrayList<Object> params = new ArrayList<>();
         Venue v = null;
-        User u = null;
         VenueDTO vdto = null;
+        UserDAO udao = new UserDAO(dbUrl, dbUser, dbPassword);
         ArrayList<VenueDTO> vdtos = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         if (ls.size() != 0) {
             for (Map<String, Object> m : ls) {
+                User u = null;
                 v = new Venue();
-                u = new User();
                 vdto = new VenueDTO();
-                v.setId((int) m.get("venueId"));
+                v.setId((int) m.get("id"));
                 v.setName((String) m.get("name"));
                 v.setLocation((String) m.get("location"));
                 v.setAddress((String) m.get("address"));
@@ -104,14 +101,11 @@ public class VenueDAO extends BaseDAO {
                 v.setType((int) m.get("type"));
                 v.setImg((String) m.get("img"));
                 v.setDescription((String) m.get("description"));
-                v.setUserId((int) m.get("userId"));
                 v.setHourlyRate((double) m.get("hourlyRate"));
-                u.setId((int) m.get("userId"));
-                u.setAccountId((int) m.get("accountId"));
-                u.setEmail((String) m.get("email"));
-                u.setFirstName((String) m.get("firstName"));
-                u.setLastName((String) m.get("lastName"));
-                u.setPhone((String) m.get("phone"));
+                if (m.get("userId") != null) {
+                    v.setUserId((int) m.get("userId"));
+                    u = udao.queryRecordById((int) m.get("userId"));
+                }
                 vdto.setUser(u);
                 vdto.setVenue(v);
                 vdtos.add(vdto);
@@ -136,16 +130,16 @@ public class VenueDAO extends BaseDAO {
         params.add("%" + keyword + "%");
         params.add("%" + keyword + "%");
         Venue v = null;
-        User u = null;
         VenueDTO vdto = null;
         ArrayList<VenueDTO> vdtos = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        UserDAO udao = new UserDAO(dbUrl, dbUser, dbPassword);
         if (ls.size() != 0) {
             for (Map<String, Object> m : ls) {
+                User u = null;
                 v = new Venue();
-                u = new User();
                 vdto = new VenueDTO();
-                v.setId((int) m.get("venueId"));
+                v.setId((int) m.get("id"));
                 v.setName((String) m.get("name"));
                 v.setLocation((String) m.get("location"));
                 v.setAddress((String) m.get("address"));
@@ -153,14 +147,11 @@ public class VenueDAO extends BaseDAO {
                 v.setType((int) m.get("type"));
                 v.setImg((String) m.get("img"));
                 v.setDescription((String) m.get("description"));
-                v.setUserId((int) m.get("userId"));
                 v.setHourlyRate((double) m.get("hourlyRate"));
-                u.setId((int) m.get("userId"));
-                u.setAccountId((int) m.get("accountId"));
-                u.setEmail((String) m.get("email"));
-                u.setFirstName((String) m.get("firstName"));
-                u.setLastName((String) m.get("lastName"));
-                u.setPhone((String) m.get("phone"));
+                if (m.get("userId") != null) {
+                    v.setUserId((int) m.get("userId"));
+                    u = udao.queryRecordById((int) m.get("userId"));
+                }
                 vdto.setUser(u);
                 vdto.setVenue(v);
                 vdtos.add(vdto);
@@ -243,20 +234,7 @@ public class VenueDAO extends BaseDAO {
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         boolean isSuccess = false;
-
-        //delete releted venue_timeslot records
-        VenueTimeslotDAO vtsDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
-        ArrayList<VenueTimeslot> vts = vtsDB.queryRocordByVenueId(id);
-        if (vts.size() != 0) {
-            for (VenueTimeslot vt : vts) {
-                isSuccess = vtsDB.delRecord(vt.getId());
-            }
-        }
-
-        //delete releted user records
-        if (isSuccess) {
-            isSuccess = dbUtil.updateByPreparedStatement(sql, params);
-        }
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
 

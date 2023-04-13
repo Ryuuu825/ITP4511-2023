@@ -12,7 +12,6 @@ import ict.bean.view.DateTimeslots;
 import ict.bean.view.VenueTimeslots;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.HashMap;
 
 public class VenueTimeslotDAO extends BaseDAO {
 
@@ -28,9 +27,9 @@ public class VenueTimeslotDAO extends BaseDAO {
                 + "bookingId INT(11) DEFAULT NULL,"
                 + "date DATE NOT NULL,"
                 + "PRIMARY KEY (id, venueId, timeslotId),"
-                + "FOREIGN KEY (venueId) REFERENCES venue(id),"
-                + "FOREIGN KEY (bookingId) REFERENCES booking(id),"
-                + "FOREIGN KEY (timeslotId) REFERENCES timeslot(id)"
+                + "FOREIGN KEY (venueId) REFERENCES venue(id) ON DELETE CASCADE,"
+                + "FOREIGN KEY (bookingId) REFERENCES booking(id) ON DELECT SET NULL,"
+                + "FOREIGN KEY (timeslotId) REFERENCES timeslot(id) ON DELETE CASCADE"
                 + ")";
         dbUtil.executeByPreparedStatement(sql);
     }
@@ -150,6 +149,7 @@ public class VenueTimeslotDAO extends BaseDAO {
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         for (Map<String, Object> m : ls) {
             VenueTimeslot vt = new VenueTimeslot();
+            vt.setId((int) m.get("int"));
             vt.setBookingId((int) m.get("bookingId"));
             vt.setVenueId((int) m.get("venueId"));
             vt.setTimeslotId((int) m.get("timeslotId"));
@@ -165,14 +165,20 @@ public class VenueTimeslotDAO extends BaseDAO {
         params.add(venueId);
         ArrayList<VenueTimeslot> vts = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        for (Map<String, Object> m : ls) {
-            VenueTimeslot vt = new VenueTimeslot();
-            vt.setBookingId((int) m.get("bookingId"));
-            vt.setVenueId((int) m.get("venueId"));
-            vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate(((Date) m.get("date")).toLocalDate());
-            vts.add(vt);
+        if (ls.size() != 0) {
+            for (Map<String, Object> m : ls) {
+                VenueTimeslot vt = new VenueTimeslot();
+                vt.setId((int) m.get("id"));
+                if (m.get("bookingId") != null) {
+                    vt.setBookingId((int) m.get("bookingId"));
+                }
+                vt.setVenueId((int) m.get("venueId"));
+                vt.setTimeslotId((int) m.get("timeslotId"));
+                vt.setDate(((Date) m.get("date")).toLocalDate());
+                vts.add(vt);
+            }
         }
+
         return vts;
     }
 
@@ -184,6 +190,7 @@ public class VenueTimeslotDAO extends BaseDAO {
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         for (Map<String, Object> m : ls) {
             VenueTimeslot vt = new VenueTimeslot();
+            vt.setId((int) m.get("int"));
             vt.setBookingId((int) m.get("bookingId"));
             vt.setVenueId((int) m.get("venueId"));
             vt.setTimeslotId((int) m.get("timeslotId"));
@@ -200,6 +207,7 @@ public class VenueTimeslotDAO extends BaseDAO {
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         for (Map<String, Object> m : ls) {
             VenueTimeslot vt = new VenueTimeslot();
+            vt.setId((int) m.get("int"));
             vt.setBookingId((int) m.get("bookingId"));
             vt.setVenueId((int) m.get("venueId"));
             vt.setTimeslotId((int) m.get("timeslotId"));
@@ -283,7 +291,9 @@ public class VenueTimeslotDAO extends BaseDAO {
             v.setType((int) m.get("type"));
             v.setImg((String) m.get("img"));
             v.setDescription((String) m.get("description"));
-            v.setUserId((int) m.get("userId"));
+            if (m.get("userId") != null) {
+                v.setUserId((int) m.get("userId"));
+            }
             v.setHourlyRate((double) m.get("hourlyRate"));
             LocalDate date = ((Date) m.get("date")).toLocalDate();
             dts = queryRocordToDateTimeslots(bookingId, date, venueId);

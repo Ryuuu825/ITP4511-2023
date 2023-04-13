@@ -4,9 +4,7 @@
  */
 package ict.servlet;
 
-import ict.bean.GuestList;
 import ict.bean.view.VenueDTO;
-import ict.db.GuestListGuestDAO;
 import ict.db.VenueDAO;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "VenueController", urlPatterns = {"/delVenue", "/addVenue", "/editVenue", "/viewVenue"})
+@WebServlet(name = "VenueController", urlPatterns = {"/delVenue", "/addVenue", "/editVenue", "/viewVenue", "/searchVenues"})
 public class VenueController extends HttpServlet {
 
     private VenueDAO venueDAO;
@@ -59,7 +57,7 @@ public class VenueController extends HttpServlet {
         if ("delete".equalsIgnoreCase(action)) {
             int vid = Integer.parseInt(req.getParameter("venueId"));
             if (venueDAO.delRecord(vid)) {
-                resp.sendRedirect("viewVenue?action=search");
+                resp.sendRedirect("searchVenues?action=search");
             };
         } else if ("search".equalsIgnoreCase(action)) {
             String searchKeys = req.getParameter("search");
@@ -72,7 +70,7 @@ public class VenueController extends HttpServlet {
             req.setAttribute("venueDTOs", vdtos);
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
-        } else{
+        } else {
             vdtos = venueDAO.queryRecordToDTO();
             RequestDispatcher rd;
             req.setAttribute("venueDTOs", vdtos);

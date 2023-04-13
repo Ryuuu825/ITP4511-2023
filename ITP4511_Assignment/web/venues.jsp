@@ -42,14 +42,14 @@
             
             $("#search-button").click(function () {
                 var search = $("#search-input").val();
-                window.location.href = "searchBookings?search=" + search;
+                window.location.href = "searchVenues?action=search&search=" + search;
             });
             
             //key press enter
             $("#search-input").keypress(function (e) {
                 if (e.which == 13) {
                     var search = $("#search-input").val();
-                    window.location.href = "searchBookings?search=" + search;
+                    window.location.href = "searchVenues?action=search&search=" + search;
                 }
             });
             
@@ -84,7 +84,7 @@
             </div>
             <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
                 <li class="nav-item nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="viewVenue">
+                    <a class="text-white mx-3 text-decoration-none" href="searchVenues">
                         <!-- Browse Spaces -->
                         Venue
                     </a>
@@ -108,10 +108,10 @@
             <div class="card bg-white p-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="m-2">Venues</h5>
-                    <div class="input-group" style="width: 30%;">
+                    <div class="input-group" style="width: 35%;">
                         <div class="form-outline">
                             <input id="search-input" type="search" class="form-control border rounded-start" />
-                            <label class="form-label" for="search-input">Search by booking id or member name</label>
+                            <label class="form-label" for="search-input">Search by venue name, location or person in charge</label>
                         </div>
                         <button id="search-button" type="button" class="btn btn-primary">
                             <i class="fas fa-search"></i>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-04-12 18:07:10
+-- 產生時間： 2023-04-13 13:03:37
 -- 伺服器版本： 10.4.24-MariaDB
 -- PHP 版本： 8.1.6
 
@@ -156,7 +156,7 @@ INSERT INTO `guest` (`id`, `userId`, `name`, `email`) VALUES
 
 CREATE TABLE `guestlist` (
   `id` int(11) NOT NULL,
-  `createDate` date NOT NULL DEFAULT curdate(),
+  `createDate` date NOT NULL DEFAULT current_timestamp(),
   `bookingId` int(11) NOT NULL,
   `venueId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -2185,7 +2185,7 @@ ALTER TABLE `guestlist`
 -- 資料表索引 `guestlist_guest`
 --
 ALTER TABLE `guestlist_guest`
-  ADD PRIMARY KEY (`id`,`guestlistId`,`guestId`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `guestlistId` (`guestlistId`),
   ADD KEY `guestId` (`guestId`);
 
@@ -2241,6 +2241,12 @@ ALTER TABLE `guest`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
+-- 使用資料表自動遞增(AUTO_INCREMENT) `guestlist`
+--
+ALTER TABLE `guestlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- 使用資料表自動遞增(AUTO_INCREMENT) `guestlist_guest`
 --
 ALTER TABLE `guestlist_guest`
@@ -2278,47 +2284,47 @@ ALTER TABLE `venue_timeslot`
 -- 資料表的限制式 `booking`
 --
 ALTER TABLE `booking`
-  ADD CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- 資料表的限制式 `guest`
 --
 ALTER TABLE `guest`
-  ADD CONSTRAINT `guest_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `guest_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- 資料表的限制式 `guestlist`
 --
 ALTER TABLE `guestlist`
-  ADD CONSTRAINT `guestlist_ibfk_1` FOREIGN KEY (`bookingId`) REFERENCES `booking` (`id`),
-  ADD CONSTRAINT `guestlist_ibfk_2` FOREIGN KEY (`venueId`) REFERENCES `venue` (`id`);
+  ADD CONSTRAINT `guestlist_ibfk_1` FOREIGN KEY (`bookingId`) REFERENCES `booking` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `guestlist_ibfk_2` FOREIGN KEY (`venueId`) REFERENCES `venue` (`id`) ON DELETE CASCADE;
 
 --
 -- 資料表的限制式 `guestlist_guest`
 --
 ALTER TABLE `guestlist_guest`
-  ADD CONSTRAINT `guestlist_guest_ibfk_1` FOREIGN KEY (`guestlistId`) REFERENCES `guestlist` (`id`),
-  ADD CONSTRAINT `guestlist_guest_ibfk_2` FOREIGN KEY (`guestId`) REFERENCES `guest` (`id`);
+  ADD CONSTRAINT `guestlist_guest_ibfk_1` FOREIGN KEY (`guestlistId`) REFERENCES `guestlist` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `guestlist_guest_ibfk_2` FOREIGN KEY (`guestId`) REFERENCES `guest` (`id`) ON DELETE CASCADE;
 
 --
 -- 資料表的限制式 `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `account` (`id`);
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `account` (`id`) ON DELETE CASCADE;
 
 --
 -- 資料表的限制式 `venue`
 --
 ALTER TABLE `venue`
-  ADD CONSTRAINT `venue_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `venue_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE SET NULL;
 
 --
 -- 資料表的限制式 `venue_timeslot`
 --
 ALTER TABLE `venue_timeslot`
-  ADD CONSTRAINT `venue_timeslot_ibfk_1` FOREIGN KEY (`venueId`) REFERENCES `venue` (`id`),
-  ADD CONSTRAINT `venue_timeslot_ibfk_2` FOREIGN KEY (`bookingId`) REFERENCES `booking` (`id`),
-  ADD CONSTRAINT `venue_timeslot_ibfk_3` FOREIGN KEY (`timeslotId`) REFERENCES `timeslot` (`id`);
+  ADD CONSTRAINT `venue_timeslot_ibfk_1` FOREIGN KEY (`venueId`) REFERENCES `venue` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `venue_timeslot_ibfk_2` FOREIGN KEY (`bookingId`) REFERENCES `booking` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `venue_timeslot_ibfk_3` FOREIGN KEY (`timeslotId`) REFERENCES `timeslot` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

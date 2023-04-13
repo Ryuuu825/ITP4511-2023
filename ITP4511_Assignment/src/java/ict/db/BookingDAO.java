@@ -5,7 +5,6 @@
 package ict.db;
 
 import ict.bean.Booking;
-import ict.bean.Guest;
 import ict.bean.GuestList;
 import ict.bean.User;
 import ict.bean.VenueTimeslot;
@@ -85,10 +84,6 @@ public class BookingDAO extends BaseDAO {
                 isSuccess = vtsDB.editRecord(vt);
             }
         }
-
-        //delete releted guest records
-        GuestListDAO glDB = new GuestListDAO(dbUrl, dbUser, dbPassword);
-        isSuccess = glDB.delRecordByBookingId(id);
 
         if (isSuccess) {
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);

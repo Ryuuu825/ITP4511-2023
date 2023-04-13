@@ -5,6 +5,7 @@
 package ict.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -23,16 +24,15 @@ public class Venue implements Serializable {
     private int userId;
     private double hourlyRate;
 
-    private enum typeEnum {
-        SportsClub,
-        Hotel,
-        Restaurant,
-        ArtGallerie,
-        Park,
-        Club
-    }
+    private ArrayList<String> typeStrings = new ArrayList<>();
 
     public Venue() {
+        typeStrings = new ArrayList<>();
+        typeStrings.add("Hotel");
+        typeStrings.add("Restaurant");
+        typeStrings.add("Art Gallery");
+        typeStrings.add("Park");
+        typeStrings.add("Club");
     }
 
     public Venue(int id, String name, String address, int capacity, int type, String img) {
@@ -84,6 +84,20 @@ public class Venue implements Serializable {
         this.type = type;
     }
 
+    public void setType(String type) {
+        int typeIdx = typeStrings.indexOf(type);
+        if (typeIdx != -1) {
+            this.type = typeIdx + 1;
+        } else {
+            typeStrings.add(type);
+            this.type = typeStrings.size() - 1;
+        }
+    }
+
+    public void addType(String type) {
+        typeStrings.add(type);
+    }
+
     public String getImg() {
         return img;
     }
@@ -93,7 +107,7 @@ public class Venue implements Serializable {
     }
 
     public String getTypeString() {
-        return typeEnum.values()[type-1].toString();
+        return typeStrings.get(type-1);
     }
 
     public String getDescription() {
@@ -132,5 +146,5 @@ public class Venue implements Serializable {
     public String toString() {
         return "Venue{" + "id=" + id + ", name=" + name + ", location=" + location + ", address=" + address + ", capacity=" + capacity + ", type=" + type + ", img=" + img + ", description=" + description + ", userId=" + userId + ", hourlyRate=" + hourlyRate + '}';
     }
-    
+
 }

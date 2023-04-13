@@ -84,7 +84,7 @@
             </div>
             <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
                 <li class="nav-item nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="viewVenue">
+                    <a class="text-white mx-3 text-decoration-none" href="searchVenues">
                         Venue
                     </a>
                 </li>
