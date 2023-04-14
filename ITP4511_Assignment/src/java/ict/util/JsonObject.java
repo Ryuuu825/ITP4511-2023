@@ -7,6 +7,7 @@ public class JsonObject {
 
     private String name;
     private HashMap<String, Object> items = new HashMap<>();
+    private boolean onlyOneObj = false;
 
 
     public JsonObject(String name) {
@@ -17,11 +18,22 @@ public class JsonObject {
         items.put(name, value.toString());
     }
 
+    public JsonObject(String name , String value , boolean onlyOneObj) {
+        this.name = name;
+        items.put(name, value);
+        this.onlyOneObj = onlyOneObj;
+    }
+
     public void add(JsonObject obj) {
         items.put(obj.name, obj.toValueString());
     }
 
     public String toString() {
+        if (onlyOneObj) {
+            String str = "\"" + name + "\":" + items.get(name).toString();
+            return str;
+        }
+
         String str = "\"" + name + "\":{";
         int i = 0;
         for (String key : items.keySet()) {

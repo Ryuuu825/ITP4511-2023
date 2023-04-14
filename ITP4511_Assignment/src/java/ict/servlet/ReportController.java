@@ -29,6 +29,12 @@ public class ReportController extends HttpServlet {
 
     private VenueDAO venueDB;
 
+    private void setHttpHeader(HttpServletResponse resp) {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+    }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,6 +42,17 @@ public class ReportController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
+
+
+        if (action.equals("usercount")) {
+            jsonUtil.clear();
+            jsonUtil.addJsonObject(getUserVisited());
+            setHttpHeader(resp);
+            resp.getWriter().write(jsonUtil.getJsonString());
+            return;
+        }
+
         // get all the venue
         ArrayList<Venue> venues = venueDB.queryRecord();
         String sql;
@@ -79,7 +96,6 @@ public class ReportController extends HttpServlet {
             jsonUtil.addJsonObject(json);
             
         }
-
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(jsonUtil.getJsonString());
@@ -300,6 +316,24 @@ public class ReportController extends HttpServlet {
             json.add(Integer.toString(i), totalIncome);
 
         }
+
+        return json;
+    }
+
+    public JsonObject getUserVisited() {
+
+        //if ( application.getAttribute("uservisited") == null ) {
+        //     application.setAttribute("uservisited", 1);
+        // } else {
+        //     int count = java.lang.Integer.parseInt(application.getAttribute("uservisited").toString());
+        //     application.setAttribute("uservisited", count + 1);
+        // }
+        try {
+            int count = Integer.parseInt( getServletContext().getAttribute("uservisited").toString() );
+        } catch (Exception e) {
+            getServletContext().setAttribute("uservisited", 1);
+        }
+        JsonObject json = new JsonObject("uservisited" ,  getServletContext().getAttribute("uservisited").toString() , true);
 
         return json;
     }
