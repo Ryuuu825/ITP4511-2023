@@ -70,6 +70,15 @@ public class VenueController extends HttpServlet {
             req.setAttribute("venueDTOs", vdtos);
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
+        } else if ("edit".equalsIgnoreCase(action)) {
+            int vid = Integer.parseInt(req.getParameter("venueId"));
+            RequestDispatcher rd;
+            VenueDTO vdto = venueDAO.queryRecordToDTOById(vid);
+            req.setAttribute("venueDTO", vdto);
+            vdtos = venueDAO.queryRecordToDTO();
+            req.setAttribute("venueDTOs", vdtos);
+            rd = getServletContext().getRequestDispatcher("/venues.jsp");
+            rd.forward(req, resp);
         } else {
             vdtos = venueDAO.queryRecordToDTO();
             RequestDispatcher rd;

@@ -114,6 +114,38 @@ public class VenueDAO extends BaseDAO {
         return vdtos;
     }
 
+    public VenueDTO queryRecordToDTOById(int id) {
+        String sql = "SELECT * FROM venue WHERE id = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(id);
+        Venue v = null;
+        VenueDTO vdto = null;
+        UserDAO udao = new UserDAO(dbUrl, dbUser, dbPassword);
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        if (ls.size() != 0) {
+            Map<String, Object> m = ls.get(0);
+            User u = null;
+            v = new Venue();
+            vdto = new VenueDTO();
+            v.setId((int) m.get("id"));
+            v.setName((String) m.get("name"));
+            v.setLocation((String) m.get("location"));
+            v.setAddress((String) m.get("address"));
+            v.setCapacity((int) m.get("capacity"));
+            v.setType((int) m.get("type"));
+            v.setImg((String) m.get("img"));
+            v.setDescription((String) m.get("description"));
+            v.setHourlyRate((double) m.get("hourlyRate"));
+            if (m.get("userId") != null) {
+                v.setUserId((int) m.get("userId"));
+                u = udao.queryRecordById((int) m.get("userId"));
+            }
+            vdto.setUser(u);
+            vdto.setVenue(v);
+        }
+        return vdto;
+    }
+
     public ArrayList<VenueDTO> queryRecordToDTOByKeyword(String keyword) {
         String sql = "SELECT v.id as venueId, v.*, u.*, u.id as userId "
                 + "FROM Venue v "
@@ -228,7 +260,7 @@ public class VenueDAO extends BaseDAO {
         }
         return vs;
     }
-    
+
     public boolean delRecord(int id) {
         String sql = "DELETE FROM venue WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();
