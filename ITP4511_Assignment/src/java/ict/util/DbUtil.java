@@ -26,7 +26,6 @@ public class DbUtil {
     private String dbUser;
     private String dbPassword;
 
-
     private static ArrayList<String> errorMsgs = new ArrayList<>();
     private static boolean hasError = false;
 

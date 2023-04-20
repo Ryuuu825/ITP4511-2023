@@ -45,7 +45,7 @@ public class ReportController extends HttpServlet {
         String action = req.getParameter("action");
 
 
-        if (action.equals("usercount")) {
+        if (action != null && action.equals("usercount")) {
             jsonUtil.clear();
             jsonUtil.addJsonObject(getUserVisited());
             setHttpHeader(resp);

@@ -133,4 +133,13 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    
+    <tag>
+        <name>checkDbConnection</name>
+        <tag-class>ict.tag.CheckDbTag</tag-class>
+        <description>
+            Insert JSP code to check if the database is connected
+        </description>
+        <body-content>empty</body-content>
+    </tag>
 </taglib>

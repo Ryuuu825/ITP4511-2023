@@ -1,4 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+
+<%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
+<ict:checkDbConnection />
+
+
 <!DOCTYPE html>
 <html>
     <%
@@ -89,6 +94,7 @@
     </head>
 
     <body style="max-height:100vh;overflow-y: hidden;">
+
         <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -122,7 +128,6 @@
 
         <div class="content p-10 flex flex-col  mb-3 h-full" style="background-color: #f3f3f3">
 
-            <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 
             <ict:result />
 
