@@ -236,8 +236,10 @@ public class DbUtil {
     }
 
     public String getErrorMsg() {
-        String errorMsg = errorMsgs.get(errorMsgs.size() - 1);
-        return errorMsg;
+        if (errorMsgs.size() > 0) {
+            return errorMsgs.get(errorMsgs.size() - 1);
+        }
+        return "";
     }
 
     public boolean hasErrorAtLastOperation() {

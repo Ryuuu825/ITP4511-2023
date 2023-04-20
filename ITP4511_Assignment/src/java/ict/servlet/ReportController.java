@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import ict.bean.Venue;
 import ict.db.VenueDAO;
 import ict.util.DbUtil;
+import ict.util.JsonArray;
 import ict.util.JsonObject;
 import ict.util.JsonUtil;
 
@@ -44,12 +45,31 @@ public class ReportController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
+        String dbUser = this.getServletContext().getInitParameter("dbUser");
+        String dbPassword = this.getServletContext().getInitParameter("dbPassword");
+        String dbUrl = this.getServletContext().getInitParameter("dbUrl");
+
+        dbUtil = new DbUtil(dbUrl, dbUser, dbPassword);
+
+        if (!dbUtil.testConnectionWithDB()) {
+            resp.setStatus(500);
+            resp.getWriter().write(dbUtil.getErrorMsg());
+            return;
+        }
+
+
 
         if (action != null && action.equals("usercount")) {
             jsonUtil.clear();
             jsonUtil.addJsonObject(getUserVisited());
             setHttpHeader(resp);
             resp.getWriter().write(jsonUtil.getJsonString());
+            return;
+        }
+
+        if (action != null && action.equals("venue")) {
+            setHttpHeader(resp);
+            resp.getWriter().write(getAllVenue().toString());
             return;
         }
 
@@ -334,6 +354,19 @@ public class ReportController extends HttpServlet {
             getServletContext().setAttribute("uservisited", 1);
         }
         JsonObject json = new JsonObject("uservisited" ,  getServletContext().getAttribute("uservisited").toString() , true);
+
+        return json;
+    }
+
+    public JsonArray getAllVenue() {
+
+        JsonArray json = new JsonArray("allvenue");
+        String sql = "SELECT name FROM venue";
+        ArrayList<Map<String, Object>> rs = dbUtil.findRecord(sql, new ArrayList<>());
+
+        for (int i = 0; i < rs.size(); i++) {
+            json.add(rs.get(i).get("name").toString());
+        }
 
         return json;
     }

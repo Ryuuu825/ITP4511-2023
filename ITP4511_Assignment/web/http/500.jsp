@@ -19,14 +19,14 @@
 />
     </head>
     <body>
-         <!-- <%
-            if ( application.getAttribute("uservisited") == null ) {
-                application.setAttribute("uservisited", 1);
+         <%
+            if ( application.getAttribute("internalservererrocount") == null ) {
+                application.setAttribute("internalservererrocount", 1);
             } else {
-                int count = java.lang.Integer.parseInt(application.getAttribute("uservisited").toString());
-                application.setAttribute("uservisited", count + 1);
+                int count = java.lang.Integer.parseInt(application.getAttribute("internalservererrocount").toString());
+                application.setAttribute("internalservererrocount", count + 1);
             }
-        %> -->
+        %>
         <div class="h-screen w-screen flex flex-col items-center justify-center text-center">
             
             <div class="card w-[35%]">
