@@ -194,7 +194,25 @@ public class UserDAO extends BaseDAO{
         return us;
     }
 
-
+    public ArrayList<User> queryRecordByRole(int role) {
+        User u = null;
+        String sql = "SELECT account.role, user.* FROM account JOIN user ON user.accountId = account.id WHERE role = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(role);
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        ArrayList<User> us = new ArrayList<>();
+        for (Map<String, Object> m : ls) {
+            u = new User();
+            u.setId((int) m.get("id"));
+            u.setAccountId((int) m.get("accountId"));
+            u.setEmail((String) m.get("email"));
+            u.setFirstName((String) m.get("firstName"));
+            u.setLastName((String) m.get("lastName"));
+            u.setPhone((String) m.get("phone"));
+            us.add(u);
+        }
+        return us;
+    }
 
     public boolean delRecord(int id) {
         String sql = "DELETE FROM user WHERE id=?";

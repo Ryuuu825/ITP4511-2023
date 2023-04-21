@@ -4,7 +4,9 @@
  */
 package ict.servlet;
 
+import ict.bean.User;
 import ict.bean.view.VenueDTO;
+import ict.db.UserDAO;
 import ict.db.VenueDAO;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpSession;
 public class VenueController extends HttpServlet {
 
     private VenueDAO venueDAO;
+    private UserDAO userDAO;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -77,12 +80,17 @@ public class VenueController extends HttpServlet {
             req.setAttribute("venueDTO", vdto);
             vdtos = venueDAO.queryRecordToDTO();
             req.setAttribute("venueDTOs", vdtos);
+            ArrayList<User> staff = userDAO.queryRecordByRole(2);
+            req.setAttribute("staff", staff);
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
         } else {
             vdtos = venueDAO.queryRecordToDTO();
             RequestDispatcher rd;
+            System.err.println(vdtos);
             req.setAttribute("venueDTOs", vdtos);
+            ArrayList<User> staff = userDAO.queryRecordByRole(2);
+            req.setAttribute("staff", staff);
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
         }
@@ -94,6 +102,7 @@ public class VenueController extends HttpServlet {
         String dbPassword = this.getServletContext().getInitParameter("dbPassword");
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");
         venueDAO = new VenueDAO(dbUrl, dbUser, dbPassword);
+        userDAO = new UserDAO(dbUrl, dbUser, dbPassword);
     }
 
 }

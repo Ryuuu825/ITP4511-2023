@@ -24,15 +24,15 @@ public class Venue implements Serializable {
     private int userId;
     private double hourlyRate;
 
-    private ArrayList<String> typeStrings = new ArrayList<>();
+    public static String[] typeStrings = {
+        "Hotel",
+        "Restaurant",
+        "Art Gallery",
+        "Park",
+        "Club"
+    };
 
     public Venue() {
-        typeStrings = new ArrayList<>();
-        typeStrings.add("Hotel");
-        typeStrings.add("Restaurant");
-        typeStrings.add("Art Gallery");
-        typeStrings.add("Park");
-        typeStrings.add("Club");
     }
 
     public Venue(int id, String name, String address, int capacity, int type, String img) {
@@ -85,17 +85,16 @@ public class Venue implements Serializable {
     }
 
     public void setType(String type) {
-        int typeIdx = typeStrings.indexOf(type);
-        if (typeIdx != -1) {
-            this.type = typeIdx + 1;
-        } else {
-            typeStrings.add(type);
-            this.type = typeStrings.size() - 1;
+        int typeIdx = 0;
+        for (int i = 1; i <= typeStrings.length; i++) {
+            if (typeStrings[i].equals(type)) {
+                this.type = i;
+            }
         }
     }
-
-    public void addType(String type) {
-        typeStrings.add(type);
+    
+    public String getTypeString() {
+        return typeStrings[type-1];
     }
 
     public String getImg() {
@@ -104,10 +103,6 @@ public class Venue implements Serializable {
 
     public void setImg(String img) {
         this.img = img;
-    }
-
-    public String getTypeString() {
-        return typeStrings.get(type-1);
     }
 
     public String getDescription() {
@@ -141,7 +136,7 @@ public class Venue implements Serializable {
     public void setLocation(String location) {
         this.location = location;
     }
-
+    
     @Override
     public String toString() {
         return "Venue{" + "id=" + id + ", name=" + name + ", location=" + location + ", address=" + address + ", capacity=" + capacity + ", type=" + type + ", img=" + img + ", description=" + description + ", userId=" + userId + ", hourlyRate=" + hourlyRate + '}';

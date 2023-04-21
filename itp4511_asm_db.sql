@@ -326,7 +326,7 @@ INSERT INTO `venue` (`id`, `name`, `location`, `address`, `capacity`, `type`, `i
 (2, 'EPL(Sha Tin)', 'Sha Tin', '1 Yuen Wo Rd, Sha Tin, Hong Kong', 1000, 1, 'img/venues/sha-tin.jpg', 'This venue is located in the scenic Sha Tin area and is perfect for large outdoor events.', 2, 200),
 (3, 'EPL(Tsing Yi)', 'Tsing Yi', '30 Tsing King Rd, Tsing Yi, HK', 800, 4, 'img/venues/tsing-yi.jpg', 'This venue is located in Tsing Yi and is perfect for conferences and corporate events.', 1, 150),
 (4, 'EPL(Lee Wai Lee)', 'Tseung Kwan O', '3 King Ling Road, Tseung Kwan O, HK', 300, 3, 'img/venues/lee-wai-lee.jpg', 'This venue is located in the bustling  Tseung Kwan O area and is perfect for intimate gatherings.', 3, 75),
-(5, 'EPL(Chai Wan)', 'Chai Wan', '60 Wing Tai Rd, Chai Wan, HK', 1200, 5, 'imgm/venues/chai-wan.jpg', 'This venue is located in Chai Wan and is perfect for large outdoor events such as concerts and festivals.', 2, 250);
+(5, 'EPL(Chai Wan)', 'Chai Wan', '60 Wing Tai Rd, Chai Wan, HK', 1200, 5, 'img/venues/chai-wan.jpg', 'This venue is located in Chai Wan and is perfect for large outdoor events such as concerts and festivals.', 2, 250);
 
 -- --------------------------------------------------------
 
