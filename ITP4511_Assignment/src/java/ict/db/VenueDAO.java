@@ -25,7 +25,7 @@ public class VenueDAO extends BaseDAO {
                 = "CREATE TABLE IF NOT EXISTS venue ("
                 + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "name varchar(50) NOT NULL,"
-                + "location varchar(255) NOT NULL,"
+                + "district varchar(50) NOT NULL,"
                 + "address varchar(255) NOT NULL,"
                 + "capacity INT(11) NOT NULL,"
                 + "type tinyint(2) NOT NULL,"
@@ -39,12 +39,12 @@ public class VenueDAO extends BaseDAO {
         dbUtil.executeByPreparedStatement(sql);
     }
 
-    public boolean addRecord(String name, String location, String address, int capacity, int type, String img, String description, int userId, double hourlyRate) {
+    public boolean addRecord(String name, String district, String address, int capacity, int type, String img, String description, int userId, double hourlyRate) {
         boolean isSuccess = false;
         if (queryRecordByName(name) == null) {
             ArrayList<Object> params = new ArrayList<>();
             params.add(name);
-            params.add(location);
+            params.add(district);
             params.add(address);
             params.add(capacity);
             params.add(type);
@@ -52,7 +52,7 @@ public class VenueDAO extends BaseDAO {
             params.add(description);
             params.add(userId);
             params.add(hourlyRate);
-            String sql = "INSERT INTO venue (name, location, address, capacity, type, img, description, userId, hourlyRate) VALUES (?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO venue (name, district, address, capacity, type, img, description, userId, hourlyRate) VALUES (?,?,?,?,?,?,?,?,?)";
             isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         };
         return isSuccess;
@@ -68,7 +68,7 @@ public class VenueDAO extends BaseDAO {
             v = new Venue();
             v.setId((int) m.get("id"));
             v.setName((String) m.get("name"));
-            v.setLocation((String) m.get("location"));
+            v.setDistrict((String) m.get("district"));
             v.setAddress((String) m.get("address"));
             v.setCapacity((int) m.get("capacity"));
             v.setType((int) m.get("type"));
@@ -95,7 +95,7 @@ public class VenueDAO extends BaseDAO {
                 vdto = new VenueDTO();
                 v.setId((int) m.get("id"));
                 v.setName((String) m.get("name"));
-                v.setLocation((String) m.get("location"));
+                v.setDistrict((String) m.get("district"));
                 v.setAddress((String) m.get("address"));
                 v.setCapacity((int) m.get("capacity"));
                 v.setType((int) m.get("type"));
@@ -129,7 +129,7 @@ public class VenueDAO extends BaseDAO {
             vdto = new VenueDTO();
             v.setId((int) m.get("id"));
             v.setName((String) m.get("name"));
-            v.setLocation((String) m.get("location"));
+            v.setDistrict((String) m.get("district"));
             v.setAddress((String) m.get("address"));
             v.setCapacity((int) m.get("capacity"));
             v.setType((int) m.get("type"));
@@ -151,12 +151,14 @@ public class VenueDAO extends BaseDAO {
                 + "FROM Venue v "
                 + "JOIN User u ON v.userId = u.id "
                 + "Where v.id = ? "
-                + "or v.location LIKE ? "
+                + "or v.district LIKE ? "
+                + "or v.address LIKE ? "
                 + "or v.name LIKE ? "
                 + "or u.firstName LIKE ? "
                 + "or u.lastName LIKE ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(keyword);
+        params.add("%" + keyword + "%");
         params.add("%" + keyword + "%");
         params.add("%" + keyword + "%");
         params.add("%" + keyword + "%");
@@ -173,7 +175,7 @@ public class VenueDAO extends BaseDAO {
                 vdto = new VenueDTO();
                 v.setId((int) m.get("id"));
                 v.setName((String) m.get("name"));
-                v.setLocation((String) m.get("location"));
+                v.setDistrict((String) m.get("district"));
                 v.setAddress((String) m.get("address"));
                 v.setCapacity((int) m.get("capacity"));
                 v.setType((int) m.get("type"));
@@ -202,7 +204,7 @@ public class VenueDAO extends BaseDAO {
             v = new Venue();
             v.setId((int) m.get("id"));
             v.setName((String) m.get("name"));
-            v.setLocation((String) m.get("location"));
+            v.setDistrict((String) m.get("district"));
             v.setAddress((String) m.get("address"));
             v.setCapacity((int) m.get("capacity"));
             v.setType((int) m.get("type"));
@@ -225,7 +227,7 @@ public class VenueDAO extends BaseDAO {
             v = new Venue();
             v.setId((int) m.get("id"));
             v.setName((String) m.get("name"));
-            v.setLocation((String) m.get("location"));
+            v.setDistrict((String) m.get("district"));
             v.setAddress((String) m.get("address"));
             v.setCapacity((int) m.get("capacity"));
             v.setType((int) m.get("type"));
@@ -248,7 +250,7 @@ public class VenueDAO extends BaseDAO {
             v = new Venue();
             v.setId((int) m.get("id"));
             v.setName((String) m.get("name"));
-            v.setLocation((String) m.get("location"));
+            v.setDistrict((String) m.get("district"));
             v.setAddress((String) m.get("address"));
             v.setCapacity((int) m.get("capacity"));
             v.setType((int) m.get("type"));
@@ -272,11 +274,11 @@ public class VenueDAO extends BaseDAO {
 
     public boolean editRecord(Venue v) {
         String sql = "UPDATE venue "
-                + "SET name = ?, location = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = null, hourlyRate = ? "
+                + "SET name = ?, district = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = null, hourlyRate = ? "
                 + "WHERE id = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(v.getName());
-        params.add(v.getLocation());
+        params.add(v.getDistrict());
         params.add(v.getAddress());
         params.add(v.getCapacity());
         params.add(v.getType());
@@ -284,7 +286,7 @@ public class VenueDAO extends BaseDAO {
         params.add(v.getDescription());
         if (v.getUserId() != 0) {
             sql = "UPDATE venue "
-                    + "SET name = ?, location = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = ?, hourlyRate = ? "
+                    + "SET name = ?, district = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = ?, hourlyRate = ? "
                     + "WHERE id = ?";
             params.add(v.getUserId());
         }

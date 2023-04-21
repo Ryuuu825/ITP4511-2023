@@ -5,6 +5,7 @@
 package ict.servlet;
 
 import ict.bean.User;
+import ict.bean.Venue;
 import ict.bean.view.VenueDTO;
 import ict.db.UserDAO;
 import ict.db.VenueDAO;
@@ -22,7 +23,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "VenueController", urlPatterns = {"/delVenue", "/addVenue", "/editVenue", "/viewVenue", "/searchVenues"})
+@WebServlet(name = "VenueController", urlPatterns = { "/delVenue", "/editVenue","/handleVenue", "/viewVenue",
+        "/searchVenues" })
 public class VenueController extends HttpServlet {
 
     private VenueDAO venueDAO;
@@ -31,26 +33,38 @@ public class VenueController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-//        if ("add".equalsIgnoreCase(action)) {
-//            int bid = Integer.parseInt(req.getParameter("bookingId"));
-//            int guestId = Integer.parseInt(req.getParameter("guestId"));
-//            if (venueDAO.delRecordByGuestId(guestId)) {
-//                resp.sendRedirect("viewGuests?action=search&bookingId=" + bid);
-//            };
-//        } else if ("update".equalsIgnoreCase(action)) {
-//            int bid = Integer.parseInt(req.getParameter("bookingId"));
-//            String searchKeys = req.getParameter("search");
-//            if (searchKeys != null && !searchKeys.equals("")) {
-//                gl = venueDAO.queryRocordByKeyword(bid, searchKeys);
-//
-//            } else {
-//                gl = venueDAO.queryRocordByBookingId(bid);
-//            }
-//            RequestDispatcher rd;
-//            req.setAttribute("venueDTOs", gl);
-//            rd = getServletContext().getRequestDispatcher("/guests.jsp");
-//            rd.forward(req, resp);
-//        }
+        String name = req.getParameter("name");
+        String district = req.getParameter("district");
+        String address = req.getParameter("address");
+        int capacity = Integer.parseInt(req.getParameter("capacity"));
+        int type = Integer.parseInt(req.getParameter("type"));
+//        String img = req.getParameter("img");
+        String description = req.getParameter("description");
+        int userId = Integer.parseInt(req.getParameter("staff"));
+        double hourlyRate = Double.parseDouble(req.getParameter("hourlyRate"));
+        if ("add".equalsIgnoreCase(action)) {
+            if (venueDAO.addRecord(name, district, address, capacity, type, "/img/venues/chai-wan.jpg", description, userId, hourlyRate)) {
+                resp.sendRedirect("searchVenues");
+            }
+        } else if ("update".equalsIgnoreCase(action)) {
+            int vid = Integer.parseInt(req.getParameter("id"));
+            Venue v = venueDAO.queryRecordById(vid);
+            v.setAddress(address);
+            v.setCapacity(capacity);
+            v.setDescription(description);
+            v.setHourlyRate(hourlyRate);
+//            v.setImg(img);
+            v.setDistrict(district);
+            v.setName(name);
+            v.setType(type);
+            v.setUserId(userId);
+
+            if (venueDAO.editRecord(v)) {
+                resp.sendRedirect("searchVenues");
+            }else {
+                resp.sendRedirect("searchVenues");
+            }
+        }
     }
 
     @Override
@@ -60,8 +74,9 @@ public class VenueController extends HttpServlet {
         if ("delete".equalsIgnoreCase(action)) {
             int vid = Integer.parseInt(req.getParameter("venueId"));
             if (venueDAO.delRecord(vid)) {
-                resp.sendRedirect("searchVenues?action=search");
-            };
+                resp.sendRedirect("searchVenues");
+            }
+            ;
         } else if ("search".equalsIgnoreCase(action)) {
             String searchKeys = req.getParameter("search");
             if (searchKeys != null && !searchKeys.equals("")) {
@@ -70,7 +85,10 @@ public class VenueController extends HttpServlet {
                 vdtos = venueDAO.queryRecordToDTO();
             }
             RequestDispatcher rd;
+            req.removeAttribute("venueDTO");
             req.setAttribute("venueDTOs", vdtos);
+            ArrayList<User> staff = userDAO.queryRecordByRole(2);
+            req.setAttribute("staff", staff);
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
         } else if ("edit".equalsIgnoreCase(action)) {
@@ -85,6 +103,7 @@ public class VenueController extends HttpServlet {
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
         } else {
+            req.removeAttribute("venueDTO");
             vdtos = venueDAO.queryRecordToDTO();
             RequestDispatcher rd;
             System.err.println(vdtos);

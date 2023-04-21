@@ -135,7 +135,7 @@ public class VenueTimeslotDAO extends BaseDAO {
             v.setImg((String) m.get("img"));
             v.setType((int) m.get("type"));
             v.setUserId((int) m.get("userId"));
-            v.setLocation((String) m.get("location"));
+            v.setDistrict((String) m.get("district"));
             vts.add(v);
         }
         return vts;
@@ -285,7 +285,7 @@ public class VenueTimeslotDAO extends BaseDAO {
             v = new Venue();
             v.setId((int) m.get("id"));
             v.setName((String) m.get("name"));
-            v.setLocation((String) m.get("location"));
+            v.setDistrict((String) m.get("district"));
             v.setAddress((String) m.get("address"));
             v.setCapacity((int) m.get("capacity"));
             v.setType((int) m.get("type"));

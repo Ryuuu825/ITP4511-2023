@@ -15,7 +15,7 @@ public class Venue implements Serializable {
 
     private int id;
     private String name;
-    private String location;
+    private String district;
     private String address;
     private int capacity;
     private int type;
@@ -33,15 +33,6 @@ public class Venue implements Serializable {
     };
 
     public Venue() {
-    }
-
-    public Venue(int id, String name, String address, int capacity, int type, String img) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.capacity = capacity;
-        this.type = type;
-        this.img = img;
     }
 
     public int getId() {
@@ -85,7 +76,6 @@ public class Venue implements Serializable {
     }
 
     public void setType(String type) {
-        int typeIdx = 0;
         for (int i = 1; i <= typeStrings.length; i++) {
             if (typeStrings[i].equals(type)) {
                 this.type = i;
@@ -129,17 +119,17 @@ public class Venue implements Serializable {
         this.hourlyRate = hourlyRate;
     }
 
-    public String getLocation() {
-        return location;
+    public String getDistrict() {
+        return district;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setDistrict(String district) {
+        this.district = district;
     }
     
     @Override
     public String toString() {
-        return "Venue{" + "id=" + id + ", name=" + name + ", location=" + location + ", address=" + address + ", capacity=" + capacity + ", type=" + type + ", img=" + img + ", description=" + description + ", userId=" + userId + ", hourlyRate=" + hourlyRate + '}';
+        return "Venue{" + "id=" + id + ", name=" + name + ", district=" + district + ", address=" + address + ", capacity=" + capacity + ", type=" + type + ", img=" + img + ", description=" + description + ", userId=" + userId + ", hourlyRate=" + hourlyRate + '}';
     }
 
 }

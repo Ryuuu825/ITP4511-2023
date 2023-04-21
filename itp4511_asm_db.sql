@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-04-13 13:03:37
+-- 產生時間： 2023-04-21 13:26:40
 -- 伺服器版本： 10.4.24-MariaDB
 -- PHP 版本： 8.1.6
 
@@ -307,7 +307,7 @@ INSERT INTO `user` (`id`, `accountId`, `firstName`, `lastName`, `email`, `phone`
 CREATE TABLE `venue` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `location` varchar(255) NOT NULL,
+  `district` varchar(50) NOT NULL,
   `address` varchar(255) NOT NULL,
   `capacity` int(11) NOT NULL,
   `type` tinyint(2) NOT NULL,
@@ -321,12 +321,12 @@ CREATE TABLE `venue` (
 -- 傾印資料表的資料 `venue`
 --
 
-INSERT INTO `venue` (`id`, `name`, `location`, `address`, `capacity`, `type`, `img`, `description`, `userId`, `hourlyRate`) VALUES
-(1, 'EPL(Tuen Mun)', 'Tuen Mun', '18 Hoi Wing Road, Tuen Mun, HK', 500, 2, 'img/venues/tuen-mun.jpg', 'This venue is located in the heart of Tuen Mun and is perfect for small to medium-sized events.', 1, 100),
-(2, 'EPL(Sha Tin)', 'Sha Tin', '1 Yuen Wo Rd, Sha Tin, Hong Kong', 1000, 1, 'img/venues/sha-tin.jpg', 'This venue is located in the scenic Sha Tin area and is perfect for large outdoor events.', 2, 200),
-(3, 'EPL(Tsing Yi)', 'Tsing Yi', '30 Tsing King Rd, Tsing Yi, HK', 800, 4, 'img/venues/tsing-yi.jpg', 'This venue is located in Tsing Yi and is perfect for conferences and corporate events.', 1, 150),
-(4, 'EPL(Lee Wai Lee)', 'Tseung Kwan O', '3 King Ling Road, Tseung Kwan O, HK', 300, 3, 'img/venues/lee-wai-lee.jpg', 'This venue is located in the bustling  Tseung Kwan O area and is perfect for intimate gatherings.', 3, 75),
-(5, 'EPL(Chai Wan)', 'Chai Wan', '60 Wing Tai Rd, Chai Wan, HK', 1200, 5, 'img/venues/chai-wan.jpg', 'This venue is located in Chai Wan and is perfect for large outdoor events such as concerts and festivals.', 2, 250);
+INSERT INTO `venue` (`id`, `name`, `district`, `address`, `capacity`, `type`, `img`, `description`, `userId`, `hourlyRate`) VALUES
+(1, 'EPL(Tuen Mun)', 'Tuen Mun District', '18 Hoi Wing Road, Tuen Mun, HK', 500, 2, 'img/venues/tuen-mun.jpg', 'This venue is located in the heart of Tuen Mun and is perfect for small to medium-sized events.', 4, 100),
+(2, 'EPL(Sha Tin)', 'Sha Tin District', '1 Yuen Wo Rd, Sha Tin, Hong Kong', 1000, 1, 'img/venues/sha-tin.jpg', 'This venue is located in the scenic Sha Tin area and is perfect for large outdoor events.', 6, 200),
+(3, 'EPL(Tsing Yi)', 'Kwai Tsing District', '30 Tsing King Rd, Tsing Yi, HK', 800, 4, 'img/venues/tsing-yi.jpg', 'This venue is located in Tsing Yi and is perfect for conferences and corporate events.', 8, 150),
+(4, 'EPL(Lee Wai Lee)', 'Sai Kung District', '3 King Ling Road, Tseung Kwan O, HK', 300, 3, 'img/venues/lee-wai-lee.jpg', 'This venue is located in the bustling  Tseung Kwan O area and is perfect for intimate gatherings.', 10, 75),
+(5, 'EPL(Chai Wan)', 'Eastern District', '60 Wing Tai Rd, Chai Wan, HK', 1200, 5, 'img/venues/chai-wan.jpg', 'This venue is located in Chai Wan and is perfect for large outdoor events such as concerts and festivals.', 4, 250);
 
 -- --------------------------------------------------------
 

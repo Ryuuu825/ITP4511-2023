@@ -38,7 +38,7 @@ public class VenueTag extends SimpleTagSupport {
             out.print("<table class=\"table text-center table-striped\">");
             out.print("<thead>");
             out.print("<tr>");
-            out.print("<th>ID</th><th>Name</th><th>Location</th><th>Address</th><th>Capacity</th><th>Type</th><th>Description</th><th>Person in charge</th><th>HourlyRate(HK$)</th>");
+            out.print("<th>ID</th><th>Name</th><th>District</th><th>Address</th><th>Capacity</th><th>Type</th><th>Description</th><th>Person in charge</th><th>HourlyRate(HK$)</th>");
             out.print("<th class=\"text-end\"><button id=\"addvenue\" class=\" btn btn-success py-2 px-4 btn-sm me-2\" role=\"button\">Add Venue</button></th>");
             out.print("</tr>");
             out.print("</thead>");
@@ -47,7 +47,7 @@ public class VenueTag extends SimpleTagSupport {
                 out.print("<tr class=\"align-middle\">");
                 out.print("<th scope = \"row\">" + v.getVenue().getId() + "</th>");
                 out.print("<td>" + v.getVenue().getName() + "</td>");
-                out.print("<td>" + v.getVenue().getLocation() + "</td>");
+                out.print("<td>" + v.getVenue().getDistrict()+ "</td>");
                 out.print("<td class=\"text-wrap text-start\">" + v.getVenue().getAddress() + "</td>");
                 out.print("<td>" + v.getVenue().getCapacity() + "</td>");
                 out.print("<td>" + v.getVenue().getTypeString() + "</td>");
