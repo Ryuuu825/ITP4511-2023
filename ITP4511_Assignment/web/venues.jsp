@@ -40,6 +40,11 @@
     .modal {
         --mdb-modal-width: 1024px;
     }
+
+    .imgbox-hover:hover {
+        transform: scale(1.01);
+        cursor: pointer;
+    }
 </style>
 <script>
     $(document).ready(function () {
@@ -93,6 +98,22 @@
         $("#select-staff").val(staff).change();
         var district = $('#selected-district').val();
         $("#select-district").val(district).change();
+
+        $(".imgbox-hover").click(function () {
+            $("#fileinput").click();
+        });
+
+        $("#fileinput").change(function () {
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("#venue-img").attr('src', e.target.result);
+                $("#upload-img").addClass("d-none");
+                $("#venue-img").removeClass("d-none");
+                $("#changeImage").val(true);
+            };
+            reader.readAsDataURL(file);
+        });
     });
 </script>
 <%
@@ -136,146 +157,146 @@
     <section class="p-5">
         <!-- Modal -->
         <div class="modal fade" id="venueModal" tabindex="-1" aria-labelledby="venueLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <form action="handleVenue" method="post">
+            <form class="modal-dialog modal-dialog-centered" action="handleVenue" method="post"
+                enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel"><%=venueDTO != null ? "Edit" : "Add"%>
+                            Venue
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="action" name="action" value="<%=venueDTO != null ? "update" : "add"%>">
+                        <input type="hidden" id="venueId" name="id"
+                            value="<%=venueDTO != null ? venueDTO.getVenue().getId() : "0"%>">
+                        <div>
+                            <div class="row">
+                                <div class="col-7">
+                                    <input type="file" class="d-none" id="fileinput" name="img" accept="image/*">
+                                    <input type="hidden" id="changeImage" name="changeImage" value="false">
+                                    <div class="imgbox-hover form-outline card h-100 bg-gray text-center"
+                                        title="Click to upload image">
+                                        <div id="upload-img"
+                                            class="card-img d-flex bg-secondary bg-opacity-25 w-100 h-100 justify-content-center align-items-center
+                                                 <%=venueDTO != null && venueDTO.getVenue().getImg() != "" ? "d-none" : "d-block"%>">
+                                            Click to upload image
+                                        </div>
+                                        <img id="venue-img"
+                                            src="<%=venueDTO != null ? "assets/" + venueDTO.getVenue().getImg() : ""%>"
+                                            class="card-img w-100 h-100 <%=venueDTO != null && venueDTO.getVenue().getImg() != "" ? "d-block" : "d-none"%>"
+                                            alt="Venue image">
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-outline mb-4">
+                                        <input required type="text" id="venueName" name="name"
+                                            class="form-control border"
+                                            value="<%=venueDTO != null ? venueDTO.getVenue().getName() : ""%>" />
+                                        <label class="form-label" for="venueName">Name</label>
+                                    </div>
+                                    <div class="row">
 
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel"><%=venueDTO != null ? "Edit" : "Add"%>
-                                Venue
-                            </h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="action" name="action"
-                                value="<%=venueDTO != null ? "update" : "add"%>">
-                            <input type="hidden" id="venueId" name="id"
-                                value="<%=venueDTO != null ? venueDTO.getVenue().getId() : "0"%>">
-                            <div>
-                                <div class="row">
-                                    <div class="col-7">
-                                        <div class="form-outline card h-100 bg-gray text-center">
-                                            <%
-                                                    if (venueDTO != null && !venueDTO.getVenue().getImg().equals("")) {
-                                                        out.print("<img src=\"assets/" + venueDTO.getVenue().getImg() + "\" class=\"card-img w-100 h-100\" alt=\"Venue image\">");
-                                                    } else {
-                                                %>
-                                            <div
-                                                class="card-img d-flex bg-secondary bg-opacity-25 w-100 h-100 justify-content-center align-items-center">
-                                                Click to upload image
+                                        <div class="col">
+                                            <div class="form-outline mb-4">
+                                                <input required type="number" id="capacity" name="capacity"
+                                                    class="form-control border"
+                                                    value="<%=venueDTO != null ? venueDTO.getVenue().getCapacity() : ""%>" />
+                                                <label class="form-label" for="capacity">Capacity</label>
                                             </div>
-                                            <% }%>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-outline mb-4">
+                                                <select required class="form-control border" name="type"
+                                                    id="select-type" aria-label="select"
+                                                    value="<%=venueDTO != null ? venueDTO.getVenue().getType() : ""%>">
+                                                    <%
+                                                            String[] types = ict.bean.Venue.typeStrings;
+                                                            for (int i = 1; i <= types.length; i++) {
+                                                                if (venueDTO != null && venueDTO.getVenue().getType() == i) {
+                                                                    out.print("<option selected value=\"" + i + "\">" + types[i - 1] + "</option>");
+                                                                } else {
+                                                                    out.print("<option value=\"" + i + "\">" + types[i - 1] + "</option>");
+                                                                }
+                                                            }
+                                                        %>
+                                                </select>
+                                                <label class="form-label" for="select-type">Type</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-outline mb-4">
+                                                <input required type="number" id="hourlyRate" name="hourlyRate"
+                                                    class="form-control border"
+                                                    value="<%=venueDTO != null ? venueDTO.getVenue().getHourlyRate() : ""%>" />
+                                                <label class="form-label" for="hourlyRate">HourlyRate</label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-5">
-                                        <div class="form-outline mb-4">
-                                            <input required type="text" id="venueName" name="name" class="form-control border"
-                                                value="<%=venueDTO != null ? venueDTO.getVenue().getName() : ""%>" />
-                                            <label class="form-label" for="venueName">Name</label>
-                                        </div>
-                                        <div class="row">
+                                    <div class="form-outline mb-4">
+                                        <input type="hidden" id="selected-staff"
+                                            value="<%=venueDTO != null ? venueDTO.getUser().getId() : "0"%>">
+                                        <select required class="form-select border form-control" name="staff"
+                                            id="select-staff" aria-label="select">
+                                            <option value="0">None</option>
+                                            <%
+                                                    ArrayList<User> staff = (ArrayList<User>) request.getAttribute("staff");
+                                                    for (int i = 1; i <= staff.size(); i++) {
+                                                        out.print("<option value=\"" + staff.get(i - 1).getId() + "\">" + staff.get(i - 1).getFirstName() + " " + staff.get(i - 1).getLastName() + "</option>");
+                                                    }
+                                                %>
+                                        </select>
+                                        <label class="form-label" for="select-staff">Person in charge</label>
+                                    </div>
+                                    <div class="form-outline mb-4">
+                                        <input type="hidden" id="selected-district"
+                                            value="<%=venueDTO != null ? venueDTO.getVenue().getDistrict() : ""%>">
+                                        <select required class="form-select border form-control" name="district"
+                                            id="select-district" aria-label="select">
+                                            <option value="Central and West District">Central and West District
+                                            </option>
+                                            <option value="Eastern District">Eastern District</option>
+                                            <option value="Southern District">Southern District</option>
+                                            <option value="Wan Chai District">Wan Chai District</option>
+                                            <option value="Kowloon City District">Kowloon City District</option>
+                                            <option value="Kwun Tong District">Kwun Tong District</option>
+                                            <option value="Sham Shui Po District">Sham Shui Po District</option>
+                                            <option value="Wong Tai Sin District">Wong Tai Sin District</option>
+                                            <option value="Yau Tsim Mong District">Yau Tsim Mong District</option>
+                                            <option value="Island District">Island District</option>
+                                            <option value="Kwai Tsing District">Kwai Tsing District</option>
+                                            <option value="North District">North District</option>
+                                            <option value="Sai Kung District">Sai Kung District</option>
+                                            <option value="Sha Tin District">Sha Tin District</option>
+                                            <option value="Tai Po District">Tai Po District</option>
+                                            <option value="Tsuen Wan District">Tsuen Wan District</option>
+                                            <option value="Tuen Mun District">Tuen Mun District</option>
+                                            <option value="Yuen Long District">Yuen Long District</option>
 
-                                            <div class="col">
-                                                <div class="form-outline mb-4">
-                                                    <input required type="text" id="capacity" name="capacity"
-                                                        class="form-control border"
-                                                        value="<%=venueDTO != null ? venueDTO.getVenue().getCapacity() : ""%>" />
-                                                    <label class="form-label" for="capacity">Capacity</label>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-outline mb-4">
-                                                    <select required class="form-control border" name="type" id="select-type"
-                                                        aria-label="select"
-                                                        value="<%=venueDTO != null ? venueDTO.getVenue().getType() : ""%>">
-                                                        <%
-                                                                String[] types = ict.bean.Venue.typeStrings;
-                                                                for (int i = 1; i <= types.length; i++) {
-                                                                    if (venueDTO != null && venueDTO.getVenue().getType() == i) {
-                                                                        out.print("<option selected value=\"" + i + "\">" + types[i - 1] + "</option>");
-                                                                    } else {
-                                                                        out.print("<option value=\"" + i + "\">" + types[i - 1] + "</option>");
-                                                                    }
-                                                                }
-                                                            %>
-                                                    </select>
-                                                    <label class="form-label" for="select-type">Type</label>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-outline mb-4">
-                                                    <input required type="text" id="hourlyRate" name="hourlyRate"
-                                                        class="form-control border"
-                                                        value="<%=venueDTO != null ? venueDTO.getVenue().getHourlyRate() : ""%>" />
-                                                    <label class="form-label" for="hourlyRate">HourlyRate</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-outline mb-4">
-                                            <input type="hidden" id="selected-staff"
-                                                value="<%=venueDTO != null ? venueDTO.getUser().getId() : "0"%>">
-                                            <select required class="form-select border form-control" name="staff"
-                                                id="select-staff" aria-label="select">
-                                                <option value="0">None</option>
-                                                <%
-                                                        ArrayList<User> staff = (ArrayList<User>) request.getAttribute("staff");
-                                                        for (int i = 1; i <= staff.size(); i++) {
-                                                            out.print("<option value=\"" + staff.get(i - 1).getId() + "\">" + staff.get(i - 1).getFirstName() + " " + staff.get(i - 1).getLastName() + "</option>");
-                                                        }
-                                                    %>
-                                            </select>
-                                            <label class="form-label" for="select-staff">Person in charge</label>
-                                        </div>
-                                        <div class="form-outline mb-4">
-                                            <input type="hidden" id="selected-district"
-                                                value="<%=venueDTO != null ? venueDTO.getVenue().getDistrict() : ""%>">
-                                            <select required class="form-select border form-control" name="district"
-                                                id="select-district" aria-label="select">
-                                                <option value="Central and West District">Central and West District
-                                                </option>
-                                                <option value="Eastern District">Eastern District</option>
-                                                <option value="Southern District">Southern District</option>
-                                                <option value="Wan Chai District">Wan Chai District</option>
-                                                <option value="Kowloon City District">Kowloon City District</option>
-                                                <option value="Kwun Tong District">Kwun Tong District</option>
-                                                <option value="Sham Shui Po District">Sham Shui Po District</option>
-                                                <option value="Wong Tai Sin District">Wong Tai Sin District</option>
-                                                <option value="Yau Tsim Mong District">Yau Tsim Mong District</option>
-                                                <option value="Island District">Island District</option>
-                                                <option value="Kwai Tsing District">Kwai Tsing District</option>
-                                                <option value="North District">North District</option>
-                                                <option value="Sai Kung District">Sai Kung District</option>
-                                                <option value="Sha Tin District">Sha Tin District</option>
-                                                <option value="Tai Po District">Tai Po District</option>
-                                                <option value="Tsuen Wan District">Tsuen Wan District</option>
-                                                <option value="Tuen Mun District">Tuen Mun District</option>
-                                                <option value="Yuen Long District">Yuen Long District</option>
-
-                                            </select>
-                                            <label class="form-label" for="select-staff">District</label>
-                                        </div>
-                                        <div class="form-outline mb-4">
-                                            <textarea required class="form-control border" name="address" id="address"
-                                                rows="2"><%=venueDTO != null ? venueDTO.getVenue().getAddress() : ""%></textarea>
-                                            <label class="form-label" for="address">Address</label>
-                                        </div>
-                                        <div class="form-outline">
-                                            <textarea class="form-control border" name="description" id="decription"
-                                                rows="4"><%=venueDTO != null ? venueDTO.getVenue().getDescription() : ""%></textarea>
-                                            <label class="form-label" for="decription">Description</label>
-                                        </div>
+                                        </select>
+                                        <label class="form-label" for="select-staff">District</label>
+                                    </div>
+                                    <div class="form-outline mb-4">
+                                        <textarea required class="form-control border" name="address" id="address"
+                                            rows="2"><%=venueDTO != null ? venueDTO.getVenue().getAddress() : ""%></textarea>
+                                        <label class="form-label" for="address">Address</label>
+                                    </div>
+                                    <div class="form-outline">
+                                        <textarea class="form-control border" name="description" id="decription"
+                                            rows="4"><%=venueDTO != null ? venueDTO.getVenue().getDescription() : ""%></textarea>
+                                        <label class="form-label" for="decription">Description</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit"
-                                class="btn btn-primary"><%=venueDTO != null ? "Save changes" : "Add Venue"%></button>
-                        </div>
                     </div>
-                </form>
-            </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit"
+                            class="btn btn-primary"><%=venueDTO != null ? "Save changes" : "Add Venue"%></button>
+                    </div>
+                </div>
+            </form>
         </div>
         <!-- Modal -->
         <ict:result />

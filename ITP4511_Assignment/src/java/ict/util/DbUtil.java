@@ -45,7 +45,6 @@ public class DbUtil {
         return (Connection) DriverManager.getConnection(dburl, dbUser, dbPassword);
     }
 
-
     public boolean testConnectionWithDB() {
 
         Connection cnnt = null;
@@ -110,7 +109,6 @@ public class DbUtil {
             cnnt.close();
         } catch (SQLException e) {
             while (e != null) {
-              
 
                 e.printStackTrace();
                 hasError = true;
@@ -129,6 +127,9 @@ public class DbUtil {
         } catch (IOException e) {
             String errorMsg = e.getMessage();
             errorMsgs.add(errorMsg);
+            e.printStackTrace();
+            hasError = true;
+        } catch (Exception e) {
             e.printStackTrace();
             hasError = true;
         }
@@ -162,11 +163,11 @@ public class DbUtil {
             cnnt.close();
         } catch (SQLException e) {
             while (e != null) {
-                if ( cnnt != null) {
+                if (cnnt != null) {
                     try {
                         System.err.print("Transaction is being rolled back");
                         cnnt.rollback();
-                    } catch(SQLException excep) {
+                    } catch (SQLException excep) {
                         excep.printStackTrace();
                     }
                 }
@@ -184,6 +185,9 @@ public class DbUtil {
                 e = e.getNextException();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+            hasError = true;
+        } catch (Exception e) {
             e.printStackTrace();
             hasError = true;
         }
@@ -208,11 +212,11 @@ public class DbUtil {
             cnnt.close();
         } catch (SQLException e) {
             while (e != null) {
-                if ( cnnt != null) {
+                if (cnnt != null) {
                     try {
                         System.err.print("Transaction is being rolled back");
                         cnnt.rollback();
-                    } catch(SQLException excep) {
+                    } catch (SQLException excep) {
                         excep.printStackTrace();
                     }
                 }
@@ -224,12 +228,14 @@ public class DbUtil {
                 }
                 errorMsgs.add(errorMsg);
 
-
                 e = e.getNextException();
                 hasError = true;
             }
         } catch (IOException e) {
 
+            e.printStackTrace();
+            hasError = true;
+        } catch (Exception e) {
             e.printStackTrace();
             hasError = true;
         }
@@ -246,7 +252,7 @@ public class DbUtil {
         return hasError;
     }
 
-    public int getTotalRecords(String table ) {
+    public int getTotalRecords(String table) {
         int totalRecords = 0;
         String sql = "SELECT COUNT(*) FROM " + table;
         ArrayList<Map<String, Object>> ls = findRecord(sql, new ArrayList<>());
