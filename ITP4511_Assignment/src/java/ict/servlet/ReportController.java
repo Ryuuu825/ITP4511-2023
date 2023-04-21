@@ -102,6 +102,9 @@ public class ReportController extends HttpServlet {
             // weekly ( recent 14 weeks )
             json.add(this.countRecent14WeeksBookings(venue.getId()));
 
+            // monthly ( recent 12 months )
+            json.add(this.countRecent12MonthsBookings(venue.getId()));
+
 
             // get the occupancy rate foreach venue [weekly, monthly, yearly] . This is the number of bookings / total number of timeslots
             json.add(this.countRecent14WeeksOccupancyRate(venue.getId()));
@@ -157,6 +160,28 @@ public class ReportController extends HttpServlet {
     public JsonObject countRecent14WeeksBookings(int venueId) {
         int countMonthly = 0;
         JsonObject jsonMonthly = new JsonObject("recent 14 weeks bookings");
+
+        // monthly in the past 12 months
+        for (int i = 0; i <= 11; i++) {
+            String sql = "SELECT COUNT(*) FROM venue_timeslot WHERE venueId = ? AND BookingId IS NOT NULL AND MONTH(date) = MONTH(CURRENT_DATE()) - ?;";
+            ArrayList<Object>  params = new ArrayList<>();
+            params.add(venueId);
+            params.add(i);
+            ArrayList<Map<String, Object>> rs = dbUtil.findRecord(sql, params);
+            int countMonthlyI = Math.round(Float.parseFloat(rs.get(0).get("COUNT(*)").toString()));
+
+            jsonMonthly.add(Integer.toString(i), countMonthlyI);
+
+            params.clear();
+            rs.clear();
+        }
+
+        return jsonMonthly;
+    }
+
+    public JsonObject countRecent12MonthsBookings(int venueId) {
+        int countMonthly = 0;
+        JsonObject jsonMonthly = new JsonObject("recent 12 months bookings");
 
         // monthly in the past 12 months
         for (int i = 0; i <= 11; i++) {
@@ -361,13 +386,15 @@ public class ReportController extends HttpServlet {
     public JsonArray getAllVenue() {
 
         JsonArray json = new JsonArray("allvenue");
-        String sql = "SELECT name FROM venue";
+        String sql = "SELECT id , name FROM venue";
         ArrayList<Map<String, Object>> rs = dbUtil.findRecord(sql, new ArrayList<>());
 
         for (int i = 0; i < rs.size(); i++) {
-            json.add(rs.get(i).get("name").toString());
+            JsonObject venue = new JsonObject("venue");
+            venue.add("id", rs.get(i).get("id").toString());
+            venue.add("name", rs.get(i).get("name").toString());
+            json.addJsonObject(venue);
         }
-
         return json;
     }
 

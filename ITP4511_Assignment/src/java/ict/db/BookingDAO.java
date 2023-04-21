@@ -276,7 +276,7 @@ public class BookingDAO extends BaseDAO {
         }
         return bdto;
     }
-    
+
     public boolean updateStatus(int bookingId, int status) {
         String sql = "UPDATE booking "
                 + "SET status = ? "

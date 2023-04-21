@@ -37,9 +37,7 @@ public class CheckDbTag extends SimpleTagSupport {
                 pageContext.getRequest().setAttribute("error", "Database is not available");
                 pageContext.getRequest().setAttribute("redirect", url);
                 pageContext.getRequest().getRequestDispatcher("/http/500.jsp").forward(pageContext.getRequest(), pageContext.getResponse());
-            } else {
-                getJspBody().invoke(null);
-            }
+            } 
         } catch (Exception e) {
             e.printStackTrace();
         }

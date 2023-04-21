@@ -18,6 +18,10 @@ public class JsonArray {
         items.add(value.toString());
     }
 
+    public void addJsonObject(JsonObject obj) {
+        items.add(obj.toValueString());
+    }
+
     public String toValueString() {
         String str = "\"" + name + "\":[";
         int i = 0;
@@ -26,9 +30,9 @@ public class JsonArray {
                 str += ",";
             }
             // str += "\"" + key + "\":\"" + items.get(key) + "\"";
-            // if the value is a json object
-            if (item.toString().startsWith("{")) {
-                str += item.toString();
+            // if the string has : or { or [ or , or " or \ or space
+            if (item.toString().startsWith("{") || item.toString().startsWith("[") || item.toString().contains("\"") ) {
+                str += ((JsonObject) item).toValueString();
             } else {
                 str += "\"" + item.toString() + "\"";
             }
