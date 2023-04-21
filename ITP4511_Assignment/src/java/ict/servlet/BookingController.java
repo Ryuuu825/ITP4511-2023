@@ -30,22 +30,20 @@ public class BookingController extends HttpServlet {
     private BookingDAO bookingDB;
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        System.err.println(action);
         if ("updateStatus".equalsIgnoreCase(action)) {
             int bookingId = Integer.parseInt(req.getParameter("bookingId"));
-            System.err.println("bid:"+bookingId);
+            System.err.println("bid:" + bookingId);
             int status = Integer.parseInt(req.getParameter("status"));
-            System.err.println("status:"+bookingId);
+            System.err.println("status:" + bookingId);
+            HttpSession session = req.getSession(true);
             if (bookingDB.updateStatus(bookingId, status)) {
-                resp.sendRedirect("searchBookings");
+                session.setAttribute("message", "Update booking " + bookingId + " successfully!");
+            } else {
+                session.setAttribute("message", "Update booking " + bookingId + " failed!");
             };
+            resp.sendRedirect("searchBookings");
         }
     }
 

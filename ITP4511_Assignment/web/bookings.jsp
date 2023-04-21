@@ -67,7 +67,7 @@
         });
     </script>
     <%
-        String role = (String)session.getAttribute("role");
+        String role = (String) session.getAttribute("role");
         if (role == null) {
             response.sendRedirect("");
         }
@@ -103,6 +103,7 @@
             </ul>
         </header>
         <section class="p-5">
+            <ict:result />
             <div class="card bg-white p-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="m-2">Bookings</h5>
