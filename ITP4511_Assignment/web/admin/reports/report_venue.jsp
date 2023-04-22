@@ -32,6 +32,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <a class="btn btn-info hidden" id="apre" target="_blank">Preview</a>
                     <button type="button" id="dbtn" class="btn btn-primary hidden" data-bs-dismiss="modal">Download</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
@@ -95,9 +96,6 @@
 
                     let response = await fetch(venueDataFilePath);
 
-                    // wait for 2 seconds
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-
                     return await response.blob();
                 }
 
@@ -105,11 +103,16 @@
 
                     // set the text to Finish
                     let modalBody = document.querySelector("#exportModal .modal-body");
-                    modalBody.innerHTML = "<p class='alert alert-success'>The file is ready to download</p>";
+                    modalBody.innerHTML = "<p class='alert alert-success'>The file is ready to go</p>";
 
                     // display the dbtn 
                     let dbtn = document.getElementById("dbtn");
                     dbtn.style.display = "block";
+
+                    // apre
+                    let apre = document.getElementById("apre");
+                    apre.href = URL.createObjectURL(res);
+                    apre.style.display = "block";
 
                     // add onclick event to dbtn
                     dbtn.onclick = function () {
@@ -125,6 +128,9 @@
 
                         // hide the dbtn
                         dbtn.style.display = "none";
+
+                        // hide the apre
+                        apre.style.display = "none";
 
                     }
                     
