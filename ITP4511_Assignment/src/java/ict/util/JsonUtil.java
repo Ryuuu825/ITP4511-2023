@@ -1,6 +1,7 @@
 package ict.util;
 
 import java.util.ArrayList;
+import javax.servlet.http.HttpServletResponse;
 
 public class JsonUtil {
 
@@ -102,6 +103,13 @@ public class JsonUtil {
 
     public String getJsonString() {
         return jsonString + "}";
+    }
+
+
+    public void setHeader(HttpServletResponse resp) {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
     }
     
 }

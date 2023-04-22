@@ -13,16 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ict.bean.Booking;
 import ict.bean.Venue;
 import ict.bean.view.BookingDTO;
+import ict.bean.view.BookingReportDTO;
 import ict.db.BookingDAO;
 import ict.db.VenueDAO;
+import ict.util.CsvUtil;
 import ict.util.DbUtil;
 import ict.util.JsonArray;
 import ict.util.JsonObject;
 import ict.util.JsonUtil;
 
-@WebServlet(name = "VeuneReportController", urlPatterns = {"/api/report/venue"})
+@WebServlet(name = "VeuneReportController", urlPatterns = { "/api/report/venue" })
 public class VeuneReportController extends HttpServlet {
 
     private DbUtil dbUtil;
@@ -38,7 +41,6 @@ public class VeuneReportController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
     }
 
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     }
@@ -52,10 +54,9 @@ public class VeuneReportController extends HttpServlet {
             return;
         }
 
-
         String venueId = req.getParameter("venue");
-        String action = req.getParameter("action"); // csv or json
-        ArrayList<BookingDTO> bdtos ;
+        String action = req.getParameter("action"); // csv or json ( not implemented yet )
+        ArrayList<BookingDTO> bdtos;
 
         if (venueId == null || venueId.equals("all")) {
             bdtos = bookingDB.queryRecordToDTO();
@@ -66,12 +67,34 @@ public class VeuneReportController extends HttpServlet {
             req.setAttribute("venueName", venue.getName());
         }
 
+        if (action == null) {
+            String redirectBackTo = getServletContext().getContextPath() + "/admin/reports/report_venue.jsp";
+            RequestDispatcher rd;
+            req.setAttribute("bookingDTOs", bdtos);
+            rd = getServletContext().getRequestDispatcher("/admin/report.jsp?report=venue");
+            rd.forward(req, resp);
+        } else if (action.equals("csv")) {
 
-        String redirectBackTo = getServletContext().getContextPath() + "/admin/reports/report_venue.jsp";
-        RequestDispatcher rd;
-        req.setAttribute("bookingDTOs", bdtos);
-        rd = getServletContext().getRequestDispatcher("/admin/report.jsp?report=venue");
-        rd.forward(req, resp);
+            CsvUtil<BookingReportDTO> csvUtil = new CsvUtil<>(BookingReportDTO.class);
+            for (BookingDTO b : bdtos) {
+                BookingReportDTO br = new BookingReportDTO(
+                        b.getBooking().getId(), 
+                        b.getMember().getFirstName() + " " + b.getMember().getLastName(),
+                        b.getVenueTimeslotses().size(), 
+                        b.getBooking().getAmount(), 
+                        b.getBooking().getCreateDate(),
+                        Booking.getStatusString(b.getBooking().getStatus())
+                    );
+                csvUtil.add(br);
+            }
+
+            csvUtil.setHeader(resp);
+            resp.getWriter().write(csvUtil.getCSV());
+
+        } else {
+            resp.setStatus(400);
+            resp.getWriter().write("Invalid action");
+        }
     }
 
     @Override
@@ -84,28 +107,6 @@ public class VeuneReportController extends HttpServlet {
         jsonUtil = new JsonUtil();
         venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
         bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
-    }
-
-    public JsonObject countRecent12MonthsBookings(int venueId) {
-        int countMonthly = 0;
-        JsonObject jsonMonthly = new JsonObject("recent 12 months bookings");
-
-        // monthly in the past 12 months
-        for (int i = 0; i <= 11; i++) {
-            String sql = "SELECT COUNT(*) FROM venue_timeslot WHERE venueId = ? AND BookingId IS NOT NULL AND MONTH(date) = MONTH(CURRENT_DATE()) - ?;";
-            ArrayList<Object>  params = new ArrayList<>();
-            params.add(venueId);
-            params.add(i);
-            ArrayList<Map<String, Object>> rs = dbUtil.findRecord(sql, params);
-            int countMonthlyI = Math.round(Float.parseFloat(rs.get(0).get("COUNT(*)").toString()));
-
-            jsonMonthly.add(Integer.toString(i), countMonthlyI);
-
-            params.clear();
-            rs.clear();
-        }
-
-        return jsonMonthly;
     }
 
 }
