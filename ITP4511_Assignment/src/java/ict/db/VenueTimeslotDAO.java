@@ -12,6 +12,7 @@ import ict.bean.view.DateTimeslots;
 import ict.bean.view.VenueTimeslots;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.DayOfWeek;
 
 public class VenueTimeslotDAO extends BaseDAO {
 
@@ -36,7 +37,10 @@ public class VenueTimeslotDAO extends BaseDAO {
 
     public boolean addRecord(int venueId, int timeslotId, int bookingId, String date) {
         boolean isSuccess = false;
-        LocalDate day = LocalDate.parse(date);
+        LocalDate day = LocalDate.now();
+        if (date != null) {
+            day = LocalDate.parse(date);
+        }
         String sql = "INSERT INTO venue_timeslot (venueId, timeslotId, date) VALUES (?,?,?)";
         ArrayList<Object> params = new ArrayList<>();
         params.add(venueId);
@@ -47,6 +51,32 @@ public class VenueTimeslotDAO extends BaseDAO {
         }
         params.add(day);
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
+
+    public boolean addRecordForSetAvailable(int timeslotId, int venueId, int weekday) {
+        boolean isSuccess = false;
+        DayOfWeek dayOfWeek = DayOfWeek.of(weekday);
+        LocalDate day = LocalDate.now();
+        DayOfWeek nowDay = day.getDayOfWeek();
+        for (int i = 0; i < 7; i++) {
+            if (nowDay.compareTo(dayOfWeek) != 0) {
+                day = day.plusDays(1);
+                nowDay = day.getDayOfWeek();
+            } else {
+                break;
+            }
+        }
+        LocalDate maxDate = queryMaxDate();
+        String sql = "INSERT INTO venue_timeslot (venueId, timeslotId, date) VALUES (?,?,?)";
+        while (maxDate.compareTo(day) > 0) {
+            ArrayList<Object> params = new ArrayList<>();
+            params.add(venueId);
+            params.add(timeslotId);
+            params.add(day);
+            isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+            day = day.plusDays(7);
+        }
         return isSuccess;
     }
 
@@ -73,6 +103,19 @@ public class VenueTimeslotDAO extends BaseDAO {
         ArrayList<Object> params = new ArrayList<>();
         params.add(id);
         String sql = "DELETE FROM venue_timeslot WHERE id=?";
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
+
+    public boolean delRecordForManagement(int timeslotId, int venueId, int weekday) {
+        boolean isSuccess = false;
+        int day = (weekday + 1) % 7;
+        System.out.println(day);
+        String sql = "DELETE FROM venue_timeslot WHERE timeslotId = ? and venueId = ? and DAYOFWEEK(date) = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(timeslotId);
+        params.add(venueId);
+        params.add(day);
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
@@ -161,6 +204,29 @@ public class VenueTimeslotDAO extends BaseDAO {
 
     public ArrayList<VenueTimeslot> queryRocordByVenueId(int venueId) {
         String sql = "SELECT * FROM venue_timeslot WHERE venueId = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(venueId);
+        ArrayList<VenueTimeslot> vts = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        if (ls.size() != 0) {
+            for (Map<String, Object> m : ls) {
+                VenueTimeslot vt = new VenueTimeslot();
+                vt.setId((int) m.get("id"));
+                if (m.get("bookingId") != null) {
+                    vt.setBookingId((int) m.get("bookingId"));
+                }
+                vt.setVenueId((int) m.get("venueId"));
+                vt.setTimeslotId((int) m.get("timeslotId"));
+                vt.setDate(((Date) m.get("date")).toLocalDate());
+                vts.add(vt);
+            }
+        }
+
+        return vts;
+    }
+
+    public ArrayList<VenueTimeslot> queryWeeklyRocordByVenueId(int venueId) {
+        String sql = "SELECT * FROM venue_timeslot WHERE venueId = ? AND date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 6 DAY);";
         ArrayList<Object> params = new ArrayList<>();
         params.add(venueId);
         ArrayList<VenueTimeslot> vts = new ArrayList<>();

@@ -19,17 +19,20 @@ public class GenerateVenueTimeslot {
 
         String sql = "INSERT INTO `venue_timeslot` (`id`, `venueId`, `timeslotId`, `bookingId`, `date`) VALUES "
                 + "(NULL, '1', '1', NULL, ?)";
-        for (int i = 1; i <= 5; i++) {
-            for (int j = 1; j <= 12; j++) {
-                sql = "INSERT INTO `venue_timeslot` (`id`, `venueId`, `timeslotId`, `bookingId`, `date`) VALUES "
-                        + "(NULL, ?, ?, NULL, ?)";
-                ArrayList<Object> params = new ArrayList<>();
-                params.add(i);
-                params.add(j);
-                date = date.plusDays(1);
-                params.add(date);
-                dbUtil.updateByPreparedStatement(sql, params);
+        for (int z = 0; z < 60; z++) {
+            for (int i = 1; i <= 5; i++) {
+                for (int j = 1; j <= 12; j++) {
+                    sql = "INSERT INTO `venue_timeslot` (`id`, `venueId`, `timeslotId`, `bookingId`, `date`) VALUES "
+                            + "(NULL, ?, ?, NULL, ?)";
+                    ArrayList<Object> params = new ArrayList<>();
+                    params.add(i);
+                    params.add(j);
+                    params.add(date);
+                    dbUtil.updateByPreparedStatement(sql, params);
+                }
             }
+            date = date.plusDays(1);
         }
-    }   
+
+    }
 }
