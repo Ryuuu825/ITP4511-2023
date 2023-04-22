@@ -83,7 +83,7 @@ public class VeuneReportController extends HttpServlet {
                         b.getVenueTimeslotses().size(), 
                         b.getBooking().getAmount(), 
                         b.getBooking().getCreateDate(),
-                        Booking.getStatusString(b.getBooking().getStatus())
+                        b.getBooking().getStatusString()
                     );
                 csvUtil.add(br);
             }

@@ -17,10 +17,9 @@ public class Booking implements Serializable{
     private int status;
     private double amount;
     private LocalDate createDate;
-
-    private static String[] BOOKING_STATUS = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancel", "Complete"};
-
-
+    
+    public static String[] statuString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancel", "Complete"};
+    
     public Booking() {
     }
 
@@ -54,10 +53,6 @@ public class Booking implements Serializable{
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public static String getStatusString(int status) {
-        return BOOKING_STATUS[status];
     }
 
     public double getAmount() {
