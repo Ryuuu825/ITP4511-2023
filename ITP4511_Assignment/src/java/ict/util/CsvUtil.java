@@ -94,4 +94,8 @@ public class CsvUtil <T> {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
     }
+
+    public void setDownloadable(HttpServletResponse resp, String filename) {
+        resp.setHeader("Content-Disposition", "attachment; filename=" + filename);
+    }
 }

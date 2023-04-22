@@ -17,6 +17,27 @@
 
 <% String role = (String)session.getAttribute("role"); %>
 <section>
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="errorModalLabel">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="errorModalLabel">
+                        Exporting Data
+                    </h1>
+                </div>
+                <div class="modal-body">
+                    <div class="flex flex-row items-center justify-start">
+                        <p>Exporting data to CSV file, please wait</p>
+                        <span class="spinner-border spinner-border-sm ml-3" role="status" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="dbtn" class="btn btn-primary hidden" data-bs-dismiss="modal">Download</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header flex flex-row items-center">
             <h3 class="text-2xl text-dark">Venue</h3>
@@ -49,10 +70,65 @@
                                 venue.innerHTML += "<option value='" + item.id + "'>" + item.name + "</option>";
                             }
                         });
-
-                        // add all option
                     });
 
+            </script>
+
+            <button class="btn btn-primary ml-6 " href="<%=request.getContextPath()%>/api/report/venue?export=true&venue=<%=request.getParameter("venue")%>"
+                onclick="preFetchCsv();"
+                >
+                Export to CSV
+            </button>
+
+            <script>
+
+                function preFetchCsv() {
+                    // open the modal
+                    $('#exportModal').modal('show');
+
+                    fetchCsvFileFromServer()
+                        .then(res => fetchFinishCallback(res));
+                }
+
+                async function fetchCsvFileFromServer() {
+                    let venueDataFilePath = "<%=request.getContextPath()%>" + "/api/report/venue?export=true&venue=<%=request.getParameter("venue")%>";
+
+                    let response = await fetch(venueDataFilePath);
+
+                    // wait for 2 seconds
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    return await response.blob();
+                }
+
+                function fetchFinishCallback(res) {
+
+                    // set the text to Finish
+                    let modalBody = document.querySelector("#exportModal .modal-body");
+                    modalBody.innerHTML = "<p class='alert alert-success'>The file is ready to download</p>";
+
+                    // display the dbtn 
+                    let dbtn = document.getElementById("dbtn");
+                    dbtn.style.display = "block";
+
+                    // add onclick event to dbtn
+                    dbtn.onclick = function () {
+
+                        // create a link
+                        let a = document.createElement("a");
+                        a.href = URL.createObjectURL(res);
+                        a.download = "venue.csv";
+                        a.click();
+
+                        // reset the modal
+                        modalBody.innerHTML = "<div class='flex flex-row items-center justify-start'><p>Exporting data to CSV file, please wait</p><span class='spinner-border spinner-border-sm ml-3' role='status' aria-hidden='true'></span></div>";
+
+                        // hide the dbtn
+                        dbtn.style.display = "none";
+
+                    }
+                    
+                }
             </script>
         </div>
         <div class="card-body">

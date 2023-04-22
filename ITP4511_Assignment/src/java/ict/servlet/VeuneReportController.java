@@ -55,7 +55,7 @@ public class VeuneReportController extends HttpServlet {
         }
 
         String venueId = req.getParameter("venue");
-        String action = req.getParameter("action"); // csv or json ( not implemented yet )
+        String action = req.getParameter("export"); // csv or json ( not implemented yet )
         ArrayList<BookingDTO> bdtos;
 
         if (venueId == null || venueId.equals("all")) {
@@ -73,7 +73,7 @@ public class VeuneReportController extends HttpServlet {
             req.setAttribute("bookingDTOs", bdtos);
             rd = getServletContext().getRequestDispatcher("/admin/report.jsp?report=venue");
             rd.forward(req, resp);
-        } else if (action.equals("csv")) {
+        } else if (action.equals("true")) {
 
             CsvUtil<BookingReportDTO> csvUtil = new CsvUtil<>(BookingReportDTO.class);
             for (BookingDTO b : bdtos) {
