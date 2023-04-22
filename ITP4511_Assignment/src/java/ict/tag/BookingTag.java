@@ -58,7 +58,7 @@ public class BookingTag extends SimpleTagSupport {
                 out.print("<td class=\"text-" + color[booking.getBooking().getStatus() - 1] + "\">");
                 out.print("<label class=\"border border-2 rounded-pill px-3 py-1 border-" + color[booking.getBooking().getStatus() - 1] + "\">");
                 out.print(status[booking.getBooking().getStatus() - 1] + "</label></td>");
-                out.print("<td><a class=\"btn btn-link btn-rounded btn-sm\" role=\"button\" href=\"viewBooking?bookingId=" + booking.getBooking().getId() + "\">View</a></td>");
+                out.print("<td><a class=\"btn btn-link btn-rounded btn-sm\" role=\"button\" href=\"" + pageContext.getServletContext().getContextPath() + "/viewBooking?bookingId=" + booking.getBooking().getId() + "\">View</a></td>");
                 out.print("</tr>");
             }
             out.print("</tbody></table>");

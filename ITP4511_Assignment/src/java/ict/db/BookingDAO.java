@@ -277,6 +277,22 @@ public class BookingDAO extends BaseDAO {
         return bdto;
     }
 
+    public ArrayList<BookingDTO> queryRecordByVenueId(int venueId) {
+        ArrayList<BookingDTO> bookings = new ArrayList<>();
+
+        String sql = "SELECT * FROM booking WHERE id IN (SELECT bookingId FROM venue_timeslot WHERE venueId = ?)";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(venueId);
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+
+        for (Map<String, Object> m : ls) {
+            bookings.add(queryRecordToDTOByBookingId((int) m.get("id")));
+        }
+
+
+        return bookings;
+    }
+
     public boolean updateStatus(int bookingId, int status) {
         String sql = "UPDATE booking "
                 + "SET status = ? "

@@ -1,6 +1,13 @@
 <% if ( request.getAttribute("bookingDTOs") == null ) { 
     // forward to /api/report/venue
-    request.getRequestDispatcher("/api/report/venue").forward(request, response);
+    String venudId = request.getParameter("venue");
+    if (venudId != null) {
+        request.getRequestDispatcher("/api/report/venue?venue=" + venudId).forward(request, response);
+    } else {
+        request.getRequestDispatcher("/api/report/venue" ).forward(request, response);
+
+    }
+    
 } %>
 
 <%@page import="ict.bean.view.BookingDTO"%>
@@ -15,8 +22,12 @@
             <h3 class="text-2xl text-dark">Venue</h3>
             <div class="ml-auto my-5"></div>
             <div class="mx-2 relative">
-                <select class="form-select" id="venue">
-                    <option value="all">EPL(All)</option>
+                <script>
+                    function refreshUrl() {
+                        this.window.location.href = "<%=request.getContextPath()%>/admin/report.jsp?report=venue&venue=" + document.getElementById("venue").value;
+                    }
+                </script>
+                <select class="form-select" id="venue" onchange="refreshUrl()">
                 </select>
                 <label for="venue" class="form-label absolute -top-2 left-2 bg-white text-xs text-gray-500 px-1 select-none">
                     Select a venue
@@ -29,12 +40,17 @@
                     .then(response => response.json())
                     .then(data => {
                         let venue = document.getElementById("venue");
+                        venue.innerHTML += "<option value='all'>EPL(All)</option>";
+
                         data.forEach(item => {
-                            let option = document.createElement("option");
-                            option.value = item.id;
-                            option.innerText = item.name;
-                            venue.appendChild(option);
+                            if (item.id == "<%=request.getParameter("venue")%>") {
+                                venue.innerHTML += "<option value='" + item.id + "' selected>" + item.name + "</option>";
+                            } else {
+                                venue.innerHTML += "<option value='" + item.id + "'>" + item.name + "</option>";
+                            }
                         });
+
+                        // add all option
                     });
 
             </script>

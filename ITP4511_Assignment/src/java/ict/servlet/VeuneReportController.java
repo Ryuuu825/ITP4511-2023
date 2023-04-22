@@ -52,7 +52,21 @@ public class VeuneReportController extends HttpServlet {
             return;
         }
 
-        ArrayList<BookingDTO> bdtos = bookingDB.queryRecordToDTO();
+
+        String venueId = req.getParameter("venue");
+        String action = req.getParameter("action"); // csv or json
+        ArrayList<BookingDTO> bdtos ;
+
+        if (venueId == null || venueId.equals("all")) {
+            bdtos = bookingDB.queryRecordToDTO();
+        } else {
+            bdtos = bookingDB.queryRecordByVenueId(Integer.parseInt(venueId));
+            // get the venue name
+            Venue venue = venueDB.queryRecordById(Integer.parseInt(venueId));
+            req.setAttribute("venueName", venue.getName());
+        }
+
+
         String redirectBackTo = getServletContext().getContextPath() + "/admin/reports/report_venue.jsp";
         RequestDispatcher rd;
         req.setAttribute("bookingDTOs", bdtos);
