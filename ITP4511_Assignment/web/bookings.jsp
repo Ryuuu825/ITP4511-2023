@@ -89,7 +89,7 @@
                     </a>
                 </li>
                 <li class="nav-item border-start nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="venueInfo.jsp">
+                    <a class="text-white mx-3 text-decoration-none" href="searchTimeslots">
                         <!-- Browse Spaces -->
                         Timeslot
                     </a>

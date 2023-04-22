@@ -32,8 +32,7 @@ public class BookingTag extends SimpleTagSupport {
     public void setRole(String role) {
         this.role = role;
     }
-
-    private String[] status = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancel", "Complete"};
+    
     private String[] color = {"warning", "danger", "warning", "primary", "success", "danger", "success"};
 
     @Override
@@ -57,7 +56,7 @@ public class BookingTag extends SimpleTagSupport {
                 out.print("<td>" + booking.getBooking().getCreateDate() + "</td>");
                 out.print("<td class=\"text-" + color[booking.getBooking().getStatus() - 1] + "\">");
                 out.print("<label class=\"border border-2 rounded-pill px-3 py-1 border-" + color[booking.getBooking().getStatus() - 1] + "\">");
-                out.print(status[booking.getBooking().getStatus() - 1] + "</label></td>");
+                out.print(ict.bean.Booking.statuString[booking.getBooking().getStatus() - 1] + "</label></td>");
                 out.print("<td><a class=\"btn btn-link btn-rounded btn-sm\" role=\"button\" href=\"" + pageContext.getServletContext().getContextPath() + "/viewBooking?bookingId=" + booking.getBooking().getId() + "\">View</a></td>");
                 out.print("</tr>");
             }

@@ -17,7 +17,9 @@ public class Booking implements Serializable{
     private int status;
     private double amount;
     private LocalDate createDate;
-
+    
+    public static String[] statuString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancel", "Complete"};
+    
     public Booking() {
     }
 
@@ -68,7 +70,11 @@ public class Booking implements Serializable{
     public void setCreateDate(LocalDate createDate) {
         this.createDate = createDate;
     }
-
+    
+    public String getStatusString(){
+        return statuString[status-1];
+    }
+    
     @Override
     public String toString() {
         return "Booking{" + "id=" + id + ", userId=" + userId + ", status=" + status + ", amount=" + amount + ", createDate=" + createDate + '}';

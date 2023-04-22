@@ -45,6 +45,26 @@
         transform: scale(1.01);
         cursor: pointer;
     }
+
+    .select-arrow {
+        color: var(--mdb-form-outline-select-arrow-color);
+        text-align: center;
+        font-size: var(--mdb-form-outline-select-arrow-font-size);
+        position: absolute;
+        top: var(--mdb-form-outline-select-arrow-top);
+        right: var(--mdb-form-outline-select-arrow-right)
+    }
+
+    .select-arrow:after {
+        display: inline-block;
+        margin-left: .255em;
+        vertical-align: .255em;
+        content: "";
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-bottom: 0;
+        border-left: .3em solid transparent
+    }
 </style>
 <script>
     $(document).ready(function () {
@@ -141,7 +161,7 @@
                 </a>
             </li>
             <li class="nav-item border-start nav-hover">
-                <a class="text-white mx-3 text-decoration-none" href="venueInfo.jsp">
+                <a class="text-white mx-3 text-decoration-none" href="searchTimeslots">
                     <!-- Browse Spaces -->
                     Timeslot
                 </a>
@@ -206,7 +226,7 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <div class="form-outline mb-4">
+                                            <div class="form-outline mb-4 position-relative">
                                                 <select required class="form-control border" name="type"
                                                     id="select-type" aria-label="select"
                                                     value="<%=venueDTO != null ? venueDTO.getVenue().getType() : ""%>">
@@ -222,6 +242,8 @@
                                                         %>
                                                 </select>
                                                 <label class="form-label" for="select-type">Type</label>
+                                                <span class="select-arrow position-absolute"
+                                                    style="top:25%; right: 1rem;"></span>
                                             </div>
                                         </div>
                                         <div class="col">
@@ -233,7 +255,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-outline mb-4">
+                                    <div class="form-outline mb-4 position-relative">
                                         <input type="hidden" id="selected-staff"
                                             value="<%=venueDTO != null ? venueDTO.getUser().getId() : "0"%>">
                                         <select required class="form-select border form-control" name="staff"
@@ -247,34 +269,43 @@
                                                 %>
                                         </select>
                                         <label class="form-label" for="select-staff">Person in charge</label>
+                                        <span class="select-arrow position-absolute"
+                                            style="top:25%; right: 1rem;"></span>
                                     </div>
-                                    <div class="form-outline mb-4">
+                                    <div class="form-outline mb-4 position-relative">
                                         <input type="hidden" id="selected-district"
                                             value="<%=venueDTO != null ? venueDTO.getVenue().getDistrict() : ""%>">
-                                        <select required class="form-select border form-control" name="district"
-                                            id="select-district" aria-label="select">
-                                            <option value="Central and West District">Central and West District
-                                            </option>
-                                            <option value="Eastern District">Eastern District</option>
-                                            <option value="Southern District">Southern District</option>
-                                            <option value="Wan Chai District">Wan Chai District</option>
-                                            <option value="Kowloon City District">Kowloon City District</option>
-                                            <option value="Kwun Tong District">Kwun Tong District</option>
-                                            <option value="Sham Shui Po District">Sham Shui Po District</option>
-                                            <option value="Wong Tai Sin District">Wong Tai Sin District</option>
-                                            <option value="Yau Tsim Mong District">Yau Tsim Mong District</option>
-                                            <option value="Island District">Island District</option>
-                                            <option value="Kwai Tsing District">Kwai Tsing District</option>
-                                            <option value="North District">North District</option>
-                                            <option value="Sai Kung District">Sai Kung District</option>
-                                            <option value="Sha Tin District">Sha Tin District</option>
-                                            <option value="Tai Po District">Tai Po District</option>
-                                            <option value="Tsuen Wan District">Tsuen Wan District</option>
-                                            <option value="Tuen Mun District">Tuen Mun District</option>
-                                            <option value="Yuen Long District">Yuen Long District</option>
-
+                                        <select required class="border form-control select-input" size="1"
+                                            name="district" id="select-district" aria-label="select">
+                                            <optgroup label="Hong Kong">
+                                                <option value="Central and West District">Central and West District
+                                                </option>
+                                                <option value="Eastern District">Eastern District</option>
+                                                <option value="Southern District">Southern District</option>
+                                                <option value="Wan Chai District">Wan Chai District</option>
+                                            </optgroup>
+                                            <optgroup label="Kowloon">
+                                                <option value="Kowloon City District">Kowloon City District</option>
+                                                <option value="Kwun Tong District">Kwun Tong District</option>
+                                                <option value="Sham Shui Po District">Sham Shui Po District</option>
+                                                <option value="Wong Tai Sin District">Wong Tai Sin District</option>
+                                                <option value="Yau Tsim Mong District">Yau Tsim Mong District</option>
+                                            </optgroup>
+                                            <optgroup label="New Territories">
+                                                <option value="Island District">Island District</option>
+                                                <option value="Kwai Tsing District">Kwai Tsing District</option>
+                                                <option value="North District">North District</option>
+                                                <option value="Sai Kung District">Sai Kung District</option>
+                                                <option value="Sha Tin District">Sha Tin District</option>
+                                                <option value="Tai Po District">Tai Po District</option>
+                                                <option value="Tsuen Wan District">Tsuen Wan District</option>
+                                                <option value="Tuen Mun District">Tuen Mun District</option>
+                                                <option value="Yuen Long District">Yuen Long District</option>
+                                            </optgroup>
                                         </select>
                                         <label class="form-label" for="select-staff">District</label>
+                                        <span class="select-arrow position-absolute"
+                                            style="top:25%; right: 1rem;"></span>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <textarea required class="form-control border" name="address" id="address"
