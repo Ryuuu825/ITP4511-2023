@@ -134,6 +134,17 @@
             };
             reader.readAsDataURL(file);
         });
+
+        $('.form-check-input').change(function () {
+            if ($(this).is(':checked')) {
+                $(this).parent().find($('input:radio[name=enable]')).filter('[value=1]').prop('checked', true);
+                $(this).parent().find($('input:radio[name=enable]')).filter('[value=0]').prop('checked', false);
+            } else {
+                $(this).parent().find($('input:radio[name=enable]')).filter('[value=0]').prop('checked', true);
+                $(this).parent().find($('input:radio[name=enable]')).filter('[value=1]').prop('checked', false);
+            }
+            $(this).parent().submit();
+        });
     });
 </script>
 <%

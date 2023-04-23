@@ -28,7 +28,7 @@ import javax.servlet.http.Part;
  *
  * @author jyuba
  */
-@WebServlet(name = "VenueController", urlPatterns = {"/delVenue", "/editVenue", "/handleVenue", "/viewVenue",
+@WebServlet(name = "VenueController", urlPatterns = {"/delVenue", "/editVenue", "/handleVenue", "/viewVenue", "/enableVenue",
     "/searchVenues"})
 @MultipartConfig
 public class VenueController extends HttpServlet {
@@ -56,15 +56,15 @@ public class VenueController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        String name = req.getParameter("name");
-        String district = req.getParameter("district");
-        String address = req.getParameter("address");
-        int capacity = Integer.parseInt(req.getParameter("capacity"));
-        int type = Integer.parseInt(req.getParameter("type"));
-        String description = req.getParameter("description");
-        int userId = Integer.parseInt(req.getParameter("staff"));
-        double hourlyRate = Double.parseDouble(req.getParameter("hourlyRate"));
         if ("add".equalsIgnoreCase(action)) {
+            String name = req.getParameter("name");
+            String district = req.getParameter("district");
+            String address = req.getParameter("address");
+            int capacity = Integer.parseInt(req.getParameter("capacity"));
+            int type = Integer.parseInt(req.getParameter("type"));
+            String description = req.getParameter("description");
+            int userId = Integer.parseInt(req.getParameter("staff"));
+            double hourlyRate = Double.parseDouble(req.getParameter("hourlyRate"));
             String imgurl = writeImage(req, resp); // write a file to server folder
             HttpSession session = req.getSession(true);
             if (venueDAO.addRecord(name, district, address, capacity, type, imgurl, description, userId, hourlyRate)) {
@@ -76,6 +76,14 @@ public class VenueController extends HttpServlet {
             resp.sendRedirect("searchVenues");
         } else if ("update".equalsIgnoreCase(action)) {
             int vid = Integer.parseInt(req.getParameter("id"));
+            String name = req.getParameter("name");
+            String district = req.getParameter("district");
+            String address = req.getParameter("address");
+            int capacity = Integer.parseInt(req.getParameter("capacity"));
+            int type = Integer.parseInt(req.getParameter("type"));
+            String description = req.getParameter("description");
+            int userId = Integer.parseInt(req.getParameter("staff"));
+            double hourlyRate = Double.parseDouble(req.getParameter("hourlyRate"));
             boolean imgChg = Boolean.parseBoolean(req.getParameter("changeImage"));
             Venue v = venueDAO.queryRecordById(vid);
             v.setAddress(address);
@@ -96,6 +104,19 @@ public class VenueController extends HttpServlet {
                 session.setAttribute("message", "Update venue " + v.getName() + " successfully!");
             } else {
                 session.setAttribute("error", "Update venue " + v.getName() + " failed!" + "<br>Database trace:<br>"
+                        + "<div style='color:red' class='ml-5'>" + venueDAO.getLastError() + "</div>");
+            }
+            resp.sendRedirect("searchVenues");
+        } else if ("enable".equalsIgnoreCase(action)) {
+            int vid = Integer.parseInt(req.getParameter("id"));
+            int disable = Integer.parseInt(req.getParameter("enable"));
+            Venue v = venueDAO.queryRecordById(vid);
+            v.setEnable(disable > 0);
+            HttpSession session = req.getSession(true);
+            if (venueDAO.editRecord(v)) {
+                session.setAttribute("message", "Enable venue " + v.getName() + " successfully!");
+            } else {
+                session.setAttribute("error", "Enable venue " + v.getName() + " failed!" + "<br>Database trace:<br>"
                         + "<div style='color:red' class='ml-5'>" + venueDAO.getLastError() + "</div>");
             }
             resp.sendRedirect("searchVenues");

@@ -33,6 +33,7 @@ public class VenueDAO extends BaseDAO {
                 + "description varchar(255) NULL,"
                 + "userId INT(11) DEFAULT NULL,"
                 + "hourlyRate DOUBLE NOT NULL,"
+                + "enable tinyint(1) NOT NULL DEFAULT 1,"
                 + "FOREIGN KEY (userId) REFERENCES user(id) ON DELECT SET NULL,"
                 + "PRIMARY KEY (id)"
                 + ")";
@@ -76,6 +77,7 @@ public class VenueDAO extends BaseDAO {
             v.setDescription((String) m.get("description"));
             v.setUserId((int) m.get("userId"));
             v.setHourlyRate((double) m.get("hourlyRate"));
+            v.setEnable((int) m.get("enable") > 0);
         }
         return v;
     }
@@ -102,6 +104,7 @@ public class VenueDAO extends BaseDAO {
                 v.setImg((String) m.get("img"));
                 v.setDescription((String) m.get("description"));
                 v.setHourlyRate((double) m.get("hourlyRate"));
+                v.setEnable((int) m.get("enable") > 0);
                 if (m.get("userId") != null) {
                     v.setUserId((int) m.get("userId"));
                     u = udao.queryRecordById((int) m.get("userId"));
@@ -136,6 +139,7 @@ public class VenueDAO extends BaseDAO {
             v.setImg((String) m.get("img"));
             v.setDescription((String) m.get("description"));
             v.setHourlyRate((double) m.get("hourlyRate"));
+            v.setEnable((int) m.get("enable") > 0);
             if (m.get("userId") != null) {
                 v.setUserId((int) m.get("userId"));
                 u = udao.queryRecordById((int) m.get("userId"));
@@ -182,6 +186,7 @@ public class VenueDAO extends BaseDAO {
                 v.setImg((String) m.get("img"));
                 v.setDescription((String) m.get("description"));
                 v.setHourlyRate((double) m.get("hourlyRate"));
+                v.setEnable((int) m.get("enable") > 0);
                 if (m.get("userId") != null) {
                     v.setUserId((int) m.get("userId"));
                     u = udao.queryRecordById((int) m.get("userId"));
@@ -212,6 +217,7 @@ public class VenueDAO extends BaseDAO {
             v.setDescription((String) m.get("description"));
             v.setUserId((int) m.get("userId"));
             v.setHourlyRate((double) m.get("hourlyRate"));
+            v.setEnable((int) m.get("enable") > 0);
         }
         return v;
     }
@@ -235,6 +241,7 @@ public class VenueDAO extends BaseDAO {
             v.setDescription((String) m.get("description"));
             v.setUserId((int) m.get("userId"));
             v.setHourlyRate((double) m.get("hourlyRate"));
+            v.setEnable((int) m.get("enable") > 0);
             vs.add(v);
         }
         return vs;
@@ -258,6 +265,7 @@ public class VenueDAO extends BaseDAO {
             v.setDescription((String) m.get("description"));
             v.setUserId((int) m.get("userId"));
             v.setHourlyRate((double) m.get("hourlyRate"));
+            v.setEnable((int) m.get("enable") > 0);
             vs.add(v);
         }
         return vs;
@@ -286,11 +294,12 @@ public class VenueDAO extends BaseDAO {
         params.add(v.getDescription());
         if (v.getUserId() != 0) {
             sql = "UPDATE venue "
-                    + "SET name = ?, district = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = ?, hourlyRate = ? "
+                    + "SET name = ?, district = ?, address = ?, capacity = ?, type = ?, img = ?, description = ?, userId = ?, hourlyRate = ?, enable = ? "
                     + "WHERE id = ?";
             params.add(v.getUserId());
         }
         params.add(v.getHourlyRate());
+        params.add(v.getEnable() == true ? 1 : 0);
         params.add(v.getId());
         boolean isSuccess = false;
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);

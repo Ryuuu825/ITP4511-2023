@@ -110,7 +110,9 @@ public class VenueTimeslotDAO extends BaseDAO {
     public boolean delRecordForManagement(int timeslotId, int venueId, int weekday) {
         boolean isSuccess = false;
         int day = (weekday + 1) % 7;
-        System.out.println(day);
+        if (day == 0) {
+            day = 7;
+        }
         String sql = "DELETE FROM venue_timeslot WHERE timeslotId = ? and venueId = ? and DAYOFWEEK(date) = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(timeslotId);

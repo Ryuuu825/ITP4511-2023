@@ -23,6 +23,7 @@ public class Venue implements Serializable {
     private String description;
     private int userId;
     private double hourlyRate;
+    private boolean enable;
 
     public static String[] typeStrings = {
         "Hotel",
@@ -126,10 +127,17 @@ public class Venue implements Serializable {
     public void setDistrict(String district) {
         this.district = district;
     }
-    
-    @Override
-    public String toString() {
-        return "Venue{" + "id=" + id + ", name=" + name + ", district=" + district + ", address=" + address + ", capacity=" + capacity + ", type=" + type + ", img=" + img + ", description=" + description + ", userId=" + userId + ", hourlyRate=" + hourlyRate + '}';
+
+    public boolean getEnable() {
+        return enable;
     }
 
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    @Override
+    public String toString() {
+        return "Venue{" + "id=" + id + ", name=" + name + ", district=" + district + ", address=" + address + ", capacity=" + capacity + ", type=" + type + ", img=" + img + ", description=" + description + ", userId=" + userId + ", hourlyRate=" + hourlyRate + ", enable=" + enable + '}';
+    }
 }

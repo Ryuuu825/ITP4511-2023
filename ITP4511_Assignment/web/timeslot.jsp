@@ -89,6 +89,7 @@
         $("#select-venue").change(function () {
             $("#getVenueTimeslotForm").submit();
         })
+
     });
 </script>
 <%
