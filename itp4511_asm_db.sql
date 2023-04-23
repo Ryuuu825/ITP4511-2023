@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-04-23 09:21:54
+-- 產生時間： 2023-04-23 13:19:49
 -- 伺服器版本： 10.4.24-MariaDB
 -- PHP 版本： 8.1.6
 
@@ -324,10 +324,10 @@ CREATE TABLE `venue` (
 
 INSERT INTO `venue` (`id`, `name`, `district`, `address`, `capacity`, `type`, `img`, `description`, `userId`, `hourlyRate`, `enable`) VALUES
 (1, 'EPL(Tuen Mun)', 'Tuen Mun District', '18 Hoi Wing Road, Tuen Mun, HK', 500, 2, 'img/venues/tuen-mun.jpg', 'This venue is located in the heart of Tuen Mun and is perfect for small to medium-sized events.', 4, 100, 1),
-(2, 'EPL(Sha Tin)', 'Sha Tin District', '1 Yuen Wo Rd, Sha Tin, Hong Kong', 1000, 1, 'img/venues/sha-tin.jpg', 'This venue is located in the scenic Sha Tin area and is perfect for large outdoor events.', 6, 200, 1),
-(3, 'EPL(Tsing Yi)', 'Kwai Tsing District', '30 Tsing King Rd, Tsing Yi, HK', 800, 4, 'img/venues/tsing-yi.jpg', 'This venue is located in Tsing Yi and is perfect for conferences and corporate events.', 8, 150, 1),
+(2, 'EPL(Sha Tin)', 'Sha Tin District', '1 Yuen Wo Rd, Sha Tin, Hong Kong', 1000, 1, 'img/venues/sha-tin.jpg', 'This venue is located in the scenic Sha Tin area and is perfect for large indoor events.', 6, 200, 1),
+(3, 'EPL(Tsing Yi)', 'Kwai Tsing District', '30 Tsing King Rd, Tsing Yi, HK', 800, 5, 'img/venues/tsing-yi.jpg', 'This venue is located in Tsing Yi and is perfect for conferences and corporate events.', 8, 150, 1),
 (4, 'EPL(Lee Wai Lee)', 'Sai Kung District', '3 King Ling Road, Tseung Kwan O, HK', 300, 3, 'img/venues/lee-wai-lee.jpg', 'This venue is located in the bustling  Tseung Kwan O area and is perfect for intimate gatherings.', 10, 75, 1),
-(5, 'EPL(Chai Wan)', 'Eastern District', '60 Wing Tai Rd, Chai Wan, HK', 1200, 5, 'img/venues/chai-wan.jpg', 'This venue is located in Chai Wan and is perfect for large outdoor events such as concerts and festivals.', 4, 250, 1);
+(5, 'EPL(Chai Wan)', 'Eastern District', '60 Wing Tai Rd, Chai Wan, HK', 1200, 4, 'img/venues/chai-wan.jpg', 'This venue is located in Chai Wan and is perfect for large outdoor events such as concerts and festivals.', 4, 250, 1);
 
 -- --------------------------------------------------------
 

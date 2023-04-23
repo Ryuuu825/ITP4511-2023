@@ -54,7 +54,7 @@ public class TimeslotController extends HttpServlet {
                 session.setAttribute("error", "Set the time slot to not available failed!" + "<br>Database trace:<br>"
                         + "<div style='color:red' class='ml-5'>" + venueDAO.getLastError() + "</div>");
             };
-            resp.sendRedirect("searchTimeslots?venueId="+vid);
+            resp.sendRedirect("searchTimeslots?venueId=" + vid);
         } else if ("add".equalsIgnoreCase(action)) {
             int vid = Integer.parseInt(req.getParameter("venueId"));
             int tid = Integer.parseInt(req.getParameter("timeslotId"));
@@ -66,14 +66,17 @@ public class TimeslotController extends HttpServlet {
                 session.setAttribute("error", "Set the time slot to available failed!" + "<br>Database trace:<br>"
                         + "<div style='color:red' class='ml-5'>" + venueDAO.getLastError() + "</div>");
             };
-            resp.sendRedirect("searchTimeslots?venueId="+vid);
+            resp.sendRedirect("searchTimeslots?venueId=" + vid);
         } else {
             int vid = 0;
             if (req.getParameter("venueId") != null) {
                 vid = Integer.parseInt(req.getParameter("venueId"));
-            } else {
+            } else if (req.getSession().getAttribute("userInfo") != null) {
                 User user = (User) req.getSession().getAttribute("userInfo");
                 vid = venueDAO.queryRecordByUserId(user.getId()).get(0).getId();
+            } else {
+                resp.sendRedirect("/login.jsp");
+                return;
             }
             ArrayList<Venue> venues = venueDAO.queryRecord();
             ArrayList<Timeslot> timeslots = timeslotDAO.queryRecord();

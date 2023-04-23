@@ -46,7 +46,7 @@
                     </a>
                 </li>
                 <li class="nav-item border-l">
-                    <a class="text-white mx-3 hover:text-lg" href="#">
+                    <a class="text-white mx-3 hover:text-lg" href="findVenue">
                         <!-- Browse Spaces -->
                         Find venues
                     </a>
