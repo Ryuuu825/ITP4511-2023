@@ -10,7 +10,7 @@ import ict.util.DbUtil;
 public class GenerateVenueTimeslot {
 
     public static void main(String[] args) {
-        String dbUrl = "jdbc:mysql://localhost:3306/ITP4511_ASM_DB";
+        String dbUrl = "jdbc:mysql://localhost:3306/ITP4511_ASM_DB?tinyInt1isBit=false";
         String dbUser = "root";
         String dbPassword = "";
         DbUtil dbUtil = new DbUtil(dbUrl, dbUser, dbPassword);
