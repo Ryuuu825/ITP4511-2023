@@ -3,10 +3,9 @@ package ict.util;
 import java.util.ArrayList;
 
 
-public class JsonArray {
+public class JsonArray extends JsonResponse {
 
 
-    private String name;
     private ArrayList<Object> items = new ArrayList<>();
 
 
@@ -23,7 +22,7 @@ public class JsonArray {
     }
 
     public String toValueString() {
-        String str = "\"" + name + "\":[";
+        String str = "[";
         int i = 0;
         for (Object item : items) {
             if (i > 0) {
@@ -31,8 +30,12 @@ public class JsonArray {
             }
             // str += "\"" + key + "\":\"" + items.get(key) + "\"";
             // if the string has : or { or [ or , or " or \ or space
-            if (item.toString().startsWith("{") || item.toString().startsWith("[") || item.toString().contains("\"") ) {
-                str += ((JsonObject) item).toValueString();
+            if (item.toString().startsWith("{") || item.toString().startsWith("[")  ) {
+                try {
+                    str += ((JsonResponse) item).toValueString();
+                } catch (Exception e) {
+                    str += item.toString();
+                }
             } else {
                 str += "\"" + item.toString() + "\"";
             }

@@ -1,4 +1,4 @@
-package ict.servlet;
+package ict.servlet.report;
 
 import java.io.IOException;
 import java.sql.Date;

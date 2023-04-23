@@ -2,10 +2,9 @@ package ict.util;
 
 import java.util.HashMap;
 
-public class JsonObject {
+public class JsonObject extends JsonResponse {
 
 
-    private String name;
     private HashMap<String, Object> items = new HashMap<>();
     private boolean onlyOneObj = false;
 
@@ -14,8 +13,13 @@ public class JsonObject {
         this.name = name;
     }
 
+
     public void add(String name, Object value) {
         items.put(name, value.toString());
+    }
+
+    public void add(JsonArray array) {
+        items.put(array.name, array.toValueString());
     }
 
     public JsonObject(String name , String value , boolean onlyOneObj) {
@@ -42,7 +46,7 @@ public class JsonObject {
             }
             // str += "\"" + key + "\":\"" + items.get(key) + "\"";
             // if the value is a json object
-            if (items.get(key).toString().startsWith("{")) {
+            if (items.get(key).toString().startsWith("{") || items.get(key).toString().startsWith("[")) {
                 str += "\"" + key + "\":" + items.get(key);
             } else {
                 str += "\"" + key + "\":\"" + items.get(key) + "\"";
@@ -60,7 +64,11 @@ public class JsonObject {
             if (i > 0) {
                 str += ",";
             }
-            str += "\"" + key + "\":\"" + items.get(key) + "\"";
+            if (items.get(key).toString().startsWith("{") || items.get(key).toString().startsWith("[")) {
+                str += "\"" + key + "\":" + items.get(key);
+            } else {
+                str += "\"" + key + "\":\"" + items.get(key) + "\"";
+            }
             i++;
         }
         str += "}";

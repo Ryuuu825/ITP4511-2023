@@ -62,7 +62,13 @@
                     .then(response => response.json())
                     .then(data => {
                         let venue = document.getElementById("venue");
-                        venue.innerHTML += "<option value='all'>EPL(All)</option>";
+
+                        if ("<%=request.getParameter("venue")%>" == null || "<%=request.getParameter("venue")%>" == "all") {
+                            venue.innerHTML += "<option value='all' selected>EPL(All)</option>";
+                        } else {
+                            venue.innerHTML += "<option value='all'>EPL(All)</option>";
+                        }
+                    
 
                         data.forEach(item => {
                             if (item.id == "<%=request.getParameter("venue")%>") {
@@ -120,7 +126,7 @@
                         // create a link
                         let a = document.createElement("a");
                         a.href = URL.createObjectURL(res);
-                        a.download = "venue.csv";
+                        a.download = $('#venue option[selected]').text() + " Booking Records.csv"
                         a.click();
 
                         // reset the modal

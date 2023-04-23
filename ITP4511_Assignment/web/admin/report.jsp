@@ -6,7 +6,7 @@ uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>JSP Page</title>
+        <title>Report - <%= request.getParameter("report") %></title>
 
         <script src="https://cdn.tailwindcss.com"></script>
 
