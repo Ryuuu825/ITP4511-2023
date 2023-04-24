@@ -59,12 +59,20 @@ public class BookingController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         boolean isAuth = CheckRole.checkIfRoleIs( req.getSession() , new String[] {"Admin", "Staff" , "Member"});
-        if ( ! isAuth) {
-            CheckRole.redirect(req, resp, "/member/booking", "You need to login first!");
-            return;
-        }
+        
 
         String bookingId = req.getParameter("bookingId");
+
+        if ( ! isAuth && bookingId != null) {
+            CheckRole.redirect(req, resp, "/viewBooking?bookingId=" + bookingId , "You need to login first!");
+            return;
+        } else {
+            if ( ! isAuth) {
+                CheckRole.redirect(req, resp, "/member/booking", "You need to login first!");
+                return;
+            }
+        }
+
         String searchKeys = req.getParameter("search");
         ArrayList<BookingDTO> bdtos = null;
         if (bookingId != null) {

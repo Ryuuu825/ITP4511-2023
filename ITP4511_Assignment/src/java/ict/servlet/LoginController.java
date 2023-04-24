@@ -100,6 +100,9 @@ public class LoginController extends HttpServlet {
             resp.sendRedirect(loginSuccessRedirectMap.get(acc.getRoleString()));
         }
         else {
+
+            // remove the redirectFrom attribute
+            req.getSession().removeAttribute("redirectFrom");
             resp.sendRedirect( getServletContext().getContextPath() + redirectedFrom ); // dont allow cross domain
         }
         

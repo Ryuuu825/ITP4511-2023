@@ -109,7 +109,13 @@
                     <div class="input-group" style="width: 30%;">
                         <div class="form-outline">
                             <input id="search-input" type="search" class="form-control border rounded-start" />
-                            <label class="form-label" for="search-input">Search by booking id or member name</label>
+                            <label class="form-label" for="search-input">
+                                <% if (role.equals("Member")) { %>
+                                    Search by booking id
+                                <% } else { %>
+                                    Search by booking id or member name
+                                <% } %>
+                            </label>
                         </div>
                         <button id="search-button" type="button" class="btn btn-primary">
                             <i class="fas fa-search"></i>

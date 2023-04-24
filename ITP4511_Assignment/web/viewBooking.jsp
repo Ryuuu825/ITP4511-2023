@@ -14,9 +14,9 @@
 <%@page import="ict.bean.Timeslot"%>
 <%@page import="ict.bean.Guest"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib.tld" prefix="ict" %>
-<ict:checkRole roleStr="Member,SeniorManager,Staff" redirectFrom="/member/booking" /> />
+
+<ict:checkRole roleStr="Member,SeniorManager,Staff" redirectFrom="/viewBooking?bookingId=${request.getParameter('bookingId')}" />
 
 <% String role = (String) session.getAttribute("role"); %>
 
@@ -105,7 +105,6 @@
                     class="text-decoration-underline">Details</span></div>
             <div class="row">
                 <div class="col-md-8 mb-4">
-                    <div class="card mb-4">
                         <% if ( ! role.equals("Member")) { %>
                             <div class="card-header py-3">
                                 <h5 class="mb-0">Member Information</h5>
@@ -137,7 +136,6 @@
                                 </div>
                             </div>
                         <% } %>
-                    </div>
                     <%
                         //subTotal for each venueTimeslots
                         double subTotal = 0;
@@ -225,6 +223,12 @@
                             <h5 class="mb-0">Guest List</h5>
                             <a type="button" href="viewGuests?action=search&bookingId=<%=bookingId%>&venueId=<%=venueId%>" class="btn btn-link fs-7 rounded-pill">
                                 View Guests
+                            </a>
+                        </div>
+                        <div class="card-header border-top d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Guest Invitations Template</h5>
+                            <a type="button" href="viewGuests?action=search&bookingId=<%=bookingId%>&venueId=<%=venueId%>" class="btn btn-link fs-7 rounded-pill">
+                                View Template
                             </a>
                         </div>
                     </div>
