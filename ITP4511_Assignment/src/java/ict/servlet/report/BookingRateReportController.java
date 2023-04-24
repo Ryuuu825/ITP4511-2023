@@ -112,20 +112,38 @@ public class BookingRateReportController extends HttpServlet {
 
         // monthly in the past 12 months
         for (int i = 0; i <= 11; i++) {
-            String sql = "SELECT COUNT(*) FROM venue_timeslot WHERE venueId = ? AND MONTH(date) = MONTH(CURRENT_DATE()) - ?;";
+
+             // get the current month
+             Calendar cal = Calendar.getInstance();
+             int currentMonth = cal.get(Calendar.MONTH);
+             int currentYear = cal.get(Calendar.YEAR);
+             boolean isLastYear = false;
+ 
+             if ( currentMonth - i < 0 ) {
+                 currentMonth += 12;
+                 isLastYear = true;
+             }
+ 
+             int resMonth =  Math.abs(currentMonth - i) + 1;
+             String monthString = Month.of(resMonth).name();
+             String yearString = isLastYear ? String.valueOf(currentYear - 1) : String.valueOf(currentYear);
+
+            String sql = "SELECT COUNT(*) FROM venue_timeslot WHERE venueId = ? AND MONTH(date) = MONTH(CURRENT_DATE()) - ? AND YEAR(date) = ? ;";
             ArrayList<Object>  params = new ArrayList<>();
             params.add(venueId);
             params.add(i);
+            params.add(yearString);
             ArrayList<Map<String, Object>> rs = dbUtil.findRecord(sql, params);
             float countMonthlyO = Float.parseFloat(rs.get(0).get("COUNT(*)").toString());
 
             params.clear();
             rs.clear();
 
-            sql = "SELECT COUNT(*) FROM venue_timeslot WHERE venueId = ? AND MONTH(date) = MONTH(CURRENT_DATE()) - ? AND BookingId IS NOT NULL;";
+            sql = "SELECT COUNT(*) FROM venue_timeslot WHERE venueId = ? AND MONTH(date) = MONTH(CURRENT_DATE()) - ? AND YEAR(date) = ? AND BookingId IS NOT NULL;";
             params = new ArrayList<>();
             params.add(venueId);
             params.add(i);
+            params.add(yearString);
             rs = dbUtil.findRecord(sql, params);
             float countMonthlyBooked = Float.parseFloat(rs.get(0).get("COUNT(*)").toString());
 
@@ -138,20 +156,7 @@ public class BookingRateReportController extends HttpServlet {
             }
 
             // calculate the month of i
-            // get the current month
-            Calendar cal = Calendar.getInstance();
-            int currentMonth = cal.get(Calendar.MONTH);
-            int currentYear = cal.get(Calendar.YEAR);
-            boolean isLastYear = false;
-
-            if ( currentMonth - i < 0 ) {
-                currentMonth += 12;
-                isLastYear = true;
-            }
-
-            int resMonth =  Math.abs(currentMonth - i) + 1;
-            String monthString = Month.of(resMonth).name();
-            String yearString = isLastYear ? String.valueOf(currentYear - 1) : String.valueOf(currentYear);
+           
 
             JsonObject res = new JsonObject("");
             res.add("month", monthString);
@@ -176,22 +181,24 @@ public class BookingRateReportController extends HttpServlet {
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         for (int i = 1; i <= daysInMonth; i++) {
-            String sql = "SELECT COUNT(*) FROM venue_timeslot WHERE MONTH(date) = ? AND DAY(date) = ? AND venueId = ?;";
+            String sql = "SELECT COUNT(*) FROM venue_timeslot WHERE MONTH(date) = ? AND DAY(date) = ? AND venueId = ? AND YEAR(date) = ?;";
             ArrayList<Object>  params = new ArrayList<>();
             params.add(month);
             params.add(i);
             params.add(venueId);
+            params.add(year);
             ArrayList<Map<String, Object>> rs = dbUtil.findRecord(sql, params);
             float countDailyO = Float.parseFloat(rs.get(0).get("COUNT(*)").toString());
 
             params.clear();
             rs.clear();
 
-            sql = "SELECT COUNT(*) FROM venue_timeslot WHERE MONTH(date) = ? AND DAY(date) = ? AND BookingId IS NOT NULL AND venueId = ?;";
+            sql = "SELECT COUNT(*) FROM venue_timeslot WHERE MONTH(date) = ? AND DAY(date) = ? AND BookingId IS NOT NULL AND venueId = ? AND YEAR(date) = ?;";
             params = new ArrayList<>();
             params.add(month);
             params.add(i);
             params.add(venueId);
+            params.add(year);
             rs = dbUtil.findRecord(sql, params);
             float countDailyBooked = Float.parseFloat(rs.get(0).get("COUNT(*)").toString());
 
