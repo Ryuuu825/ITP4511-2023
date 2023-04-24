@@ -13,6 +13,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class CheckRoleTag extends SimpleTagSupport {
 
     private String roleStr; 
+    private String redirectFrom;
 
     public void setRoleStr(String roleStr) {
         this.roleStr = roleStr;
@@ -20,6 +21,14 @@ public class CheckRoleTag extends SimpleTagSupport {
 
     public String getRoleStr() {
         return roleStr;
+    }
+
+    public String getRedirectFrom() {
+        return redirectFrom;
+    }
+
+    public void setRedirectFrom(String redirectFrom) {
+        this.redirectFrom = redirectFrom;
     }
 
     @Override
@@ -30,24 +39,29 @@ public class CheckRoleTag extends SimpleTagSupport {
             HttpServletResponse response = (HttpServletResponse) ((PageContext) getJspContext()).getResponse();
             
             String role = (String) session.getAttribute("role");
+            System.out.println("role: " + role);
+
+            String _redirectFrom = this.redirectFrom == null ? request.getServletPath() : this.redirectFrom;
 
             if ( role == null ) {
-                session.setAttribute("redirectFrom", request.getServletPath());
+                session.setAttribute("redirectFrom", _redirectFrom );
                 session.setAttribute("unautherror", "You must login to access this page");
-                response.sendRedirect( request.getContextPath() + "/login.jsp" );
+                response.sendRedirect( request.getContextPath() + "/login.jsp" ); 
+                return;
             } else {
                 String[] roles = roleStr.split(",");
         
-                if ( !role.toLowerCase().equals("admin") ) {
+                if ( ! role.toLowerCase().equals("SeniorManager") ) {
                     for ( String r : roles ) {
                         if ( role.toLowerCase().equals(r.toLowerCase()) ) {
                             return;
                         }
                     }
 
-                    session.setAttribute("redirectFrom", request.getServletPath());
+                    session.setAttribute("redirectFrom", _redirectFrom );
                     session.setAttribute("unautherror", "You are not authorized to access this page");
                     response.sendRedirect( request.getContextPath() + "/login.jsp" );
+                    return;
                 }
             }
 

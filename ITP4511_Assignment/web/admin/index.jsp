@@ -1,10 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%> 
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 <ict:checkDbConnection />
-
-<ict:checkRole roleStr="admin" />
+<ict:checkRole roleStr="SeniorManager" />
 
 <!DOCTYPE html>
+
+<%@ page import="ict.bean.User" %>
+
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -27,8 +29,15 @@
 
         <div
             class="welcome message text-xl border bg-gray-100 px-3 py-1 m-4 mx-5"
-        >
-            Welcome back, <%= session.getAttribute("username") %> 🕺
+            >
+            Welcome back, <%
+                User u = ((User) session.getAttribute("userInfo")); 
+                if (u != null) { // the tag could not redirect to login page immediately
+                    out.print(u.getFirstName());
+                }
+            %>
+
+            🕺
         </div>
 
         <div class="content px-5 flex flex-col pb-3">
@@ -55,7 +64,7 @@
                                 >Loading ...</span
                             >
                             <span class="text-normal font-normal text-gray-500"
-                                >Total Income</span
+                                  >Total Income</span
                             >
                         </div>
                     </div>
@@ -67,7 +76,7 @@
                                 >Loading ...
                             </span>
                             <span class="text-normal font-normal text-gray-500"
-                                >Total Bookings</span
+                                  >Total Bookings</span
                             >
                         </div>
                     </div>
@@ -87,13 +96,12 @@
                         <div class="card-body flex flex-col">
                             <span class="text-2xl font-bold" id="userVisited">
                                 <% if (application.getAttribute("uservisited")
-                                != null) { %> <%=
-                                application.getAttribute("uservisited") %> <% }
-                                else { application.setAttribute("uservisited",
-                                0); %> 0 <% } %>
+                                            != null) {%> <%=application.getAttribute("uservisited")%> <% } else {
+                                    application.setAttribute("uservisited",
+                                            0); %> 0 <% } %>
                             </span>
                             <span class="text-normal font-normal text-gray-500"
-                                >Users Visited (Last 30 days)
+                                  >Users Visited (Last 30 days)
                             </span>
                         </div>
                     </div>
@@ -105,31 +113,36 @@
                                 >Loading ...</span
                             >
                             <span class="text-normal font-normal text-gray-500"
-                                >Bounce Rate</span
+                                  >Bounce Rate</span
                             >
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-body flex flex-col">
                             <span class="text-2xl font-bold">
-                                <% if
-                                (application.getAttribute("internalservererrocount")
-                                != null &&
-                                application.getAttribute("uservisited") != null)
-                                { double uservisited =
-                                Double.parseDouble(application.getAttribute("uservisited").toString());
-                                double internalservererrocount =
-                                Double.parseDouble(application.getAttribute("internalservererrocount").toString());
-                                if (internalservererrocount == 0 ) {
-                                out.print("100%"); } else { double res =
-                                (internalservererrocount / uservisited ) * 100;
-                                // format to 2 decimal places
-                                out.print(String.format("%.2f", res));
-                                out.print( "%"); } } else { out.print("0%"); }
+                                <% if (application.getAttribute("internalservererrocount")
+                                            != null
+                                            && application.getAttribute("uservisited") != null) {
+                                        double uservisited
+                                                = Double.parseDouble(application.getAttribute("uservisited").toString());
+                                        double internalservererrocount
+                                                = Double.parseDouble(application.getAttribute("internalservererrocount").toString());
+                                        if (internalservererrocount == 0) {
+                                            out.print("100%");
+                                        } else {
+                                            double res
+                                                    = (internalservererrocount / uservisited) * 100;
+                                            // format to 2 decimal places
+                                            out.print(String.format("%.2f", res));
+                                            out.print("%");
+                                        }
+                                    } else {
+                                        out.print("0%");
+                                    }
                                 %>
                             </span>
                             <span class="text-normal font-normal text-gray-500"
-                                >Failure Rate</span
+                                  >Failure Rate</span
                             >
                         </div>
                     </div>
@@ -181,7 +194,7 @@
 
             let apiLocation = "<%=request.getContextPath()%>" + "/api/report";
             let apiLocation_veune =
-                "<%=request.getContextPath()%>" + "/api/report?action=venue";
+                    "<%=request.getContextPath()%>" + "/api/report?action=venue";
 
             let totalIncome = 0;
             let totalIncomeRef = document.getElementById("totalIncome");
@@ -200,11 +213,11 @@
 
             let veunes = [];
 
-            let occRateBySeason = [ 
-                { season: "Spring", occRate: 0 },
-                { season: "Summer", occRate: 0 },
-                { season: "Autumn", occRate: 0 },
-                { season: "Winter", occRate: 0 },
+            let occRateBySeason = [
+                {season: "Spring", occRate: 0},
+                {season: "Summer", occRate: 0},
+                {season: "Autumn", occRate: 0},
+                {season: "Winter", occRate: 0},
             ];
 
             async function fetchVenueName() {
@@ -214,182 +227,182 @@
             }
 
             fetch(apiLocation)
-                .then((response) => response.json())
-                .then(async (data) => {
-                    vname = await fetchVenueName();
+                    .then((response) => response.json())
+                    .then(async (data) => {
+                        vname = await fetchVenueName();
 
-                    vname.forEach((location) => {
-                        totalIncome += parseInt(data[location]["Total Income"]);
-                        totalBookings += parseInt(data[location].totalbookings);
-                        occTotal += parseInt(
-                            data[location]["recent 12 months occupancy rate"][0]
-                        );
-                        veunes.push({
-                            name: location,
-                            totalIncome: parseInt(
-                                data[location]["Total Income"]
-                            ),
-                            totalBooking: parseInt(
-                                data[location].totalbookings
-                            )
+                        vname.forEach((location) => {
+                            totalIncome += parseInt(data[location]["Total Income"]);
+                            totalBookings += parseInt(data[location].totalbookings);
+                            occTotal += parseInt(
+                                    data[location]["recent 12 months occupancy rate"][0]
+                                    );
+                            veunes.push({
+                                name: location,
+                                totalIncome: parseInt(
+                                        data[location]["Total Income"]
+                                        ),
+                                totalBooking: parseInt(
+                                        data[location].totalbookings
+                                        )
+                            });
+
+                            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                            for (i = 0; i < 12; i++) {
+
+                                // get current month
+                                let currentMonth = new Date().getMonth() + 1;
+                                /// get current year
+                                let currentYear = new Date().getFullYear();
+
+                                // the month of the data
+                                let month = currentMonth - i;
+                                let monthString = "";
+
+                                // turn the month into string from number
+                                // check if the month is negative
+                                if (month < 0) {
+                                    monthString = currentYear - 1 + "-" + months[month + 12];
+                                } else {
+                                    monthString = currentYear + "-" + months[month];
+                                }
+
+                                // determine the season
+                                let currSeason = "";
+                                if (monthString.includes("Mar") || monthString.includes("Apr") || monthString.includes("May")) {
+                                    currSeason = "Spring";
+                                } else if (monthString.includes("Jun") || monthString.includes("Jul") || monthString.includes("Aug")) {
+                                    currSeason = "Summer";
+                                } else if (monthString.includes("Sep") || monthString.includes("Oct") || monthString.includes("Nov")) {
+                                    currSeason = "Autumn";
+                                } else {
+                                    currSeason = "Winter";
+                                }
+
+                                // get the occupancy rate
+                                let totalBooking = parseInt(data[location]["recent 12 months bookings"][i]);
+
+                                // add the occupancy rate to the season
+                                occRateBySeason.forEach((season) => {
+                                    if (season.season == currSeason) {
+                                        season.occRate += totalBooking;
+                                    }
+                                });
+                            }
                         });
 
-                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                        
-                        for( i = 0 ; i < 12 ; i++ ){
+                        totalIncomeRef.innerHTML = "HKD " + totalIncome + ".00";
+                        totalIncomeRef.classList.remove("animate-pulse");
 
-                            // get current month
-                            let currentMonth = new Date().getMonth() + 1;
-                            /// get current year
-                            let currentYear = new Date().getFullYear();
+                        totalBookingsRef.innerHTML = totalBookings;
+                        totalBookingsRef.classList.remove("animate-pulse");
 
-                            // the month of the data
-                            let month = currentMonth - i;
-                            let monthString = "";
+                        occRate = occTotal / vname.length;
+                        occRateRef.innerHTML = occRate.toFixed(2) + "%";
+                        occRateRef.classList.remove("animate-pulse");
 
-                            // turn the month into string from number
-                            // check if the month is negative
-                            if ( month < 0 ){
-                                monthString = currentYear - 1 + "-" + months[month + 12];
-                            } else {
-                                monthString = currentYear + "-" + months[month];
-                            }
-
-                            // determine the season
-                            let currSeason = "";
-                            if ( monthString.includes("Mar") || monthString.includes("Apr") || monthString.includes("May") ){
-                                currSeason = "Spring";
-                            } else if ( monthString.includes("Jun") || monthString.includes("Jul") || monthString.includes("Aug") ){
-                                currSeason = "Summer";
-                            } else if ( monthString.includes("Sep") || monthString.includes("Oct") || monthString.includes("Nov") ){
-                                currSeason = "Autumn";
-                            } else {
-                                currSeason = "Winter";
-                            }
-
-                            // get the occupancy rate
-                            let totalBooking = parseInt(data[location]["recent 12 months bookings"][i]);
-
-                            // add the occupancy rate to the season
-                            occRateBySeason.forEach( (season) => {
-                                if ( season.season == currSeason ){
-                                    season.occRate += totalBooking;
-                                }
-                            });
-                        }
-                    });
-
-                    totalIncomeRef.innerHTML = "HKD " + totalIncome + ".00";
-                    totalIncomeRef.classList.remove("animate-pulse");
-
-                    totalBookingsRef.innerHTML = totalBookings;
-                    totalBookingsRef.classList.remove("animate-pulse");
-
-                    occRate = occTotal / vname.length;
-                    occRateRef.innerHTML = occRate.toFixed(2) + "%";
-                    occRateRef.classList.remove("animate-pulse");
-
-                    // chart for total income
-                    new Chart( document.getElementById("tiev"), {
-                        type: "bar",
-                        data: {
-                            labels: vname,
-                            datasets: [
-                                {
-                                    label: "Total Income",
-                                    data: veunes.map(
-                                        (veune) => veune.totalIncome
-                                    ),
-                                    backgroundColor: [
-                                        "rgba(255, 99, 132, 0.2)",
-                                        "rgba(54, 162, 235, 0.2)",
-                                        "rgba(255, 206, 86, 0.2)",
-                                        "rgba(75, 192, 192, 0.2)",
-                                        "rgba(153, 102, 255, 0.2)",
-                                        "rgba(255, 159, 64, 0.2)",
-                                    ],
-                                    borderColor: [
-                                        "rgba(255, 99, 132, 1)",
-                                        "rgba(54, 162, 235, 1)",
-                                        "rgba(255, 206, 86, 1)",
-                                        "rgba(75, 192, 192, 1)",
-                                        "rgba(153, 102, 255, 1)",
-                                        "rgba(255, 159, 64, 1)",
-                                    ],
-                                    borderWidth: 1,
-                                },
-                            ],
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
+                        // chart for total income
+                        new Chart(document.getElementById("tiev"), {
+                            type: "bar",
+                            data: {
+                                labels: vname,
+                                datasets: [
+                                    {
+                                        label: "Total Income",
+                                        data: veunes.map(
+                                                (veune) => veune.totalIncome
+                                        ),
+                                        backgroundColor: [
+                                            "rgba(255, 99, 132, 0.2)",
+                                            "rgba(54, 162, 235, 0.2)",
+                                            "rgba(255, 206, 86, 0.2)",
+                                            "rgba(75, 192, 192, 0.2)",
+                                            "rgba(153, 102, 255, 0.2)",
+                                            "rgba(255, 159, 64, 0.2)",
+                                        ],
+                                        borderColor: [
+                                            "rgba(255, 99, 132, 1)",
+                                            "rgba(54, 162, 235, 1)",
+                                            "rgba(255, 206, 86, 1)",
+                                            "rgba(75, 192, 192, 1)",
+                                            "rgba(153, 102, 255, 1)",
+                                            "rgba(255, 159, 64, 1)",
+                                        ],
+                                        borderWidth: 1,
+                                    },
+                                ],
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                    },
                                 },
                             },
-                        },
-                    });
+                        });
 
-                    // chart for total bookings
-                    new Chart( document.getElementById("tbev"), {
-                        type: "bar",
-                        data: {
-                            labels: vname,
-                            datasets: [
-                                {
-                                    label: "Total Bookings",
-                                    data: vname.map(
-                                        (veune) =>
+                        // chart for total bookings
+                        new Chart(document.getElementById("tbev"), {
+                            type: "bar",
+                            data: {
+                                labels: vname,
+                                datasets: [
+                                    {
+                                        label: "Total Bookings",
+                                        data: vname.map(
+                                                (veune) =>
                                             data[veune].totalbookings
-                                    ),
-                                    backgroundColor: [
-                                        "rgba(255, 99, 132, 0.2)",
-                                        "rgba(54, 162, 235, 0.2)",
-                                        "rgba(255, 206, 86, 0.2)",
-                                        "rgba(75, 192, 192, 0.2)",
-                                        "rgba(153, 102, 255, 0.2)",
-                                        "rgba(255, 159, 64, 0.2)",
-                                    ],
-                                    borderColor: [
-                                        "rgba(255, 99, 132, 1)",
-                                        "rgba(54, 162, 235, 1)",
-                                        "rgba(255, 206, 86, 1)",
-                                        "rgba(75, 192, 192, 1)",
-                                        "rgba(153, 102, 255, 1)",
-                                        "rgba(255, 159, 64, 1)",
-                                    ],
-                                    borderWidth: 1,
-                                },
-                            ],
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
+                                        ),
+                                        backgroundColor: [
+                                            "rgba(255, 99, 132, 0.2)",
+                                            "rgba(54, 162, 235, 0.2)",
+                                            "rgba(255, 206, 86, 0.2)",
+                                            "rgba(75, 192, 192, 0.2)",
+                                            "rgba(153, 102, 255, 0.2)",
+                                            "rgba(255, 159, 64, 0.2)",
+                                        ],
+                                        borderColor: [
+                                            "rgba(255, 99, 132, 1)",
+                                            "rgba(54, 162, 235, 1)",
+                                            "rgba(255, 206, 86, 1)",
+                                            "rgba(75, 192, 192, 1)",
+                                            "rgba(153, 102, 255, 1)",
+                                            "rgba(255, 159, 64, 1)",
+                                        ],
+                                        borderWidth: 1,
+                                    },
+                                ],
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                    },
                                 },
                             },
-                        },
-                    });
+                        });
 
-                    // chart for recent 12 months occupancy rate
-                    new Chart( document.getElementById("ror"), {
-                        type: "doughnut",
-                        data: {
-                            labels: occRateBySeason.map( (data) => data.season ),
-                            datasets: [
-                                {
-                                    label: "Occupancy Rate",
-                                    data: occRateBySeason.map( (data) => ( data.occRate  ) ),
-                                    backgroundColor: [
-                                        "rgba(255, 99, 132, 0.2)",
-                                        "rgba(54, 162, 235, 0.2)",
-                                        "rgba(255, 206, 86, 0.2)",
-                                        "rgba(75, 192, 192, 0.2)",
-                                    ],
-                                },
-                            ],
-                        },
+                        // chart for recent 12 months occupancy rate
+                        new Chart(document.getElementById("ror"), {
+                            type: "doughnut",
+                            data: {
+                                labels: occRateBySeason.map((data) => data.season),
+                                datasets: [
+                                    {
+                                        label: "Occupancy Rate",
+                                        data: occRateBySeason.map((data) => (data.occRate)),
+                                        backgroundColor: [
+                                            "rgba(255, 99, 132, 0.2)",
+                                            "rgba(54, 162, 235, 0.2)",
+                                            "rgba(255, 206, 86, 0.2)",
+                                            "rgba(75, 192, 192, 0.2)",
+                                        ],
+                                    },
+                                ],
+                            },
+                        });
                     });
-                });
         </script>
     </body>
 </html>

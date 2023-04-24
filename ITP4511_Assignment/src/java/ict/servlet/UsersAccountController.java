@@ -18,7 +18,7 @@ import ict.db.AccountDAO;
 import ict.db.UserDAO;
 import ict.util.DbUtil;
 
-@WebServlet(name = "UsersAccountController", urlPatterns = {"/api/admin/users" , "/api/admin/user/"})
+@WebServlet(name = "UsersAccountController", urlPatterns = {"/api/admin/users" , "/api/admin/user/" , "/admin/users"})
 public class UsersAccountController extends HttpServlet{
     private AccountDAO accountDB;
     private UserDAO userDB;

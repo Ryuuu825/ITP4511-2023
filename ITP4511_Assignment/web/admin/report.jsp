@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%> <%@ taglib
 uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 <ict:checkDbConnection />
-<ict:checkRole roleStr="admin" />
+<ict:checkRole roleStr="SeniorManager" />
 
 <!DOCTYPE html>
 <html>

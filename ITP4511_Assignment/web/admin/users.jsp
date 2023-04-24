@@ -2,17 +2,11 @@
 
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 <ict:checkDbConnection />
+<ict:checkRole roleStr="SeniorManager" redirectFrom="/admin/users" />
 
 
 <!DOCTYPE html>
 <html>
-    <%
-        // if userAccounts is null, redirect to /api/admin/users 
-        if (request.getAttribute("userAccounts") == null) {
-            getServletContext().getRequestDispatcher("/api/admin/users").forward(request, response);
-        }
-    %>
-
     
     <%@ page import="java.util.ArrayList" %>
     <%@ page import="ict.bean.view.UserAccount" %>

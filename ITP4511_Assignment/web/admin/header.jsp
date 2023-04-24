@@ -16,7 +16,7 @@
         <li class="nav-item nav-hover">
             <a
                 class="text-white mx-3 text-decoration-none"
-                href="<%=request.getContextPath()%>/admin/users.jsp"
+                href="<%=request.getContextPath()%>/admin/users"
             >
                 <!-- Browse Spaces -->
                 Users
@@ -34,7 +34,7 @@
         </li>
 
         <li class="nav-item border bg-light rounded-1 py-1">
-            <a class="mx-3 text-dark text-decoration-none" href="login.jsp">
+            <a class="mx-3 text-dark text-decoration-none" href="<%=request.getContextPath()%>/logout">
                 Sign Out
             </a>
         </li>

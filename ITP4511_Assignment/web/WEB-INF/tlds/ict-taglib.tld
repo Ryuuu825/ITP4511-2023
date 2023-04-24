@@ -156,6 +156,12 @@
             <type>java.lang.String</type>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>redirectFrom</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
     </tag>
 
 </taglib>
