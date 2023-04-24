@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar"})
+@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar", "/selectDate"})
 @MultipartConfig
 public class VenueBookingController extends HttpServlet {
 
@@ -68,7 +68,6 @@ public class VenueBookingController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        ArrayList<VenueDTO> vdtos = null;
         ArrayList<Venue> venues = venueDAO.queryRecord();
         req.setAttribute("venueList", venues);
         if ("delete".equalsIgnoreCase(action)) {
@@ -84,13 +83,12 @@ public class VenueBookingController extends HttpServlet {
         } else if ("search".equalsIgnoreCase(action)) {
             String searchKeys = req.getParameter("search");
             if (searchKeys != null && !searchKeys.equals("")) {
-                vdtos = venueDAO.queryRecordToDTOByKeyword(searchKeys);
+                venues = venueDAO.queryRecordByName("");
             } else {
-                vdtos = venueDAO.queryRecordToDTO();
+                venues = venueDAO.queryRecord();
             }
             RequestDispatcher rd;
-            req.removeAttribute("venueDTO");
-            req.setAttribute("venueDTOs", vdtos);
+            req.setAttribute("venueList", venues);
             ArrayList<User> staff = userDAO.queryRecordByRole(2);
             req.setAttribute("staff", staff);
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
@@ -104,8 +102,17 @@ public class VenueBookingController extends HttpServlet {
             }
             int vid = Integer.parseInt(req.getParameter("venueId"));
             RequestDispatcher rd;
-            ArrayList<CalendarTimeslot> calendar = vtsDAO.queryCalendarByVenueId(vid);
-            req.setAttribute("calendar", calendar);
+            String[] selectedDate = req.getParameterValues("selectedDate");
+            req.getSession(true).setAttribute("selectedDate", selectedDate);
+            if (selectedDate != null) {
+                System.err.println(selectedDate.length);
+                ArrayList<ArrayList<CalendarTimeslot>> selectedDateTimeslot = new ArrayList<>();
+                for (String date : selectedDate) {
+                    ArrayList<CalendarTimeslot> c = vtsDAO.queryCalendarByVenueIdDate(vid, date);
+                    selectedDateTimeslot.add(c);
+                }
+                req.setAttribute("selectedDateTimeslot", selectedDateTimeslot);
+            }
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
         } else {

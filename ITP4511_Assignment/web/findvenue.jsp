@@ -52,13 +52,20 @@
         .modal {
             --mdb-modal-width: 75%;
         }
+
+        .date-td {
+            width: 10%;
+        }
+
+        .date-td, .date-td label {
+            cursor: pointer;
+        }
     </style>
     <script>
                     $(document).ready(function () {
                         var params = new window.URLSearchParams(window.location.search);
                         var action = params.get('action');
                         action == "calendar" ? showCalendar() : "";
-
                         const searchFocus = document.getElementById('search-focus');
                         const keys = [{
                                 keyCode: 'AltLeft',
@@ -69,21 +76,17 @@
                                 isTriggered: false
                             }
                         ];
-
                         window.addEventListener('keydown', (e) => {
                             keys.forEach((obj) => {
                                 if (obj.keyCode === e.code) {
                                     obj.isTriggered = true;
                                 }
                             });
-
                             const shortcutTriggered = keys.filter((obj) => obj.isTriggered).length === keys.length;
-
                             if (shortcutTriggered) {
                                 searchFocus.focus();
                             }
                         });
-
                         window.addEventListener('keyup', (e) => {
                             keys.forEach((obj) => {
                                 if (obj.keyCode === e.code) {
@@ -91,29 +94,37 @@
                                 }
                             });
                         });
-
                         $('#search-focus').on('focus', function () {
                             $(this).addClass('border-primary');
                         });
-
                         $('#search-focus').on('blur', function () {
                             $(this).removeClass('border-primary');
                         });
-
                         $("#calendarModal").on('hidden.bs.modal', () => {
-                            location.href = 'searchVenues';
+                            location.href = 'findVenue';
                         })
 
                         function showCalendar() {
                             $("#calendarModal").modal('show');
                         }
                         ;
+
+                        $(".date-td").click(function () {
+                            $(this).toggleClass("table-success");
+                            $(this).find($("input[type=checkbox]")).prop("checked", function (i, v) {
+                                return !v;
+                            });
+                            $("#selectForm").submit();
+                        });
+
+
                     });
     </script>
     <%
         User user = (User) session.getAttribute("userInfo");
         ArrayList<Venue> venueList = (ArrayList<Venue>) request.getAttribute("venueList");
-        //VenueTimeslots calendar = (VenueTimeslots) request.getAttribute("calendar");
+        ArrayList<ArrayList<CalendarTimeslot>> selectedDateTimeslot = (ArrayList<ArrayList<CalendarTimeslot>>) request.getAttribute("selectedDateTimeslot");
+        String[] selectedDate = (String[]) session.getAttribute("selectedDate");
     %>
 
     <body style="min-height: 100vh;background-color: #eee;">
@@ -132,54 +143,93 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <table class="table table-bordered text-center">
-                                <thead>
-                                    <tr class="table-primary">
-                                        <th class="col">Sunday</th>
-                                        <th class="col">Monday</th>
-                                        <th class="col">Tuesday</th>
-                                        <th class="col">Wednesday</th>
-                                        <th class="col">Thursday</th>
-                                        <th class="col">Friday</th>
-                                        <th class="col">Saturday</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <%
-                                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
-                                        LocalDate date = LocalDate.now().plusDays(1);
-                                        int day = date.getDayOfWeek().getValue();
-                                        int month = date.getMonth().getValue();
-                                        LocalDate max = date.plusMonths(1);
-                                        int rowOfMonth = 1;
-                                        boolean newMonth = false;
-                                        out.print("<tr><td class=\"table-secondary\" colspan=\"7\">" + date.getMonth() + "</td></tr>");
-                                        while (date.isBefore(max)) {
-                                            if (newMonth) {
-                                                out.print("<tr><td class=\"table-secondary\" colspan=\"7\">" + date.getMonth() + "</td></tr>");
-                                                month = date.getMonth().getValue();
-                                                day = date.getDayOfWeek().getValue();
-                                                rowOfMonth = 1;
-                                            }
-                                            out.print("<tr>");
-
-                                            for (int j = 0; j <= 6; j++) {
-                                                if (j < day && rowOfMonth == 1) {
-                                                    out.print("<td></td>");
-                                                } else if (month < date.getMonth().getValue() && newMonth == false) {
-                                                    out.print("<td></td>");
-                                                } else if (date.isBefore(max)) {
-                                                    out.print("<td>" + formatter.format(date) + "</td>");
-                                                    date = date.plusDays(1);
+                            <form action="selectDate" method="get" id="selectForm">
+                                <input type="hidden" name="action" value="calendar">
+                                <table class="table table-bordered text-center">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th class="col">Sun</th>
+                                            <th class="col">Mon</th>
+                                            <th class="col">Tue</th>
+                                            <th class="col">Wed</th>
+                                            <th class="col">Thu</th>
+                                            <th class="col">Fri</th>
+                                            <th class="col">Sat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
+                                            LocalDate date = LocalDate.now().plusDays(1);
+                                            int day = date.getDayOfWeek().getValue();
+                                            int month = date.getMonth().getValue();
+                                            LocalDate max = date.plusMonths(1);
+                                            int rowOfMonth = 1;
+                                            boolean newMonth = false;
+                                            out.print("<tr><td class=\"table-secondary\" colspan=\"7\">" + date.getMonth() + "</td></tr>");
+                                            int idx = 0;
+                                            while (date.isBefore(max)) {
+                                                if (newMonth) {
+                                                    out.print("<tr><td class=\"table-secondary\" colspan=\"7\">" + date.getMonth() + "</td></tr>");
+                                                    month = date.getMonth().getValue();
+                                                    day = date.getDayOfWeek().getValue();
+                                                    rowOfMonth = 1;
                                                 }
+                                                out.print("<tr>");
+
+                                                for (int j = 0; j <= 6; j++) {
+                                                    if (j < day && rowOfMonth == 1) {
+                                                        out.print("<td></td>");
+                                                    } else if (month < date.getMonth().getValue() && newMonth == false) {
+                                                        out.print("<td></td>");
+                                                    } else if (date.isBefore(max)) {
+                                                        String chk = "";
+                                                        String style = "";
+                                                        if (selectedDate != null) {
+                                                            for (String d : selectedDate) {
+                                                                if (d.equals(date.toString())) {
+                                                                    chk = "checked";
+                                                                    style = "table-success";
+                                                                }
+                                                            }
+                                                        }
+
+                                                        out.print("<td class=\"date-td " + style + "\"><label>" + formatter.format(date) + "</label><input type=\"checkbox\"" + chk + " class=\"d-none\" name=\"selectedDate\" value=\"" + date + "\">" + "</td>");
+                                                        date = date.plusDays(1);
+                                                    }
+                                                }
+                                                newMonth = month < date.getMonth().getValue();
+                                                out.print("</tr>");
+                                                rowOfMonth++;
                                             }
-                                            newMonth = month < date.getMonth().getValue();
-                                            out.print("</tr>");
-                                            rowOfMonth++;
+                                        %>
+                                    </tbody>
+                                </table>
+                            </form>
+                            <% if (selectedDateTimeslot != null) {
+                                    for (ArrayList<CalendarTimeslot> ctss : selectedDateTimeslot) {%>
+                            <div class="card">
+                                <div class="card-header">
+                                    <%=ctss.get(0).getDate()%>
+                                    <button class="btn-close"></button>
+                                </div>
+                                <div class="card-body">
+                                    <% for (CalendarTimeslot cts : ctss) {
+                                            String startTime = cts.getTimeslot().getStartTime().toString();
+                                            String endTime = cts.getTimeslot().getEndTime().toString();
+                                    %>
+                                    <label class="border px-2 me-2 border-2 border-primary text-primary rounded-pill">
+                                        <%=cts.getTimeslot().getStartTime()%> - <%=cts.getTimeslot().getEndTime()%>
+                                    </label>
+                                    <%
                                         }
                                     %>
-                                </tbody>
-                            </table>
+                                </div>
+                            </div>
+                            <%
+                                    }
+                                }
+                            %>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -201,7 +251,8 @@
                     </div>
                     <div class="col card ms-4">
                         <div class="card-header d-flex flex-row justify-content-between align-items-center">
-                            <label class="fs-4"><strong>Displaying <%=venueList.size()%> matching results</strong></label>
+                            <label class="fs-4"><strong>Displaying <%=venueList != null ? venueList.size() : 0%> matching
+                                    results</strong></label>
                             <form class="input-group w-25" action="searchVenue" method="GET">
                                 <div class="form-outline">
                                     <input id="search-focus" name="keyword" type="search" id="keyword"
@@ -214,7 +265,8 @@
                             </form>
                         </div>
                         <div class="card-body">
-                            <% for (Venue venue : venueList) {%>
+                            <% if (venueList != null) {
+                                    for (Venue venue : venueList) {%>
                             <div class="row">
                                 <div class="card mb-3 ps-0" style="max-width: 100%;">
                                     <div class="row g-0">
@@ -270,7 +322,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <% }%>
+                            <%
+                                    }
+                                }%>
                         </div>
                     </div>
                 </div>

@@ -199,14 +199,14 @@ public class VenueDAO extends BaseDAO {
         return vdtos;
     }
 
-    public Venue queryRecordByName(String name) {
+    public ArrayList<Venue> queryRecordByName(String name) {
         String sql = "SELECT * FROM venue WHERE name LIKE ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add("%" + name + "%");
-        Venue v = null;
+        ArrayList<Venue> vs = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         for (Map<String, Object> m : ls) {
-            v = new Venue();
+            Venue v = new Venue();
             v.setId((int) m.get("id"));
             v.setName((String) m.get("name"));
             v.setDistrict((String) m.get("district"));
@@ -218,8 +218,36 @@ public class VenueDAO extends BaseDAO {
             v.setUserId((int) m.get("userId"));
             v.setHourlyRate((double) m.get("hourlyRate"));
             v.setEnable((int) m.get("enable") > 0);
+            vs.add(v);
         }
-        return v;
+        return vs;
+    }
+    
+    public ArrayList<Venue> queryRecordByKeyword(String keyword) {
+        String sql = "SELECT * FROM venue WHERE name LIKE ? or location LIKE ? or address LIKE ? or type LIKE ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add("%" + keyword + "%");
+        params.add("%" + keyword + "%");
+        params.add("%" + keyword + "%");
+        params.add("%" + keyword + "%");
+        ArrayList<Venue> vs = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        for (Map<String, Object> m : ls) {
+            Venue v = new Venue();
+            v.setId((int) m.get("id"));
+            v.setName((String) m.get("name"));
+            v.setDistrict((String) m.get("district"));
+            v.setAddress((String) m.get("address"));
+            v.setCapacity((int) m.get("capacity"));
+            v.setType((int) m.get("type"));
+            v.setImg((String) m.get("img"));
+            v.setDescription((String) m.get("description"));
+            v.setUserId((int) m.get("userId"));
+            v.setHourlyRate((double) m.get("hourlyRate"));
+            v.setEnable((int) m.get("enable") > 0);
+            vs.add(v);
+        }
+        return vs;
     }
 
     public ArrayList<Venue> queryRecordByUserId(int userId) {

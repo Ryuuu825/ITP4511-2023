@@ -396,7 +396,34 @@ public class VenueTimeslotDAO extends BaseDAO {
             cts.setTimeslot(ts);
             cts.setVenueId(venueId);
             cts.setBooked(m.get("bookingId") != null);
-            LocalDate date = ((Date) m.get("date")).toLocalDate();
+            cts.setDate(((Date) m.get("date")).toLocalDate());
+            ctss.add(cts);
+        }
+        return ctss;
+    }
+    
+    public ArrayList<CalendarTimeslot> queryCalendarByVenueIdDate(int venueId, String date) {
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(venueId);
+        params.add(date);
+        String sql = "SELECT v.id as venueId, vt.date, t.*, vt.bookingId "
+                + "FROM venue v JOIN venue_timeslot vt "
+                + "ON v.id = vt.venueId JOIN timeslot t "
+                + "ON vt.timeslotId = t.id "
+                + "WHERE vt.venueId = ? "
+                + "AND date = ?";
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        ArrayList<CalendarTimeslot> ctss = new ArrayList<>();
+        CalendarTimeslot cts = new CalendarTimeslot();
+        for (Map<String, Object> m : ls) {
+            Timeslot ts = new Timeslot();
+            ts.setId((int) m.get("id"));
+            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
+            cts.setTimeslot(ts);
+            cts.setVenueId(venueId);
+            cts.setBooked(m.get("bookingId") != null);
+            cts.setDate(((Date) m.get("date")).toLocalDate());
             ctss.add(cts);
         }
         return ctss;
