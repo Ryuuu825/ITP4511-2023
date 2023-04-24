@@ -16,6 +16,7 @@ public class CalendarTimeslot {
     private Timeslot timeslot;
     private LocalDate date;
     private boolean booked;
+    private int venuetimeslotId;
 
     public CalendarTimeslot() {
     }
@@ -52,9 +53,16 @@ public class CalendarTimeslot {
         this.venueId = venueId;
     }
 
+    public int getVenuetimeslotId() {
+        return venuetimeslotId;
+    }
+
+    public void setVenuetimeslotId(int venuetimeslotId) {
+        this.venuetimeslotId = venuetimeslotId;
+    }
+
     @Override
     public String toString() {
-        return "CalendarTimeslot{" + "venueId=" + venueId + ", timeslot=" + timeslot + ", date=" + date + ", booked=" + booked + '}';
+        return "CalendarTimeslot{" + "venueId=" + venueId + ", timeslot=" + timeslot + ", date=" + date + ", booked=" + booked + ", venuetimeslotId=" + venuetimeslotId + '}';
     }
-    
 }

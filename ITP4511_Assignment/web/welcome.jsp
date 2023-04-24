@@ -59,7 +59,7 @@
                 </li>
             </ul>
         </header>
-        <div class="absolute z-2">${sessionScope.role}</div>
+        <!--<div class="absolute z-2">${sessionScope.role}</div>-->
         <div class="h-screen w-screen overflow-hidden relative flex flex-col">
             <div class="h-[85%] overflow-hidden select-none">
                 <div

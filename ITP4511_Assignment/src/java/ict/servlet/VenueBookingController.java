@@ -6,15 +6,14 @@ package ict.servlet;
 
 import ict.bean.User;
 import ict.bean.Venue;
-import ict.bean.VenueTimeslot;
 import ict.bean.view.CalendarTimeslot;
-import ict.bean.view.VenueDTO;
-import ict.bean.view.VenueTimeslots;
 import ict.db.UserDAO;
 import ict.db.VenueDAO;
 import ict.db.VenueTimeslotDAO;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -28,7 +27,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar", "/selectDate"})
+@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar", "/selectDate", "/handleBooking"})
 @MultipartConfig
 public class VenueBookingController extends HttpServlet {
 
@@ -39,20 +38,23 @@ public class VenueBookingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        if ("add".equalsIgnoreCase(action)) {
-
-            int userId = Integer.parseInt(req.getParameter("staff"));
-
-            HttpSession session = req.getSession(true);
-//            if (venueDAO.addRecord(name, district, address, capacity, type, imgurl, description, userId, hourlyRate)) {
-//                session.setAttribute("message", "Add venue " + name + " successfully!");
-//            } else {
-//                session.setAttribute("error", "The venue " + name + " already exists!" + "<br>Database trace:<br>"
-//                        + "<div style='color:red' class='ml-5'>" + venueDAO.getLastError() + "</div>");
-//            }
-            resp.sendRedirect("searchVenues");
+        if ("addBookingVenue".equalsIgnoreCase(action)) {
+            String venueId = (String) req.getParameter("venueId");
+            String[] selectedTimeslotIds = req.getParameterValues("timeOption");
+            int[] toIntTimeslotIds = new int[selectedTimeslotIds.length];
+            for (int i = 0; i < selectedTimeslotIds.length; i++) {
+                toIntTimeslotIds[i] = Integer.parseInt(selectedTimeslotIds[i]);
+            }
+            HttpSession session = req.getSession();
+            HashMap<String, int[]> bookingVenus = (HashMap<String, int[]>) session.getAttribute("bookingVenues");
+            if (session.getAttribute("bookingVenues") != null) {
+                bookingVenus.put(venueId, toIntTimeslotIds);
+            }
+            session.setAttribute("bookingVenues", bookingVenus);
+             System.err.println(bookingVenus.keySet());
+            resp.sendRedirect("findVenue");
         } else if ("update".equalsIgnoreCase(action)) {
-            HttpSession session = req.getSession(true);
+            HttpSession session = req.getSession();
 //            if (venueDAO.editRecord(v)) {
 //                session.setAttribute("message", "Update venue " + v.getName() + " successfully!");
 //            } else {
@@ -94,25 +96,14 @@ public class VenueBookingController extends HttpServlet {
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
         } else if ("calendar".equalsIgnoreCase(action)) {
-            String org_path = req.getServletPath();
-            User user = (User) req.getSession(false).getAttribute("userInfo");
-            if (user == null) {
-                resp.sendRedirect("login.jsp");
-                return;
-            }
             int vid = Integer.parseInt(req.getParameter("venueId"));
+            req.setAttribute("selectedVenue", vid);
             RequestDispatcher rd;
             String[] selectedDate = req.getParameterValues("selectedDate");
-            req.getSession(true).setAttribute("selectedDate", selectedDate);
-            if (selectedDate != null) {
-                System.err.println(selectedDate.length);
-                ArrayList<ArrayList<CalendarTimeslot>> selectedDateTimeslot = new ArrayList<>();
-                for (String date : selectedDate) {
-                    ArrayList<CalendarTimeslot> c = vtsDAO.queryCalendarByVenueIdDate(vid, date);
-                    selectedDateTimeslot.add(c);
-                }
-                req.setAttribute("selectedDateTimeslot", selectedDateTimeslot);
-            }
+            req.getSession().setAttribute("selectedDate", selectedDate);
+            ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = vtsDAO.queryMonthlyCalendarByVenueId(vid);
+            req.setAttribute("monthlyDateTimeslot", monthlyDateTimeslot);
+            System.err.println(monthlyDateTimeslot);
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
         } else {
