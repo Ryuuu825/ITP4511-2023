@@ -10,6 +10,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib.tld" prefix="ict" %>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,34 +77,7 @@
     %>
 
     <body style="background-color: #f2f2f2;">
-        <header class="z-3 w-100 d-flex flex-row align-items-center justify-content-between p-3"
-                style="background-color: #144272; height: 5rem;">
-            <div class="title text-uppercase ms-3 me-auto fw-bold text-white" style="font-size: 1.5rem;line-height: 2rem;">
-                <a href="index.jsp" class="text-white text-decoration-none">
-                    Event Point Limited
-                </a>
-            </div>
-            <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
-                <li class="nav-item nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="searchVenues">
-                        <!-- Browse Spaces -->
-                        Venue
-                    </a>
-                </li>
-                <li class="nav-item border-start nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="venueInfo.jsp">
-                        <!-- Browse Spaces -->
-                        Timeslot
-                    </a>
-                </li>
-                <li class="nav-item border-start nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="searchBookings"> Booking </a>
-                </li>
-                <li class="nav-item border bg-light rounded-1 py-1">
-                    <a class="mx-3 text-dark text-decoration-none" href="logout"> Sign Out </a>
-                </li>
-            </ul>
-        </header>
+        <jsp:include page="header.jsp" />
         <section class="p-5">
             <div class="fw-bold fs-5 my-3"><a href="searchBookings">Bookings </a>> <span
                     class=""><a href="searchBookings?bookingId=<%=bookingId%>&venueId=<%=venueId%>">Details </a></span> > <span
@@ -125,6 +99,8 @@
                 </div>
                 <% if ("Member".equalsIgnoreCase(role)) {%>
                 <form class="p-3 border-bottom" action="addGuest" method="post">
+                    <input type="hidden" name="bookingId" value="<%=bookingId%>" />
+                    <input type="hidden" name="venueId" value="<%=venueId%>" />
                     <div class="row d-flex justify-content-between align-items-center ">
                         <div class="col-md-5">
                             <div class="form-outline">
@@ -146,6 +122,7 @@
                         </div>
                     </div>
                 </form>
+                
                 <% }%>
                 <div class="table-responsive text-nowrap mt-3 fs-6">
                     <ict:guestTable guests="<%=guests%>" role="<%=role%>"/>

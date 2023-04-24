@@ -72,70 +72,46 @@
     %>
 
     <body style="background-color: #f2f2f2;">
-        <header class="z-3 w-100 d-flex flex-row align-items-center justify-content-between p-3"
-                style="background-color: #144272; height: 5rem;">
-            <div class="title text-uppercase ms-3 me-auto fw-bold text-white" style="font-size: 1.5rem;line-height: 2rem;">
-                <a href="index.jsp" class="text-white text-decoration-none">
-                    Event Point Limited
-                </a>
-            </div>
-            <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
-                <li class="nav-item nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="searchVenues">
-                        <!-- Browse Spaces -->
-                        Venue
-                    </a>
-                </li>
-                <li class="nav-item border-start nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="venueInfo.jsp">
-                        <!-- Browse Spaces -->
-                        Timeslot
-                    </a>
-                </li>
-                <li class="nav-item border-start nav-hover">
-                    <a class="text-white mx-3 text-decoration-none" href="searchBookings"> Booking </a>
-                </li>
-                <li class="nav-item border bg-light rounded-1 py-1">
-                    <a class="mx-3 text-dark text-decoration-none" href="logout"> Sign Out </a>
-                </li>
-            </ul>
-        </header>
+        <jsp:include page="header.jsp" />
+
         <section class="p-5">
             <div class="fw-bold fs-5 my-3"><a href="searchBookings">Bookings </a>/ <span
                     class="text-decoration-underline">Details</span></div>
             <div class="row">
                 <div class="col-md-8 mb-4">
-                        <% if ( ! role.equals("Member")) { %>
-                            <div class="card-header py-3">
-                                <h5 class="mb-0">Member Information</h5>
-                            </div>
-                            <div class="card-body">
-                                <div>
-                                    <div class="row mb-4">
-                                        <div class="col">
-                                            <div class="form-outline">
-                                                <input type="text" id="firstName" disabled class="form-control border active"
-                                                       value="<%=memberName%>" />
-                                                <label class="form-label" for="firstName">Name</label>
-                                            </div>
+                    <% if (!role.equals("Member")) {%>
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Member Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="firstName" disabled class="form-control border active"
+                                                   value="<%=memberName%>" />
+                                            <label class="form-label" for="firstName">Name</label>
                                         </div>
-                                        <div class="col">
-                                            <div class="form-outline">
-                                                <input type="text" id="phone" disabled class="form-control border active"
-                                                       value="<%=memberPhone%>" />
-                                                <label class="form-label" for="phone">Phone</label>
-                                            </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="phone" disabled class="form-control border active"
+                                                   value="<%=memberPhone%>" />
+                                            <label class="form-label" for="phone">Phone</label>
                                         </div>
-    
                                     </div>
-                                    <div class="form-outline mb-4">
-                                        <input type="text" id="email" disabled class="form-control border active"
-                                               value="<%=memberEmail%>" />
-                                        <label class="form-label" for="email">Email</label>
-                                    </div>
+
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="email" disabled class="form-control border active"
+                                           value="<%=memberEmail%>" />
+                                    <label class="form-label" for="email">Email</label>
                                 </div>
                             </div>
-                        <% } %>
+                        </div>
+                    </div>
+                    <% } %>
                     <%
                         //subTotal for each venueTimeslots
                         double subTotal = 0;

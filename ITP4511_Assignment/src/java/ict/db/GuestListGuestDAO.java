@@ -6,6 +6,8 @@ package ict.db;
 
 import java.util.ArrayList;
 
+import ict.bean.Guest;
+
 /**
  *
  * @author jyuba
@@ -65,4 +67,15 @@ public class GuestListGuestDAO extends BaseDAO {
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
+
+    public boolean addRecord(int guestlistId, int guestId) {
+        boolean isSuccess = false;
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(guestlistId);
+        params.add(guestId);
+        String sql = "INSERT INTO guestlist_guest (guestlistId,  guestId) VALUES (?,?)";
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
+
 }

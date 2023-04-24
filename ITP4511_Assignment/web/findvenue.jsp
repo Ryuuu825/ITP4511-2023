@@ -117,47 +117,8 @@
     %>
 
     <body style="min-height: 100vh;background-color: #eee;">
-        <header class="z-3 w-100 d-flex flex-row align-items-center justify-content-between p-3"
-                style="background-color: #144272;">
-            <div class="title text-uppercase ms-5 me-auto fw-bold text-white"
-                 style="font-size: 1.875rem;line-height: 2.25rem;">
-                <a href="index.jsp" class="text-white">
-                    Event Point Limited
-                </a>
-            </div>
-            <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
-                <li class="nav-item nav-hover">
-                    <a class="text-white mx-3" href="#">
-                        <!-- Browse Spaces -->
-                        Browse Spaces
-                    </a>
-                </li>
-                <li class="nav-item border-start nav-hover">
-                    <a class="text-white mx-3" href="findVenue">
-                        <!-- Browse Spaces -->
-                        Find venues
-                    </a>
-                </li>
-                <%
-                    if (user == null) {
+        <jsp:include page="header.jsp" />
 
-                %>
-                <li class="nav-item border-start nav-hover">
-                    <a class="text-white mx-3 px-3" href="login.jsp"> Login </a>
-                </li>
-                <li class="nav-item border bg-light rounded-1 py-1">
-                    <a class="mx-3 text-dark" href="register.jsp"> Sign Up </a>
-                </li>
-                <%            } else {
-                %>
-                <li class="nav-item border bg-light rounded-1 py-1">
-                    <a class="mx-3 text-dark" href="logout"> Sign Out </a>
-                </li>
-                <%
-                    }
-                %>
-            </ul>
-        </header>
         <div></div>
         <section>
             <!-- Modal -->

@@ -157,34 +157,8 @@
 %>
 
 <body style="background-color: #f2f2f2;">
-    <header class="z-3 w-100 d-flex flex-row align-items-center justify-content-between p-3"
-        style="background-color: #144272; height: 5rem;">
-        <div class="title text-uppercase ms-3 me-auto fw-bold text-white" style="font-size: 1.5rem;line-height: 2rem;">
-            <a href="index.jsp" class="text-white text-decoration-none">
-                Event Point Limited
-            </a>
-        </div>
-        <ul class="nav justify-content-end fs-6 fw-semibold flex align-items-center mr-5">
-            <li class="nav-item nav-hover">
-                <a class="text-white mx-3 text-decoration-none" href="searchVenues">
-                    <!-- Browse Spaces -->
-                    Venue
-                </a>
-            </li>
-            <li class="nav-item border-start nav-hover">
-                <a class="text-white mx-3 text-decoration-none" href="searchTimeslots">
-                    <!-- Browse Spaces -->
-                    Timeslot
-                </a>
-            </li>
-            <li class="nav-item border-start nav-hover">
-                <a class="text-white mx-3 text-decoration-none" href="searchBookings"> Booking </a>
-            </li>
-            <li class="nav-item border bg-light rounded-1 py-1">
-                <a class="mx-3 text-dark text-decoration-none" href="logout"> Sign Out </a>
-            </li>
-        </ul>
-    </header>
+    <jsp:include page="header.jsp" />
+
     <section class="p-5">
         <!-- Modal -->
         <div class="modal fade" id="venueModal" tabindex="-1" aria-labelledby="venueLabel" aria-hidden="true">

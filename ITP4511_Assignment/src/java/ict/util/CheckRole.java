@@ -22,5 +22,13 @@ public class CheckRole {
         req.getSession().setAttribute("redirectFrom", _redirectFrom );
         resp.sendRedirect( req.getServletContext().getContextPath() + "/login.jsp" );
     }
+
+    public static void didNotLogin(HttpServletRequest req , HttpServletResponse resp , String _redirectFrom) throws IOException {
+        redirect(req, resp, _redirectFrom, "You need to login first");
+    }
+
+    public static void notEnoughPermission(HttpServletRequest req , HttpServletResponse resp , String _redirectFrom) throws IOException {
+        redirect(req, resp, _redirectFrom, "You don't have enough permission to access this page");
+    }
     
 }
