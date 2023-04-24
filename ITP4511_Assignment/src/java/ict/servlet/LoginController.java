@@ -34,7 +34,8 @@ public class LoginController extends HttpServlet {
         {
             put("SeniorManager", "admin/index.jsp");
             put("Staff", "searchBookings");
-            put("Member", "findVenue");
+            put("Customer", "member/booking");
+            put("Member", "member/booking");
         }
     };
 
@@ -95,6 +96,7 @@ public class LoginController extends HttpServlet {
 
 
         if ( redirectedFrom == null ) {
+            System.out.println(acc.getRoleString());
             resp.sendRedirect(loginSuccessRedirectMap.get(acc.getRoleString()));
         }
         else {
