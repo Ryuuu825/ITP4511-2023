@@ -61,10 +61,18 @@
                 </a>
             <% } %>
         </li>
-        <li class="nav-item border bg-light rounded-1 py-1">
-            <a class="mx-3 text-dark text-decoration-none" href="<%=request.getContextPath()%>/logout">
-                Sign Out
-            </a>
-        </li>
+        <% if (role != null) { %>
+            <li class="nav-item border bg-light rounded-1 py-1">
+                <a class="mx-3 text-dark text-decoration-none" href="<%=request.getContextPath()%>/logout">
+                    Sign Out
+                </a>
+            </li>
+        <% } else { %>
+            <li class="nav-item border bg-light rounded-1 py-1">
+                <a class="mx-3 text-dark text-decoration-none" href="<%=request.getContextPath()%>/login.jsp">
+                    Log In
+                </a>
+            </li>
+        <% } %>
     </ul>
 </header>
