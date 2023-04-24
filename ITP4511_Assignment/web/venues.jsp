@@ -358,7 +358,7 @@
             </div>
 
             <div class="table-responsive text-nowrap mt-3 fs-6">
-                <ict:venueTable venues="<%=venueDTOs%>" />
+                <ict:venueTable venues="<%=venueDTOs %>" />
             </div>
 
         </div>

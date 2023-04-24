@@ -8,6 +8,7 @@ import java.util.Map;
 import ict.bean.Timeslot;
 import ict.bean.Venue;
 import ict.bean.VenueTimeslot;
+import ict.bean.view.CalendarTimeslot;
 import ict.bean.view.DateTimeslots;
 import ict.bean.view.VenueTimeslots;
 import java.sql.Date;
@@ -311,7 +312,6 @@ public class VenueTimeslotDAO extends BaseDAO {
     }
 
     public DateTimeslots queryRocordToDateTimeslots(int bookingId, LocalDate date, int venueId) {
-        VenueTimeslot vt = new VenueTimeslot();
         ArrayList<Object> params = new ArrayList<>();
         params.add(bookingId);
         params.add(venueId);
@@ -370,5 +370,35 @@ public class VenueTimeslotDAO extends BaseDAO {
         vts.setVenue(v);
         vts.setDateTimeslots(dtss);
         return vts;
+    }
+
+    public ArrayList<CalendarTimeslot> queryCalendarByVenueId(int venueId) {
+        LocalDate now = LocalDate.now().plusDays(1);
+        LocalDate maxDate = now.plusMonths(1).minusDays(1);
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(venueId);
+        params.add(now);
+        params.add(maxDate);
+        String sql = "SELECT v.id as venueId, vt.date, t.*, vt.bookingId "
+                + "FROM venue v JOIN venue_timeslot vt "
+                + "ON v.id = vt.venueId JOIN timeslot t "
+                + "ON vt.timeslotId = t.id "
+                + "WHERE vt.venueId = ? "
+                + "AND date BETWEEN ? AND ?";
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        ArrayList<CalendarTimeslot> ctss = new ArrayList<>();
+        CalendarTimeslot cts = new CalendarTimeslot();
+        for (Map<String, Object> m : ls) {
+            Timeslot ts = new Timeslot();
+            ts.setId((int) m.get("id"));
+            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
+            cts.setTimeslot(ts);
+            cts.setVenueId(venueId);
+            cts.setBooked(m.get("bookingId") != null);
+            LocalDate date = ((Date) m.get("date")).toLocalDate();
+            ctss.add(cts);
+        }
+        return ctss;
     }
 }

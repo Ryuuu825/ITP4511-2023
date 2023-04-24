@@ -6,13 +6,14 @@ package ict.servlet;
 
 import ict.bean.User;
 import ict.bean.Venue;
+import ict.bean.VenueTimeslot;
+import ict.bean.view.CalendarTimeslot;
 import ict.bean.view.VenueDTO;
+import ict.bean.view.VenueTimeslots;
 import ict.db.UserDAO;
 import ict.db.VenueDAO;
-import java.io.FileOutputStream;
+import ict.db.VenueTimeslotDAO;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,18 +23,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
 /**
  *
  * @author jyuba
  */
-@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue"})
+@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar"})
 @MultipartConfig
 public class VenueBookingController extends HttpServlet {
 
     private VenueDAO venueDAO;
     private UserDAO userDAO;
+    private VenueTimeslotDAO vtsDAO;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -68,6 +69,8 @@ public class VenueBookingController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         ArrayList<VenueDTO> vdtos = null;
+        ArrayList<Venue> venues = venueDAO.queryRecord();
+        req.setAttribute("venueList", venues);
         if ("delete".equalsIgnoreCase(action)) {
             int vid = Integer.parseInt(req.getParameter("venueId"));
             HttpSession session = req.getSession(true);
@@ -92,21 +95,21 @@ public class VenueBookingController extends HttpServlet {
             req.setAttribute("staff", staff);
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
-        } else if ("edit".equalsIgnoreCase(action)) {
+        } else if ("calendar".equalsIgnoreCase(action)) {
+            String org_path = req.getServletPath();
+            User user = (User) req.getSession(false).getAttribute("userInfo");
+            if (user == null) {
+                resp.sendRedirect("login.jsp");
+                return;
+            }
             int vid = Integer.parseInt(req.getParameter("venueId"));
             RequestDispatcher rd;
-            VenueDTO vdto = venueDAO.queryRecordToDTOById(vid);
-            req.setAttribute("venueDTO", vdto);
-            vdtos = venueDAO.queryRecordToDTO();
-            req.setAttribute("venueDTOs", vdtos);
-            ArrayList<User> staff = userDAO.queryRecordByRole(2);
-            req.setAttribute("staff", staff);
-            rd = getServletContext().getRequestDispatcher("/venues.jsp");
+            ArrayList<CalendarTimeslot> calendar = vtsDAO.queryCalendarByVenueId(vid);
+            req.setAttribute("calendar", calendar);
+            rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
         } else {
-            ArrayList<Venue> venues = venueDAO.queryRecord();
             RequestDispatcher rd;
-            req.setAttribute("venueList", venues);
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
         }
@@ -119,6 +122,7 @@ public class VenueBookingController extends HttpServlet {
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");
         venueDAO = new VenueDAO(dbUrl, dbUser, dbPassword);
         userDAO = new UserDAO(dbUrl, dbUser, dbPassword);
+        vtsDAO = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
     }
 
 }
