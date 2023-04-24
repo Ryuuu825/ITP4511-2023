@@ -9,6 +9,9 @@ import ict.bean.User;
 import ict.db.AccountDAO;
 import ict.db.UserDAO;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,6 +29,14 @@ public class LoginController extends HttpServlet {
 
     private AccountDAO accountDB;
     private UserDAO userDB;
+
+    private static HashMap<String, String> loginSuccessRedirectMap = new HashMap<String, String>() {
+        {
+            put("SeniorManager", "admin/index.jsp");
+            put("Staff", "searchBookings");
+            put("Customer", "venueInfo.jsp");
+        }
+    };
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -76,15 +87,20 @@ public class LoginController extends HttpServlet {
         Account acc = accountDB.queryRecordByUsername(username);
         User u = userDB.queryRecordByAccountId(acc.getId());
         HttpSession session = req.getSession(true);
+
+        String redirectedFrom = req.getParameter("redirectFrom");
+
         session.setAttribute("userInfo", u);
         session.setAttribute("role", acc.getRoleString());
-        if (acc.getRoleString().equals("SeniorManager")) {
-            resp.sendRedirect("admin/index.jsp");
-        } else if (acc.getRoleString().equals("Staff")) {
-            resp.sendRedirect("searchBookings");
-        } else {
-            resp.sendRedirect("venueInfo.jsp");
+
+
+        if ( redirectedFrom == null ) {
+            resp.sendRedirect(loginSuccessRedirectMap.get(acc.getRoleString()));
         }
+        else {
+            resp.sendRedirect( getServletContext().getContextPath() + redirectedFrom ); // dont allow cross domain
+        }
+        
     }
 
     @Override

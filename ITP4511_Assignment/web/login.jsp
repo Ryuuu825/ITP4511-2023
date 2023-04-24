@@ -82,9 +82,17 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <% if ( session.getAttribute("redirectFrom") != null ) { %>
+                            <div class="alert alert-danger mx-4 mb-4 text-xs">
+                                <%= session.getAttribute("unautherror") %>
+                            </div>
+                        <% } %>
                         <h1 class="text-sm-start ps-4 mb-4 fw-bold">Sign in</h1>
                         <form method="post" action="handleLogin" class="px-4">
                             <input type="hidden" name="action" value="login" />
+                            <% if ( session.getAttribute("redirectFrom") != null ) { %>
+                                <input type="hidden" name="redirectFrom" value="<%=session.getAttribute("redirectFrom")%>" />
+                            <% } %>
                             <!-- Username input -->
                             <div class="form-outline mb-4">
                                 <input type="text" id="username" required aria-autocomplete="none" name="username"

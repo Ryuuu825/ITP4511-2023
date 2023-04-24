@@ -12,6 +12,8 @@
             getServletContext().getRequestDispatcher("/api/admin/users").forward(request, response);
         }
     %>
+
+    
     <%@ page import="java.util.ArrayList" %>
     <%@ page import="ict.bean.view.UserAccount" %>
     <%@ page import="ict.bean.User" %>

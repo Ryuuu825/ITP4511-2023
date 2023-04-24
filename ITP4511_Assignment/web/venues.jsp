@@ -154,7 +154,7 @@
         }
         ArrayList<VenueDTO> venueDTOs = (ArrayList<VenueDTO>) request.getAttribute("venueDTOs");
         VenueDTO venueDTO = (VenueDTO) request.getAttribute("venueDTO");
-    %>
+%>
 
 <body style="background-color: #f2f2f2;">
     <header class="z-3 w-100 d-flex flex-row align-items-center justify-content-between p-3"

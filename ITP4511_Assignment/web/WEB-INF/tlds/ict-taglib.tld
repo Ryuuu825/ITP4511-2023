@@ -142,4 +142,20 @@
         </description>
         <body-content>empty</body-content>
     </tag>
+
+    <tag>
+        <name>checkRole</name>
+        <tag-class>ict.tag.CheckRoleTag</tag-class>
+        <description>
+            Check if user has the verified role to access the page
+        </description>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>roleStr</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
 </taglib>

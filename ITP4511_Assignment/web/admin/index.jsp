@@ -2,6 +2,8 @@
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 <ict:checkDbConnection />
 
+<ict:checkRole roleStr="admin" />
+
 <!DOCTYPE html>
 <html>
     <head>
