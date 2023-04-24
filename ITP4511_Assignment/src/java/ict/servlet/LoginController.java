@@ -34,7 +34,7 @@ public class LoginController extends HttpServlet {
         {
             put("SeniorManager", "admin/index.jsp");
             put("Staff", "searchBookings");
-            put("Customer", "venueInfo.jsp");
+            put("Member", "findVenue");
         }
     };
 
