@@ -52,6 +52,8 @@ public class BookingDAO extends BaseDAO {
         return isSuccess;
     }
 
+    
+
     public Booking queryRecordById(int id) {
         String sql = "SELECT * FROM booking WHERE id=?";
         ArrayList<Object> params = new ArrayList<>();

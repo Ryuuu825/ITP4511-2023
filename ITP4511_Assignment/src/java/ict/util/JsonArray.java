@@ -18,7 +18,15 @@ public class JsonArray extends JsonResponse {
     }
 
     public void addJsonObject(JsonObject obj) {
-        items.add(obj.toValueString());
+        items.add(obj);
+    }
+
+    public Object get(int index) {
+        return items.get(index);
+    }
+
+    public int size() {
+        return items.size();
     }
 
     public String toValueString() {
@@ -30,11 +38,13 @@ public class JsonArray extends JsonResponse {
             }
             // str += "\"" + key + "\":\"" + items.get(key) + "\"";
             // if the string has : or { or [ or , or " or \ or space
-            if (item.toString().startsWith("{") || item.toString().startsWith("[")  ) {
+            if ( item instanceof JsonObject || item instanceof JsonArray || item instanceof JsonResponse   
+                || item.toString().startsWith("{") || item.toString().startsWith("[")
+            ) {
                 try {
                     str += ((JsonResponse) item).toValueString();
                 } catch (Exception e) {
-                    str += item.toString();
+                    str += item.toString(); // maybe some json object are passed as a string
                 }
             } else {
                 str += "\"" + item.toString() + "\"";
@@ -54,7 +64,9 @@ public class JsonArray extends JsonResponse {
             }
             // str += "\"" + key + "\":\"" + items.get(key) + "\"";
             // if the value is a json object
-            if (item.toString().startsWith("{")) {
+            if ( item instanceof JsonObject || item instanceof JsonArray || item instanceof JsonResponse
+                || item.toString().startsWith("{") || item.toString().startsWith("[")
+            ) {
                 str += item.toString();
             } else {
                 str += "\"" + item.toString() + "\"";

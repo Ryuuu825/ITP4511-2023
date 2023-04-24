@@ -7,10 +7,23 @@ public class JsonObject extends JsonResponse {
 
     private HashMap<String, Object> items = new HashMap<>();
     private boolean onlyOneObj = false;
+    private boolean rValueOnly = false;
 
 
     public JsonObject(String name) {
         this.name = name;
+    }
+
+    public JsonObject(String name  , boolean rValueOnly) {
+        this.name = name;
+        this.rValueOnly = rValueOnly;
+    }
+
+
+    public JsonObject(String name , String value , boolean onlyOneObj) {
+        this.name = name;
+        items.put(name, value);
+        this.onlyOneObj = onlyOneObj;
     }
 
 
@@ -22,14 +35,13 @@ public class JsonObject extends JsonResponse {
         items.put(array.name, array.toValueString());
     }
 
-    public JsonObject(String name , String value , boolean onlyOneObj) {
-        this.name = name;
-        items.put(name, value);
-        this.onlyOneObj = onlyOneObj;
-    }
 
     public void add(JsonObject obj) {
         items.put(obj.name, obj.toValueString());
+    }
+
+    public Object get(String name) {
+        return items.get(name);
     }
 
     public String toString() {
@@ -38,12 +50,18 @@ public class JsonObject extends JsonResponse {
             return str;
         }
 
+
         String str = "\"" + name + "\":{";
+
+        if (rValueOnly) {
+            str = "{";
+        }
         int i = 0;
         for (String key : items.keySet()) {
             if (i > 0) {
                 str += ",";
             }
+
             // str += "\"" + key + "\":\"" + items.get(key) + "\"";
             // if the value is a json object
             if (items.get(key).toString().startsWith("{") || items.get(key).toString().startsWith("[")) {

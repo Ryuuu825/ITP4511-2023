@@ -390,7 +390,7 @@ public class ReportController extends HttpServlet {
         ArrayList<Map<String, Object>> rs = dbUtil.findRecord(sql, new ArrayList<>());
 
         for (int i = 0; i < rs.size(); i++) {
-            JsonObject venue = new JsonObject("venue");
+            JsonObject venue = new JsonObject("venue" , true );
             venue.add("id", rs.get(i).get("id").toString());
             venue.add("name", rs.get(i).get("name").toString());
             json.addJsonObject(venue);
