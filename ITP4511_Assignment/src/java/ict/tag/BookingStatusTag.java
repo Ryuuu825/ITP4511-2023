@@ -43,7 +43,12 @@ public class BookingStatusTag extends SimpleTagSupport {
                 out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
                 out.print("Update");
                 out.print("</button>");
-                out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-danger btn-block \">");
+                if (status != 2 && status != 6 && status != 7) {
+                    out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
+                } else {
+                    out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \" style=\"display: none;\">");
+                }
+
                 out.print("Cancel");
                 out.print("</button>");
             } else {

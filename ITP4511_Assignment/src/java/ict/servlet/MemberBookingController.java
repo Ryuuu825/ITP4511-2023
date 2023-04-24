@@ -4,6 +4,7 @@
  */
 package ict.servlet;
 
+import ict.bean.User;
 import ict.bean.view.BookingDTO;
 import ict.db.AccountDAO;
 import ict.db.BookingDAO;
@@ -51,6 +52,19 @@ public class MemberBookingController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String bookingId = req.getParameter("bookingId");
         String searchKeys = req.getParameter("search");
+        User user = (User) req.getSession().getAttribute("userInfo");
+        if (user == null) {
+            req.getSession().setAttribute("redirectFrom",  "/member/booking");
+            req.getSession().setAttribute("unautherror", "You need to login first!");
+            resp.sendRedirect(getServletContext().getContextPath() + "/login.jsp");
+            return;
+        }
+        //  if user is not a member, redirect to searchBookings ( /bookings.jsp points to this servlet by default)
+        if (! req.getSession().getAttribute("role").equals("Member")) {
+            resp.sendRedirect(getServletContext().getContextPath() + "/searchBookings");
+            return;
+        }
+
         ArrayList<BookingDTO> bdtos = null;
         if (bookingId != null) {
             int bid = Integer.parseInt(bookingId);
@@ -65,7 +79,7 @@ public class MemberBookingController extends HttpServlet {
         } else if (searchKeys != null && !searchKeys.equals("")) {
             bdtos = bookingDB.queryRecordToDTOByKeyword(searchKeys);
         } else {
-            bdtos = bookingDB.queryRecordToDTO();
+            bdtos = bookingDB.queryRecordToDTOWithUserId( user.getId());
         }
         RequestDispatcher rd;
         req.setAttribute("bookingDTOs", bdtos);

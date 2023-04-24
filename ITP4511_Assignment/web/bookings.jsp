@@ -9,6 +9,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib.tld" prefix="ict" %>
 
+<ict:checkRole roleStr="Member,SeniorManager,Staff" redirectFrom="/member/booking" />
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -68,9 +70,6 @@
     </script>
     <%
         String role = (String) session.getAttribute("role");
-        if (role == null) {
-            response.sendRedirect("");
-        }
         ArrayList<BookingDTO> bookings = (ArrayList<BookingDTO>) request.getAttribute("bookingDTOs");
     %>
 

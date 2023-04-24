@@ -172,6 +172,7 @@ public class BookingDAO extends BaseDAO {
         return bs;
     }
 
+    
     public ArrayList<Booking> queryRecordByDate(String date) {
         String sql = "SELECT * FROM booking WHERE createDate=?";
         ArrayList<Object> params = new ArrayList<>();
@@ -234,6 +235,32 @@ public class BookingDAO extends BaseDAO {
         }
         return bdtos;
     }
+
+
+    public ArrayList<BookingDTO> queryRecordToDTOWithUserId( int userID) {
+        UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
+        VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+        GuestListDAO guestListDAO = new GuestListDAO(dbUrl, dbUser, dbPassword);
+        ArrayList<BookingDTO> bdtos = new ArrayList<>();
+        ArrayList<Booking> bookings = queryRecordByUserId(userID);
+        ArrayList<GuestList> gl = null;
+        BookingDTO bdto = null;
+        if (bookings.size() != 0) {
+            for (Booking b : bookings) {
+                bdto = new BookingDTO();
+                bdto.setBooking(b);
+                ArrayList<VenueTimeslots> vts1 = venueTimeslotDB.queryRocordToVenueTimeslotsList(b.getId());
+                bdto.setVenueTimeslotses(vts1);
+                gl = guestListDAO.queryRocordByBookingId(b.getId());
+                bdto.setVenueGuestlists(gl);
+                User u = userDB.queryRecordById(b.getUserId());
+                bdto.setMember(u);
+                bdtos.add(bdto);
+            }
+        }
+        return bdtos;
+    }
+
 
     public ArrayList<BookingDTO> queryRecordToDTOByKeyword(String keyword) {
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);

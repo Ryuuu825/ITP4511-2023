@@ -14,7 +14,11 @@
 <%@page import="ict.bean.Timeslot"%>
 <%@page import="ict.bean.Guest"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib.tld" prefix="ict" %>
+<ict:checkRole roleStr="Member,SeniorManager,Staff" redirectFrom="/member/booking" /> />
+
+<% String role = (String) session.getAttribute("role"); %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,10 +60,6 @@
 
     <jsp:useBean scope="request" id="bookingDTO" class="ict.bean.view.BookingDTO" />
     <%
-        String role = (String) session.getAttribute("role");
-        if (role == null) {
-            response.sendRedirect("");
-        }
         int bookingId = bookingDTO.getBooking().getId();
         String memberName = bookingDTO.getMember().getFirstName() + " " + bookingDTO.getMember().getLastName();
         String memberPhone = bookingDTO.getMember().getPhone();
@@ -106,35 +106,37 @@
             <div class="row">
                 <div class="col-md-8 mb-4">
                     <div class="card mb-4">
-                        <div class="card-header py-3">
-                            <h5 class="mb-0">Member Information</h5>
-                        </div>
-                        <div class="card-body">
-                            <div>
-                                <div class="row mb-4">
-                                    <div class="col">
-                                        <div class="form-outline">
-                                            <input type="text" id="firstName" disabled class="form-control border active"
-                                                   value="<%=memberName%>" />
-                                            <label class="form-label" for="firstName">Name</label>
+                        <% if ( ! role.equals("Member")) { %>
+                            <div class="card-header py-3">
+                                <h5 class="mb-0">Member Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div>
+                                    <div class="row mb-4">
+                                        <div class="col">
+                                            <div class="form-outline">
+                                                <input type="text" id="firstName" disabled class="form-control border active"
+                                                       value="<%=memberName%>" />
+                                                <label class="form-label" for="firstName">Name</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-outline">
-                                            <input type="text" id="phone" disabled class="form-control border active"
-                                                   value="<%=memberPhone%>" />
-                                            <label class="form-label" for="phone">Phone</label>
+                                        <div class="col">
+                                            <div class="form-outline">
+                                                <input type="text" id="phone" disabled class="form-control border active"
+                                                       value="<%=memberPhone%>" />
+                                                <label class="form-label" for="phone">Phone</label>
+                                            </div>
                                         </div>
+    
                                     </div>
-
-                                </div>
-                                <div class="form-outline mb-4">
-                                    <input type="text" id="email" disabled class="form-control border active"
-                                           value="<%=memberEmail%>" />
-                                    <label class="form-label" for="email">Email</label>
+                                    <div class="form-outline mb-4">
+                                        <input type="text" id="email" disabled class="form-control border active"
+                                               value="<%=memberEmail%>" />
+                                        <label class="form-label" for="email">Email</label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        <% } %>
                     </div>
                     <%
                         //subTotal for each venueTimeslots
