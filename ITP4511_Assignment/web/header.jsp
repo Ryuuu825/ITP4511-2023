@@ -37,7 +37,7 @@
             <li class="nav-item border-start nav-hover">
                 <a
                     class="text-white mx-3 text-decoration-none"
-                    href="<%=request.getContextPath()%>/venueInfo.jsp"
+                    href="<%=request.getContextPath()%>/searchTimeslots"
                     >
                     <!-- Browse Spaces -->
                     Timeslot

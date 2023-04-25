@@ -63,6 +63,11 @@
         .date-td label {
             cursor: pointer;
         }
+        
+        .date-td.table-danger,
+        .date-td.table-danger label{
+            cursor: default;
+        }
 
         .ts-btn:hover {
             background-color: var(--mdb-primary);
@@ -131,6 +136,9 @@
                         });
 
                         $(".date-td").click(function () {
+                            if($(this).hasClass("table-secondary")){
+                                return;
+                            }
                             $(this).toggleClass("table-success");
                             $(this).find($("input[type=checkbox]")).prop("checked", function (i, v) {
                                 return !v;
@@ -145,11 +153,23 @@
                             }
                         });
 
+                        $("#bookVenueForm button[type=submit]").click(function () {
+                            var submit = false;
+                            for (var i = 0; i < $("input[name='timeOption']").length; i++) {
+                                if ($(`input[name='timeOption']:eq(` + i + `)`).is(":checked")) {
+                                    submit = true;
+                                }
+                            }
+                            if (submit) {
+                                $("#bookVenueForm").submit();
+                            } else {
+                                alert("You have to select a timeslot");
+                            }
+                        });
                     });
     </script>
     <%
         ArrayList<Venue> venueList = (ArrayList<Venue>) request.getAttribute("venueList");
-        ArrayList<ArrayList<CalendarTimeslot>> selectedDateTimeslot = (ArrayList<ArrayList<CalendarTimeslot>>) request.getAttribute("selectedDateTimeslot");
         ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = (ArrayList<ArrayList<CalendarTimeslot>>) request.getAttribute("monthlyDateTimeslot");
         String[] selectedDate = (String[]) session.getAttribute("selectedDate");
         String selectedVenue = (Integer) request.getAttribute("selectedVenue") + "";
@@ -160,19 +180,23 @@
         <jsp:include page="header.jsp" />
 
         <div class="position-fixed" style="bottom:1.5rem; right: 1.5rem; z-index: 10;">
-            <button type="button" style="width: 4.5rem; height: 4.5rem;" class="p-0 btn btn-primary rounded-pill position-relative" data-mdb-ripple-unbound="true">
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
-                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            <button type="button" style="width: 4.5rem; height: 4.5rem;"
+                    class="p-0 btn btn-primary rounded-pill position-relative" data-mdb-ripple-unbound="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-fill"
+                     viewBox="0 0 16 16">
+                <path
+                    d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                 </svg>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-                    <%=bookingVenues != null ? "+" + bookingVenues.size() : 0 %> <span class="visually-hidden">unread messages</span>
+                    <%=bookingVenues != null ? "+" + bookingVenues.size() : 0%> <span class="visually-hidden">unread
+                        messages</span>
                 </span>
             </button>
         </div>
         <section>
             <!-- Modal -->
             <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarLabel" aria-hidden="true">
-                <form class="modal-dialog modal-dialog-centered" action="handleBooking" method="post">
+                <form class="modal-dialog modal-dialog-centered" id="bookVenueForm" action="handleBooking" method="post">
                     <input type="hidden" id="action" name="action" value="addBookingVenue">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -205,6 +229,7 @@
                                         LocalDate max = date.plusMonths(1);
                                         int rowOfMonth = 1;
                                         boolean newMonth = false;
+                                        int nextDate = 0;
                                         out.print("<tr><td class=\"table-secondary\" colspan=\"7\">" + date.getMonth() + "</td></tr>");
                                         int idx = 0;
                                         while (date.isBefore(max)) {
@@ -222,19 +247,25 @@
                                                 } else if (month < date.getMonth().getValue() && newMonth == false) {
                                                     out.print("<td></td>");
                                                 } else if (date.isBefore(max)) {
-                                                    String chk = "";
+                                                    String prop = "";
                                                     String style = "";
-                                                    if (selectedDate != null) {
+                                                    if (selectedDate != null && selectedDate.length > 0) {
                                                         for (String d : selectedDate) {
                                                             if (d.equals(date.toString())) {
-                                                                chk = "checked";
+                                                                prop = "checked";
                                                                 style = "table-success";
                                                             }
                                                         }
                                                     }
 
-                                                    out.print("<td class=\"date-td " + style + "\"><label>" + formatter.format(date) + "</label><input type=\"checkbox\"" + chk + " class=\"d-none\" name=\"dateOption\" value=\"" + date + "\">" + "</td>");
+                                                    if (monthlyDateTimeslot == null || monthlyDateTimeslot.get(nextDate).isEmpty()) {
+                                                        style = "table-danger";
+                                                        prop = "disabled";
+                                                    }
+
+                                                    out.print("<td class=\"date-td " + style + "\"><label>" + formatter.format(date) + "</label><input type=\"checkbox\"" + prop + " class=\"d-none\" name=\"dateOption\" value=\"" + date + "\">" + "</td>");
                                                     date = date.plusDays(1);
+                                                    nextDate++;
                                                 }
                                             }
                                             newMonth = month < date.getMonth().getValue();
@@ -244,35 +275,43 @@
                                     %>
                                 </tbody>
                             </table>
-                            <% if (monthlyDateTimeslot != null) {
-                                for (ArrayList<CalendarTimeslot> ctss : monthlyDateTimeslot) {%>
+                            <% if (monthlyDateTimeslot != null && !monthlyDateTimeslot.isEmpty()) {
+                                    for (ArrayList<CalendarTimeslot> ctss : monthlyDateTimeslot) {%>
                             <div class="card mb-3 rounded-0 d-none">
-                                <input type="hidden" name="selectedDate" value="<%=ctss.get(0).getDate()%>">
+                                <input type="hidden" name="selectedDate" value="<%=ctss !=null && !ctss.isEmpty() ? ctss.get(0).getDate() : "" %>">
                                 <div class="card-header d-flex align-items-center justify-content-between">
-                                    <label class="fs-5"><%=ctss.get(0).getDate()%></label>
+                                    <label class="fs-5"><%=ctss !=null && !ctss.isEmpty() ? ctss.get(0).getDate() : "" %></label>
                                     <button type="button" class="btn-close"></button>
                                 </div>
                                 <div class="card-body">
-                                    <% for (CalendarTimeslot cts : ctss) {
+                                    <%
+                                        if (ctss != null && !ctss.isEmpty()) {
+                                            for (CalendarTimeslot cts : ctss) {
                                     %>
-                                    <button type="button" onclick="event.preventDefault();
-                                            " <%=cts.isBooked() ? "disabled" : ""%>
+                                    <button type="button" onclick="event.preventDefault();"
+                                            <%=cts.isBooked() ? "disabled" : ""%>
                                             class="ts-btn btn btn-outline-<%=cts.isBooked() ? "secondary" : "primary"%> btn-rounded m-1">
                                         <%=cts.getTimeslot().getStartTime()%> - <%=cts.getTimeslot().getEndTime()%>
                                         <input type="checkbox" class="d-none" name="timeOption"
                                                value="<%=cts.getVenuetimeslotId()%>">
                                     </button>
                                     <%
+                                            }
+                                        } else {
+                                            out.print("<label class=\"w-100 h-100\">No time slot available</label>");
                                         }
-                                    %> </div>
-                            </div> <%
+                                    %>
+                                </div>
+                            </div>
+                            <%
                                     }
                                 }
                             %>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">ADD TO BOOK</button>
+                            <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">ADD TO
+                                BOOK</button>
                         </div>
                     </div>
                 </form>
@@ -304,8 +343,11 @@
                             </form>
                         </div>
                         <div class="card-body">
-                            <% if (venueList != null) {
-                                for (Venue venue : venueList) {%>
+                            <% if (venueList != null && !venueList.isEmpty()) {
+                                    for (int i = 0; i < venueList.size(); i++) {
+                                        if (venueList.get(i) != null) {
+                                            Venue venue = venueList.get(i);
+                            %>
                             <div class="row">
                                 <div class="card mb-3 ps-0" style="max-width: 100%;">
                                     <div class="row g-0">
@@ -362,8 +404,13 @@
                                 </div>
                             </div>
                             <%
-                                } 
-                            } %>
+
+                                        }
+                                    }
+                                } else {
+                                    out.print("<div class=\"row\">No such record found</div>");
+                                }
+                            %>
                         </div>
                     </div>
                 </div>

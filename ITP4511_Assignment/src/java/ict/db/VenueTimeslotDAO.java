@@ -150,12 +150,14 @@ public class VenueTimeslotDAO extends BaseDAO {
         params.add(venueId);
         ArrayList<Timeslot> vts = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        for (Map<String, Object> m : ls) {
-            Timeslot ts = new Timeslot();
-            ts.setId((int) m.get("id"));
-            ts.setStartTime((LocalTime) m.get("startTime"));
-            ts.setEndTime((LocalTime) m.get("endTime"));
-            vts.add(ts);
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                Timeslot ts = new Timeslot();
+                ts.setId((int) m.get("id"));
+                ts.setStartTime((LocalTime) m.get("startTime"));
+                ts.setEndTime((LocalTime) m.get("endTime"));
+                vts.add(ts);
+            }
         }
         return vts;
     }
@@ -170,19 +172,21 @@ public class VenueTimeslotDAO extends BaseDAO {
         params.add(timeslot);
         ArrayList<Venue> vts = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        for (Map<String, Object> m : ls) {
-            Venue v = new Venue();
-            v.setId((int) m.get("id"));
-            v.setName((String) m.get("name"));
-            v.setCapacity((int) m.get("capacity"));
-            v.setAddress((String) m.get("address"));
-            v.setDescription((String) m.get("description"));
-            v.setHourlyRate((double) m.get("hourlyRate"));
-            v.setImg((String) m.get("img"));
-            v.setType((int) m.get("type"));
-            v.setUserId((int) m.get("userId"));
-            v.setDistrict((String) m.get("district"));
-            vts.add(v);
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                Venue v = new Venue();
+                v.setId((int) m.get("id"));
+                v.setName((String) m.get("name"));
+                v.setCapacity((int) m.get("capacity"));
+                v.setAddress((String) m.get("address"));
+                v.setDescription((String) m.get("description"));
+                v.setHourlyRate((double) m.get("hourlyRate"));
+                v.setImg((String) m.get("img"));
+                v.setType((int) m.get("type"));
+                v.setUserId((int) m.get("userId"));
+                v.setDistrict((String) m.get("district"));
+                vts.add(v);
+            }
         }
         return vts;
     }
@@ -193,14 +197,16 @@ public class VenueTimeslotDAO extends BaseDAO {
         params.add(timeslot);
         ArrayList<VenueTimeslot> vts = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        for (Map<String, Object> m : ls) {
-            VenueTimeslot vt = new VenueTimeslot();
-            vt.setId((int) m.get("int"));
-            vt.setBookingId((int) m.get("bookingId"));
-            vt.setVenueId((int) m.get("venueId"));
-            vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate(((Date) m.get("date")).toLocalDate());
-            vts.add(vt);
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                VenueTimeslot vt = new VenueTimeslot();
+                vt.setId((int) m.get("int"));
+                vt.setBookingId((int) m.get("bookingId"));
+                vt.setVenueId((int) m.get("venueId"));
+                vt.setTimeslotId((int) m.get("timeslotId"));
+                vt.setDate(((Date) m.get("date")).toLocalDate());
+                vts.add(vt);
+            }
         }
         return vts;
     }
@@ -211,7 +217,7 @@ public class VenueTimeslotDAO extends BaseDAO {
         params.add(venueId);
         ArrayList<VenueTimeslot> vts = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        if (ls.size() != 0) {
+        if (!ls.isEmpty()) {
             for (Map<String, Object> m : ls) {
                 VenueTimeslot vt = new VenueTimeslot();
                 vt.setId((int) m.get("id"));
@@ -234,7 +240,7 @@ public class VenueTimeslotDAO extends BaseDAO {
         params.add(venueId);
         ArrayList<VenueTimeslot> vts = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        if (ls.size() != 0) {
+        if (!ls.isEmpty()) {
             for (Map<String, Object> m : ls) {
                 VenueTimeslot vt = new VenueTimeslot();
                 vt.setId((int) m.get("id"));
@@ -257,14 +263,16 @@ public class VenueTimeslotDAO extends BaseDAO {
         params.add(bookingId);
         ArrayList<VenueTimeslot> vts = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        for (Map<String, Object> m : ls) {
-            VenueTimeslot vt = new VenueTimeslot();
-            vt.setId((int) m.get("int"));
-            vt.setBookingId((int) m.get("bookingId"));
-            vt.setVenueId((int) m.get("venueId"));
-            vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate(((Date) m.get("date")).toLocalDate());
-            vts.add(vt);
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                VenueTimeslot vt = new VenueTimeslot();
+                vt.setId((int) m.get("int"));
+                vt.setBookingId((int) m.get("bookingId"));
+                vt.setVenueId((int) m.get("venueId"));
+                vt.setTimeslotId((int) m.get("timeslotId"));
+                vt.setDate(((Date) m.get("date")).toLocalDate());
+                vts.add(vt);
+            }
         }
         return vts;
     }
@@ -274,14 +282,16 @@ public class VenueTimeslotDAO extends BaseDAO {
         ArrayList<Object> params = new ArrayList<>();
         ArrayList<VenueTimeslot> vts = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        for (Map<String, Object> m : ls) {
-            VenueTimeslot vt = new VenueTimeslot();
-            vt.setId((int) m.get("int"));
-            vt.setBookingId((int) m.get("bookingId"));
-            vt.setVenueId((int) m.get("venueId"));
-            vt.setTimeslotId((int) m.get("timeslotId"));
-            vt.setDate(((Date) m.get("date")).toLocalDate());
-            vts.add(vt);
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                VenueTimeslot vt = new VenueTimeslot();
+                vt.setId((int) m.get("int"));
+                vt.setBookingId((int) m.get("bookingId"));
+                vt.setVenueId((int) m.get("venueId"));
+                vt.setTimeslotId((int) m.get("timeslotId"));
+                vt.setDate(((Date) m.get("date")).toLocalDate());
+                vts.add(vt);
+            }
         }
         return vts;
     }
@@ -303,10 +313,12 @@ public class VenueTimeslotDAO extends BaseDAO {
         params.add(bookingId);
         ArrayList<VenueTimeslots> vtss = new ArrayList<>();
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        for (Map<String, Object> m : ls) {
-            int venueId = (int) m.get("id");
-            VenueTimeslots vts = queryRocordToVenueTimeslots(bookingId, venueId);
-            vtss.add(vts);
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                int venueId = (int) m.get("id");
+                VenueTimeslots vts = queryRocordToVenueTimeslots(bookingId, venueId);
+                vtss.add(vts);
+            }
         }
         return vtss;
     }
@@ -324,12 +336,14 @@ public class VenueTimeslotDAO extends BaseDAO {
                 + "WHERE vt.bookingId = ? and vt.venueId = ? and date = ? ";
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         dts.setDate(date);
-        for (Map<String, Object> m : ls) {
-            Timeslot ts = new Timeslot();
-            ts.setId((int) m.get("id"));
-            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
-            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
-            tss.add(ts);
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                Timeslot ts = new Timeslot();
+                ts.setId((int) m.get("id"));
+                ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+                ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
+                tss.add(ts);
+            }
         }
         dts.setTimeslots(tss);
         return dts;
@@ -349,23 +363,25 @@ public class VenueTimeslotDAO extends BaseDAO {
                 + "GROUP BY vt.date";
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         Venue v = null;
-        for (Map<String, Object> m : ls) {
-            v = new Venue();
-            v.setId((int) m.get("id"));
-            v.setName((String) m.get("name"));
-            v.setDistrict((String) m.get("district"));
-            v.setAddress((String) m.get("address"));
-            v.setCapacity((int) m.get("capacity"));
-            v.setType((int) m.get("type"));
-            v.setImg((String) m.get("img"));
-            v.setDescription((String) m.get("description"));
-            if (m.get("userId") != null) {
-                v.setUserId((int) m.get("userId"));
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                v = new Venue();
+                v.setId((int) m.get("id"));
+                v.setName((String) m.get("name"));
+                v.setDistrict((String) m.get("district"));
+                v.setAddress((String) m.get("address"));
+                v.setCapacity((int) m.get("capacity"));
+                v.setType((int) m.get("type"));
+                v.setImg((String) m.get("img"));
+                v.setDescription((String) m.get("description"));
+                if (m.get("userId") != null) {
+                    v.setUserId((int) m.get("userId"));
+                }
+                v.setHourlyRate((double) m.get("hourlyRate"));
+                LocalDate date = ((Date) m.get("date")).toLocalDate();
+                dts = queryRocordToDateTimeslots(bookingId, date, venueId);
+                dtss.add(dts);
             }
-            v.setHourlyRate((double) m.get("hourlyRate"));
-            LocalDate date = ((Date) m.get("date")).toLocalDate();
-            dts = queryRocordToDateTimeslots(bookingId, date, venueId);
-            dtss.add(dts);
         }
         vts.setVenue(v);
         vts.setDateTimeslots(dtss);
@@ -375,7 +391,7 @@ public class VenueTimeslotDAO extends BaseDAO {
     public ArrayList<ArrayList<CalendarTimeslot>> queryMonthlyCalendarByVenueId(int venueId) {
         ArrayList<ArrayList<CalendarTimeslot>> ctss = new ArrayList<>();
         LocalDate now = LocalDate.now().plusDays(1);
-        LocalDate maxDate = now.plusMonths(1).minusDays(1);
+        LocalDate maxDate = now.plusMonths(1);
         while (now.isBefore(maxDate)) {
             ArrayList<CalendarTimeslot> cts = queryCalendarByVenueIdDate(venueId, now.toString());
             ctss.add(cts);
@@ -396,19 +412,23 @@ public class VenueTimeslotDAO extends BaseDAO {
                 + "AND date = ?";
         ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
         ArrayList<CalendarTimeslot> cts = new ArrayList<>();
-        for (Map<String, Object> m : ls) {
-            CalendarTimeslot ct = new CalendarTimeslot();
-            Timeslot ts = new Timeslot();
-            ts.setId((int) m.get("id"));
-            ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
-            ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
-            ct.setTimeslot(ts);
-            ct.setVenueId(venueId);
-            ct.setBooked(m.get("bookingId") != null);
-            ct.setDate(((Date) m.get("date")).toLocalDate());
-            ct.setVenuetimeslotId((int) m.get("vtId"));
-            cts.add(ct);
+        if (!ls.isEmpty()) {
+            for (Map<String, Object> m : ls) {
+                CalendarTimeslot ct = new CalendarTimeslot();
+                Timeslot ts = new Timeslot();
+                ts.setId((int) m.get("id"));
+                ts.setStartTime(((Time) m.get("startTime")).toLocalTime());
+                ts.setEndTime(((Time) m.get("endTime")).toLocalTime());
+                ct.setTimeslot(ts);
+                ct.setVenueId(venueId);
+                ct.setBooked(m.get("bookingId") != null);
+                ct.setDate(((Date) m.get("date")).toLocalDate());
+                ct.setVenuetimeslotId((int) m.get("vtId"));
+                cts.add(ct);
+            }
         }
+        System.out.println("cts:" + cts.size());
+        System.err.println(cts.isEmpty());
         return cts;
     }
 }
