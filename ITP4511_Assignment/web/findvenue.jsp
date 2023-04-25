@@ -53,7 +53,15 @@
         }
     </style>
     <script>
+                    function hideCart() {
+                        $("#cartBox").hide();
+                    }
+
+                    function showCart() {
+                        $("#cartBox").show();
+                    }
                     $(document).ready(function () {
+                        hideCart();
                         var params = new window.URLSearchParams(window.location.search);
                         var action = params.get('action');
                         action == "calendar" ? showCalendar() : "";
@@ -112,6 +120,8 @@
                                 alert("You have to select a timeslot");
                             }
                         });
+
+
                     });
     </script>
     <%
@@ -125,7 +135,7 @@
         <jsp:include page="header.jsp" />
 
         <div class="position-fixed" style="bottom:1.5rem; right: 1.5rem; z-index: 10;">
-            <button type="button" style="width: 4.5rem; height: 4.5rem;"
+            <button type="button" onclick="showCart()" style="width: 4.5rem; height: 4.5rem;"
                     class="p-0 btn btn-primary rounded-pill position-relative" data-mdb-ripple-unbound="true">
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart-fill"
                      viewBox="0 0 16 16">
@@ -165,31 +175,32 @@
             </div>
             <!-- Modal -->
 
-            <!-- Modal -->
-            <div class="card position-fixed w-25" style="bottom:1rem; right: 0.5rem; z-index: 20;" id="cartModal" tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
+            <!-- Cart -->
+            <div class="card position-fixed w-25" style="bottom:1rem; right: 0.5rem; z-index: 20;" id="cartBox" tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
                 <form class="" id="cartForm" action="handleCart" method="post">
                     <input type="hidden" id="action" name="action" value="cart">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h1 class="modal-title fs-5">
-
                             Cart
                         </h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="card" aria-label="Close"></button>
+                        <button type="button" onclick="hideCart()" class="btn-close" data-bs-dismiss="card" aria-label="Close"></button>
                     </div>
                     <div class="card-body">
                         <%
+                            double total = 0;
                             if (bookingVenues != null && !bookingVenues.isEmpty()) {
+                                total = 0;
                                 for (Map.Entry<String, int[]> en : bookingVenues.entrySet()) {
                                     String key = en.getKey();
                                     int[] val = en.getValue();
                                     for (Venue v : venueList) {
                                         String venueId = v.getId() + "";
                                         if (venueId.equalsIgnoreCase(key)) {
-
+                                            total += v.getHourlyRate() * val.length;
                         %>
                         <div class="d-flex align-items-center justify-content-between">
                             <strong><%=v.getName()%></strong>
-                            <middle>$<%=v.getHourlyRate()%> x <%=val.length%></middle>
+                            <div class="d-flex w-25 align-items-center"><label class="me-1">$<%=v.getHourlyRate()%></label><label class="me-auto">x</label><label> <%=val.length%></label></div>
                         </div>
                         <%                           }
                                     }
@@ -198,16 +209,16 @@
                         %>
                         <div class="mt-2 d-flex align-items-start justify-content-between">
                             <strong>Total</strong>
-                            <strong class="fs-4">HK$800.0</strong>
+                            <strong class="fs-4">HK$<%=total %></strong>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
-                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="card">Close</button>
+                        <button type="button" onclick="hideCart()" class="btn btn-secondary me-2" data-bs-dismiss="offcanvas">Close</button>
                         <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">GO TO CART</button>
                     </div>
                 </form>
             </div>
-            <!-- Modal -->
+            <!-- Cart -->
 
             <div class="text-start container-xl py-5">
                 <div class="row">
