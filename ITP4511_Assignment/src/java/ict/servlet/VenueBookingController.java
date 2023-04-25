@@ -95,7 +95,6 @@ public class VenueBookingController extends HttpServlet {
             session.setAttribute("selectedDate", selectedDate);
             ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = vtsDAO.queryMonthlyCalendarByVenueId(vid);
             req.setAttribute("monthlyDateTimeslot", monthlyDateTimeslot);
-            System.err.println(monthlyDateTimeslot.size());
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
         } else {

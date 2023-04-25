@@ -427,8 +427,6 @@ public class VenueTimeslotDAO extends BaseDAO {
                 cts.add(ct);
             }
         }
-        System.out.println("cts:" + cts.size());
-        System.err.println(cts.isEmpty());
         return cts;
     }
 }
