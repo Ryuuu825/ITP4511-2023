@@ -4,6 +4,7 @@
    Author     : jyuba
 --%>
 
+<%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="ict.bean.User"%>
 <%@page import="java.time.temporal.TemporalAdjusters"%>
@@ -159,6 +160,50 @@
                             <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">ADD TO
                                 BOOK</button>
                         </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Modal -->
+
+            <!-- Modal -->
+            <div class="card position-fixed w-25" style="bottom:1rem; right: 0.5rem; z-index: 20;" id="cartModal" tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
+                <form class="" id="cartForm" action="handleCart" method="post">
+                    <input type="hidden" id="action" name="action" value="cart">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h1 class="modal-title fs-5">
+
+                            Cart
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="card" aria-label="Close"></button>
+                    </div>
+                    <div class="card-body">
+                        <%
+                            if (bookingVenues != null && !bookingVenues.isEmpty()) {
+                                for (Map.Entry<String, int[]> en : bookingVenues.entrySet()) {
+                                    String key = en.getKey();
+                                    int[] val = en.getValue();
+                                    for (Venue v : venueList) {
+                                        String venueId = v.getId() + "";
+                                        if (venueId.equalsIgnoreCase(key)) {
+
+                        %>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <strong><%=v.getName()%></strong>
+                            <middle>$<%=v.getHourlyRate()%> x <%=val.length%></middle>
+                        </div>
+                        <%                           }
+                                    }
+                                }
+                            }
+                        %>
+                        <div class="mt-2 d-flex align-items-start justify-content-between">
+                            <strong>Total</strong>
+                            <strong class="fs-4">HK$800.0</strong>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="card">Close</button>
+                        <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">GO TO CART</button>
                     </div>
                 </form>
             </div>
