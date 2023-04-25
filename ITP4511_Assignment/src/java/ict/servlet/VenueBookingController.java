@@ -46,7 +46,6 @@ public class VenueBookingController extends HttpServlet {
                     toIntTimeslotIds[i] = Integer.parseInt(selectedTimeslotIds[i]);
                 }
             }
-
             HttpSession session = req.getSession();
             HashMap<String, int[]> bookingVenus = null;
             if (session.getAttribute("bookingVenues") != null) {
@@ -57,11 +56,6 @@ public class VenueBookingController extends HttpServlet {
             System.out.println(bookingVenus);
             bookingVenus.put(venueId, toIntTimeslotIds);
             session.setAttribute("bookingVenues", bookingVenus);
-//            ArrayList<Venue> venues = venueDAO.queryRecord();
-//            req.setAttribute("venueList", venues);
-//            RequestDispatcher rd;
-//            rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
-//            rd.forward(req, resp);
             resp.sendRedirect("findVenue");
         } else if ("update".equalsIgnoreCase(action)) {
             resp.sendRedirect("findVenue");
@@ -73,13 +67,13 @@ public class VenueBookingController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
+        ArrayList<Venue> venues = venueDAO.queryRecord();
+        req.setAttribute("venueList", venues);
         if ("delete".equalsIgnoreCase(action)) {
             int vid = Integer.parseInt(req.getParameter("venueId"));
             HttpSession session = req.getSession(true);
             resp.sendRedirect("findVenue");
         } else if ("search".equalsIgnoreCase(action)) {
-            ArrayList<Venue> venues = venueDAO.queryRecord();
-            req.setAttribute("venueList", venues);
             String searchKeys = req.getParameter("search");
             if (searchKeys != null && !searchKeys.equals("")) {
                 venues = venueDAO.queryRecordByName("");
@@ -93,8 +87,6 @@ public class VenueBookingController extends HttpServlet {
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
         } else if ("calendar".equalsIgnoreCase(action)) {
-            ArrayList<Venue> venues = venueDAO.queryRecord();
-            req.setAttribute("venueList", venues);
             int vid = Integer.parseInt(req.getParameter("venueId"));
             req.setAttribute("selectedVenue", vid);
             RequestDispatcher rd;
@@ -102,14 +94,11 @@ public class VenueBookingController extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("selectedDate", selectedDate);
             ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = vtsDAO.queryMonthlyCalendarByVenueId(vid);
-            System.out.print("sssss: "+monthlyDateTimeslot);
             req.setAttribute("monthlyDateTimeslot", monthlyDateTimeslot);
             System.err.println(monthlyDateTimeslot.size());
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
         } else {
-            ArrayList<Venue> venues = venueDAO.queryRecord();
-            req.setAttribute("venueList", venues);
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
