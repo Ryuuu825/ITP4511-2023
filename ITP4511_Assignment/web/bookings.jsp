@@ -24,6 +24,11 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"
+        ></script>  
     </head>
     <style>
         .nav-hover:hover {
@@ -71,6 +76,7 @@
     <%
         String role = (String) session.getAttribute("role");
         ArrayList<BookingDTO> bookings = (ArrayList<BookingDTO>) request.getAttribute("bookingDTOs");
+        ArrayList<BookingDTO> upcomingBookings = (ArrayList<BookingDTO>) request.getAttribute("upcomingBookings");
     %>
 
     <body style="background-color: #f2f2f2;">
@@ -78,9 +84,27 @@
 
         <section class="p-5">
             <ict:result />
+            <% 
+                // upcomingBookings 
+                if ( upcomingBookings != null && upcomingBookings.size() > 0 ) {
+            %>
+                <div class="alert alert-info fade show" role="alert">
+                    <div class="d-flex flex-row justify-content-between">
+                       <div>
+                            You have <span class="fw-bold" style="font-size: 1.1rem;"><%= upcomingBookings.size() %></span> upcoming bookings.
+                            <br>
+                            You can click <a href="<%=request.getContextPath()%>/member/booking?action=upcoming" class="link-primary fw-semibold">here</a> view them.
+                       </div>
+                        <div onclick="$('.alert').alert('close')" style="cursor: pointer;">
+                            &times;
+                        </div>
+                    </div>
+                </div>
+            <% } %>     
             <div class="card bg-white p-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="m-2">Bookings</h5>
+                        
                     <div class="input-group" style="width: 30%;">
                         <div class="form-outline">
                             <input id="search-input" type="search" class="form-control border rounded-start" />

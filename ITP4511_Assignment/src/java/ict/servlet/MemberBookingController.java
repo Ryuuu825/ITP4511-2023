@@ -53,6 +53,8 @@ public class MemberBookingController extends HttpServlet {
         String bookingId = req.getParameter("bookingId");
         String searchKeys = req.getParameter("search");
         User user = (User) req.getSession().getAttribute("userInfo");
+        String action = req.getParameter("action");
+
         if (user == null) {
             req.getSession().setAttribute("redirectFrom",  "/member/booking");
             req.getSession().setAttribute("unautherror", "You need to login first!");
@@ -76,13 +78,20 @@ public class MemberBookingController extends HttpServlet {
                 rd.forward(req, resp);
                 return;
             }
+
+
         } else if (searchKeys != null && !searchKeys.equals("")) {
             bdtos = bookingDB.queryRecordToDTOByKeyword(searchKeys);
         } else {
             bdtos = bookingDB.queryRecordToDTOWithUserId( user.getId());
+
+            if ("upcoming".equalsIgnoreCase(action) ) {
+                bdtos = bookingDB.queryUpcomingFiveDayRecord(Integer.toString(user.getId()));
+            }
         }
         RequestDispatcher rd;
         req.setAttribute("bookingDTOs", bdtos);
+        req.setAttribute("upcomingBookings", bookingDB.queryUpcomingFiveDayRecord(Integer.toString(user.getId())));
         rd = getServletContext().getRequestDispatcher("/bookings.jsp");
         rd.forward(req, resp);
     }
@@ -95,6 +104,11 @@ public class MemberBookingController extends HttpServlet {
         accountDB = new AccountDAO(dbUrl, dbUser, dbPassword);
         userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
+    }
+
+    public ArrayList<BookingDTO> getRecendBooking(String userId) {
+        // get upcoming booking ( 5 days from now )
+        return bookingDB.queryUpcomingFiveDayRecord(userId);
     }
 
 }

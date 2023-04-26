@@ -19,6 +19,10 @@ public class Booking implements Serializable{
     private LocalDate createDate;
     
     public static String[] statuString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancel", "Complete"};
+
+    public enum BookingStatus {
+        PENDING_APPROVAL, REJECTED, PENDING_CHECK_IN, CHECK_IN, CHECK_OUT, CANCEL, COMPLETE
+    }
     
     public Booking() {
     }
@@ -73,6 +77,14 @@ public class Booking implements Serializable{
     
     public String getStatusString(){
         return statuString[status-1];
+    }
+
+    public static BookingStatus getStatusEnum(int status) {
+        return BookingStatus.values()[status-1];
+    }
+
+    public static int getStatusInt(BookingStatus status) {
+        return status.ordinal()+1;
     }
     
     @Override

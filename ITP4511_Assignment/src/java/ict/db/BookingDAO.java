@@ -8,6 +8,7 @@ import ict.bean.Booking;
 import ict.bean.GuestList;
 import ict.bean.User;
 import ict.bean.VenueTimeslot;
+import ict.bean.Booking.BookingStatus;
 import ict.bean.view.BookingDTO;
 import ict.bean.view.VenueTimeslots;
 import java.math.BigDecimal;
@@ -321,6 +322,26 @@ public class BookingDAO extends BaseDAO {
 
         return bookings;
     }
+
+    public ArrayList<BookingDTO> queryUpcomingFiveDayRecord(String memberId) {
+        ArrayList<BookingDTO> bookings = new ArrayList<>();
+
+        // get all booking id
+        String status = Integer.toString(Booking.getStatusInt(BookingStatus.PENDING_CHECK_IN));
+        String sql = "SELECT booking.* FROM booking INNER JOIN venue_timeslot ON booking.id = venue_timeslot.bookingId WHERE booking.userId = ? AND booking.status = ? AND venue_timeslot.date >= CURDATE() AND venue_timeslot.date <= DATE_ADD(CURDATE(), INTERVAL 5 DAY)";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(memberId);
+        params.add(status);
+
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+
+        for (Map<String, Object> m : ls) {
+            bookings.add(queryRecordToDTOByBookingId((int) m.get("id")));
+        }
+
+        return bookings;
+    }
+    
 
     public boolean updateStatus(int bookingId, int status) {
         String sql = "UPDATE booking "

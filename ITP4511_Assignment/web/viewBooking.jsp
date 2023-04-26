@@ -80,35 +80,37 @@
         <div class="row">
             <div class="col-md-8 mb-4">
                 <% if ( ! role.equals("Member")) { %>
-                <div class="card-header py-3">
-                    <h5 class="mb-0">Member Information</h5>
-                </div>
-                <div class="card-body">
-                    <div>
-                        <div class="row mb-4">
-                            <div class="col">
-                                <div class="form-outline">
-                                    <input type="text" id="firstName" disabled class="form-control border active"
-                                        value="<%=memberName%>" />
-                                    <label class="form-label" for="firstName">Name</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-outline">
-                                    <input type="text" id="phone" disabled class="form-control border active"
-                                        value="<%=memberPhone%>" />
-                                    <label class="form-label" for="phone">Phone</label>
-                                </div>
-                            </div>
-
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Member Information</h5>
                         </div>
-                        <div class="form-outline mb-4">
-                            <input type="text" id="email" disabled class="form-control border active"
-                                value="<%=memberEmail%>" />
-                            <label class="form-label" for="email">Email</label>
+                        <div class="card-body">
+                            <div>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="firstName" disabled class="form-control border active"
+                                                value="<%=memberName%>" />
+                                            <label class="form-label" for="firstName">Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="phone" disabled class="form-control border active"
+                                                value="<%=memberPhone%>" />
+                                            <label class="form-label" for="phone">Phone</label>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="email" disabled class="form-control border active"
+                                        value="<%=memberEmail%>" />
+                                    <label class="form-label" for="email">Email</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <% } %>
                 <%
                         //subTotal for each venueTimeslots
