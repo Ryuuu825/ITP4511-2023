@@ -53,7 +53,6 @@ public class GuestController extends HttpServlet {
             guestEmail = req.getParameter("email");
 
             
-
             int bookingId = Integer.parseInt(bookingIdStr);
             int venueId = Integer.parseInt(venueIdStr);
 
@@ -65,7 +64,6 @@ public class GuestController extends HttpServlet {
             guestDAO.addRecord(userId , guestName , guestEmail);
             // get guest id from guestname, guestemail ( from ben ) : goodest idea
             Guest guest = guestDAO.queryRecordByGuestNameAndEmail(guestName, guestEmail);
-            System.out.println("guest id: " + guest.getId());
 
 
             // get the guestlist id from booking id and venue id

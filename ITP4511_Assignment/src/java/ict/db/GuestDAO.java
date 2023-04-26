@@ -187,8 +187,6 @@ public class GuestDAO extends BaseDAO {
     public ArrayList<Guest> queryRecordRelatedToUser( String userId  ) {
 
         String sql = "SELECT guest.* FROM guest " +
-            "INNER JOIN guestlist_guest ON guest.id = guestlist_guest.guestId " +
-            "INNER JOIN guestlist ON guestlist.id = guestlist_guest.guestlistId " +
             "WHERE guest.userId = ? " ;
 
         System.out.println(sql);
