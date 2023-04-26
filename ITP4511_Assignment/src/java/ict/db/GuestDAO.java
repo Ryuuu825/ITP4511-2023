@@ -184,6 +184,36 @@ public class GuestDAO extends BaseDAO {
         return isSuccess;
     }
 
+    public ArrayList<Guest> queryRecordRelatedToUser( String userId  ) {
+
+        String sql = "SELECT guest.* FROM guest " +
+            "INNER JOIN guestlist_guest ON guest.id = guestlist_guest.guestId " +
+            "INNER JOIN guestlist ON guestlist.id = guestlist_guest.guestlistId " +
+            "WHERE guest.userId = ? " ;
+
+        System.out.println(sql);
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(userId);
+
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        ArrayList<Guest> gs = new ArrayList<>();
+
+        for (Map<String, Object> m : ls) {
+            Guest g = new Guest();
+            g.setId((int) m.get("id"));
+            g.setUserId((int) m.get("userId"));
+            g.setName((String) m.get("name"));
+            g.setEmail((String) m.get("email"));
+            gs.add(g);
+        }
+
+
+        return gs;
+
+
+    }
+
+
     public void dropTable() {
         String sql = "DROP TABLE guest";
         dbUtil.executeByPreparedStatement(sql);

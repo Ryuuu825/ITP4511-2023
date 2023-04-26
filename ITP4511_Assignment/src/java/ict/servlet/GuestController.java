@@ -13,6 +13,7 @@ import ict.db.GuestListGuestDAO;
 import ict.util.CheckRole;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import javax.servlet.RequestDispatcher;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "GuestController", urlPatterns = {"/delGuest", "/viewGuests" , "/addGuest" , "/editGuest" })
+@WebServlet(name = "GuestController", urlPatterns = {"/delGuest", "/viewGuests" , "/addGuest" , "/editGuest" , "/createGuest" })
 public class GuestController extends HttpServlet {
 
     private GuestListDAO guestListDAO;
@@ -137,6 +138,34 @@ public class GuestController extends HttpServlet {
                 CheckRole.didNotLogin(req, resp, "/viewGuests?bookingId="+bid+"&venueId="+vid+"&action=search");
                 return;
             }
+
+            User u = (User) req.getSession().getAttribute("userInfo");
+
+            // get all the regiested guests that related to the user but not on current guestlist
+            if ( ! CheckRole.checkIfRoleIs(req.getSession(), new String[] {"SeniorManager" , "Staff"})) {
+                String userId = u.getId() + "";
+                ArrayList<Guest> l  = guestDAO.queryRecordRelatedToUser(userId);
+                GuestList l2 = guestListDAO.queryRocordByBooking(bid, vid);
+
+                ArrayList<Guest> res = new ArrayList<Guest>();
+
+                for ( Guest g : l ) {
+                    boolean found = false;
+                    for ( Guest g2 : l2.getGuests() ) {
+                        if ( g.getId() == g2.getId() || (g.getName().equals(g2.getName()) && g.getEmail().equals(g2.getEmail()) )) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if ( ! found ) {
+                        res.add(g);
+                    }
+                }
+
+                req.setAttribute("guestsNotOnList", res);
+                
+            }
+
             String searchKeys = req.getParameter("search");
             if (searchKeys != null && !searchKeys.equals("")) {
                 gl = guestListDAO.queryRocordByKeyword(bid, vid, searchKeys);
@@ -148,6 +177,8 @@ public class GuestController extends HttpServlet {
             req.setAttribute("guests", gl);
             rd = getServletContext().getRequestDispatcher("/guests.jsp");
             rd.forward(req, resp);
+
+
         } else if ("edit".equalsIgnoreCase(action)) {
             String guestId = req.getParameter("guestId");
 

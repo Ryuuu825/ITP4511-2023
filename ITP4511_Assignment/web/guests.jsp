@@ -158,43 +158,109 @@
             <div class="bg-white p-3 border card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="m-2">Guests</h5>
-                    <div class="input-group" style="width: 30%;">
-                        <div class="form-outline">
-                            <input id="search-input" type="search" class="form-control border rounded-start" />
-                            <label class="form-label" for="search">Search by guest name or email</label>
-                        </div>
-                        <button id="search-button" type="button" class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-                <% if ("Member".equalsIgnoreCase(role)) {%>
-                <form class="p-3 border-bottom" action="addGuest" method="post">
-                    <input type="hidden" name="bookingId" value="<%=bookingId%>" />
-                    <input type="hidden" name="venueId" value="<%=venueId%>" />
-                    <div class="row d-flex justify-content-between align-items-center ">
-                        <div class="col-md-5">
+                    <div class="w-full flex flex-row justify-content-end">
+                        <div class="input-group" style="width: 30%;">
                             <div class="form-outline">
-                                <input type="text" name="name" id="name" required
-                                       aria-required="true" class="form-control border" />
-                                <label class="form-label" for="name">Name</label>
+                                <input id="search-input" type="search" class="form-control border rounded-start" />
+                                <label class="form-label" for="search">Search by guest name or email</label>
                             </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="form-outline">
-                                <input type="email" name="email" id="email" class="form-control border" />
-                                <label class="form-label" for="email">Email address</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2 my-1">
-                            <button type="submit" class="btn btn-primary btn-block">
-                                Add Guest
+                            <button id="search-button" type="button" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
                             </button>
                         </div>
+
+                        <div class="relative">
+                            <div class="btn btn-primary ml-3" onclick="document.getElementById('guestBox').classList.toggle('hidden');">
+                                Add Guest
+                                
+                            </div>
+
+                            <div class="card absolute w-[30rem]  bg-white -left-[22rem] top-[3rem] z-[100] hidden" id="guestBox">
+
+                                <div class="card-header">
+                                    <h5 class="m-2">Add Guest</h5>
+                                </div>
+
+                                <div class="card-body h-fit overflow-y-auto">
+
+                                    <ul class="list-group list-group-light h-full max-h-[25rem]" id="guestList">
+                                        <% if (request.getAttribute("guestsNotOnList") != null && !((ArrayList<Guest>) request.getAttribute("guestsNotOnList")).isEmpty()) { %>
+                                            <%
+                                                ArrayList<Guest> guestsNotOnList = (ArrayList<Guest>) request.getAttribute("guestsNotOnList");
+                                                for (Guest guestNotOnList : guestsNotOnList) {
+                                            %>
+                                                <form action="<%=request.getContextPath()%>/addGuest" method="post">
+
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center"  style="border:none">
+                                                        <input id="guestName" type="hidden" name="name" value="<%=guestNotOnList.getName()%>" />
+                                                        <input id="guestEmail" type="hidden" name="email" value="<%=guestNotOnList.getEmail()%>"  />
+                                                        <input type="hidden" name="action" value="add">
+                                                        <input type="hidden" name="bookingId" value="<%=request.getParameter("bookingId")%>">
+                                                        <input type="hidden" name="venueId" value="<%=request.getParameter("venueId")%>">
+
+
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="ms-3">
+                                                                <p class="fw-bold mb-1"><%=guestNotOnList.getName()%></p>
+                                                                <p class="text-muted mb-0"><%=guestNotOnList.getEmail()%></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <button class="btn btn-link btn-rounded btn-sm" type="submit">Add</button>
+
+                                                    </li>
+                                                </form>
+                                        <% } } else { %>
+                                            There are no saved guests to add.
+                                        <% } %>
+                                    </ul>
+
+                                        
+
+                                    <div id="newGuest" class="hidden ">
+                                        <form action='<%=request.getContextPath()%>/addGuest' method="post">
+                                            <input type="hidden" name="action" value="add">
+                                            <input type="hidden" name="bookingId" value="<%=request.getParameter("bookingId")%>">
+                                            <input type="hidden" name="venueId" value="<%=request.getParameter("venueId")%>">
+
+                                            <div class="col-5 w-100">
+                                                <div class="form-outline mb-4">
+                                                    <input required type="text" id="guestName" name="name"
+                                                        class="form-control border" />
+                                                    <label class="form-label" for="guestName">Name</label>
+                                                </div>
+    
+                                                <div class="form-outline mb-4">
+                                                    <input required type="text" id="guestEmail" name="email"
+                                                        class="form-control border" />
+                                                    <label class="form-label" for="guestEmail">Email</label>
+                                                </div>
+                                                <!-- style="margin-left: 75%;"   -->
+                                                <button type="submit" class="btn btn-primary">
+                                                    Add New
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer flex flex-row justify-content-end">
+                                    <div class="btn btn-secondary mx-2" onclick="document.getElementById('guestList').classList.add('hidden');document.getElementById('newGuest').classList.remove('hidden');">
+                                        New Guest
+                                    </div>
+                                    <div class="btn btn-secondary mx-2" onclick="document.getElementById('guestList').classList.remove('hidden');document.getElementById('newGuest').classList.add('hidden');">
+                                        Existing Guest
+                                    </div> 
+                      
+                                </div>
+
+                            </div>
+                        </div>
+    
                     </div>
-                </form>
-                
-                <% }%>
+
+                </div>
+              
                 <div class="table-responsive text-nowrap mt-3 fs-6">
                     <ict:guestTable guests="<%=guests%>" role="<%=role%>"/>
                 </div>
