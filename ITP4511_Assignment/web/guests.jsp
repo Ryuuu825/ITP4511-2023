@@ -130,7 +130,7 @@
                             <div class="form-outline my-3">
                                 <input id="editGuestName" name="editGuestName" type="text" class="active form-control border rounded-start" value="<%=guest.getName()%>" />
                                 <label class="form-label" for="search">Guest Name</label>
-                            </div>ssss
+                            </div>
 
                             <div class="form-outline mb-3">
                                 <input id="editGuestEmail" name="editGuestEmail" type="text" class="active form-control border rounded-start" value="<%=guest.getEmail()%>" />
