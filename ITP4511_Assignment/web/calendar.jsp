@@ -20,7 +20,7 @@ integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="ano
     }
 
     .date-td.table-danger,
-    .date-td.table-danger label{
+    .date-td.table-danger label {
         cursor: default;
     }
 
@@ -37,35 +37,65 @@ integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="ano
 <script>
     $(document).ready(function () {
         $(".ts-btn").click(function () {
-            $(this).toggleClass("btn-primary");
-            $(this).toggleClass("btn-outline-primary");
+            addSelectedTime(this);
             $(this).find($("input[type=checkbox]")).prop("checked", function (i, v) {
                 return !v;
             });
         });
 
-        $(".date-td").click(function () {
-            if ($(this).hasClass("table-secondary")) {
-                return;
-            }
-            $(this).toggleClass("table-success");
-            $(this).find($("input[type=checkbox]")).prop("checked", function (i, v) {
-                return !v;
-            });
+        function addSelectedTime(e) {
+            $(e).toggleClass("btn-primary");
+            $(e).toggleClass("btn-outline-primary");
+        }
 
-            for (var i = 0; i < $("input[name='selectedDate']").length; i++) {
-                if ($(`input[name='selectedDate']:eq(` + i + `)`).val() === $(this).find($(
+        for (var i = 0; i < $("input[name='timeOption']").length; i++) {
+            if ($(`input[name='timeOption']:eq(` + i + `)`).is(":checked")) {
+                addSelectedTime($(`input[name='timeOption']:eq(` + i + `)`).parent());
+            }
+        }
+
+
+        function showDateTime(e) {
+            for (var i = 0; i < $("label[name='datetitle']").length; i++) {
+                if ($(`label[name='datetitle']:eq(` + i + `)`).text() === $(e).find($(
                         "input[name='dateOption']")).val()) {
-                    $(`input[name='selectedDate']:eq(` + i + `)`).parent().toggleClass("d-none");
+                    $(`label[name='datetitle']:eq(` + i + `)`).parent().parent().toggleClass("d-none");
                     break;
                 }
             }
+        }
+
+        function addSelectedDate(e) {
+            e.append(`<input type="hidden" id="selectedDate" name="selectedDate" value="` + $(
+                    `label[name='datetitle']:eq(` + i + `)`).text() + `">`);
+        }
+
+        function selectDate(e) {
+            if ($(e).hasClass("table-secondary")) {
+                return;
+            }
+            $(e).toggleClass("table-success");
+            $(e).find($("input[type=checkbox]")).prop("checked", function (i, v) {
+                return !v;
+            });
+
+            showDateTime(e);
+        }
+
+        $(".date-td").click(function () {
+            selectDate(this);
         });
     });
 </script>
 <%
     ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = (ArrayList<ArrayList<CalendarTimeslot>>) request.getAttribute("monthlyDateTimeslot");
-    String[] selectedDate = (String[]) session.getAttribute("selectedDate");
+    HashMap<String, int[]> bookingVenues = (HashMap<String, int[]>) session.getAttribute("bookingVenues");
+    HashMap<String, ArrayList<String>> bookingDates = (HashMap<String, ArrayList<String>>) session.getAttribute("bookingDates");
+    String selectedVenue = (String) request.getAttribute("selectedVenue");
+    ArrayList<String> selectedDate = null;
+    if (bookingDates != null) {
+        selectedDate = bookingDates.get(selectedVenue);
+    }
 %>
 <table class="table table-bordered text-center shadow-3 rounded">
     <thead>
@@ -90,7 +120,6 @@ integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="ano
             boolean newMonth = false;
             int nextDate = 0;
             out.print("<tr><td class=\"table-secondary\" colspan=\"7\">" + date.getMonth() + "</td></tr>");
-            int idx = 0;
             while (date.isBefore(max)) {
                 if (newMonth) {
                     out.print("<tr><td class=\"table-secondary\" colspan=\"7\">" + date.getMonth() + "</td></tr>");
@@ -108,12 +137,10 @@ integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="ano
                     } else if (date.isBefore(max)) {
                         String prop = "";
                         String style = "";
-                        if (selectedDate != null && selectedDate.length > 0) {
-                            for (String d : selectedDate) {
-                                if (d.equals(date.toString())) {
-                                    prop = "checked";
-                                    style = "table-success";
-                                }
+                        if (selectedDate != null && selectedDate.size() > 0) {
+                            if (selectedDate.contains(date.toString())) {
+                                prop = "checked";
+                                style = "table-success";
                             }
                         }
 
@@ -135,32 +162,56 @@ integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="ano
     </tbody>
 </table>
 <% if (monthlyDateTimeslot != null && !monthlyDateTimeslot.isEmpty()) {
-        for (ArrayList<CalendarTimeslot> ctss : monthlyDateTimeslot) {%>
-<div class="card mb-3 rounded-0 d-none">
-    <input type="hidden" name="selectedDate" value="<%=ctss != null && !ctss.isEmpty() ? ctss.get(0).getDate() : ""%>">
-    <div class="card-header d-flex align-items-center justify-content-between">
-        <label class="fs-5"><%=ctss != null && !ctss.isEmpty() ? ctss.get(0).getDate() : ""%></label>
-        <button type="button" class="btn-close"></button>
-    </div>
-    <div class="card-body">
-        <%
-            if (ctss != null && !ctss.isEmpty()) {
-                for (CalendarTimeslot cts : ctss) {
-        %>
-        <button type="button" onclick="event.preventDefault();"
-                <%=cts.isBooked() ? "disabled" : ""%>
-                class="ts-btn btn btn-outline-<%=cts.isBooked() ? "secondary" : "primary"%> btn-rounded m-1">
-            <%=cts.getTimeslot().getStartTime()%> - <%=cts.getTimeslot().getEndTime()%>
-            <input type="checkbox" class="d-none" name="timeOption"
-                   value="<%=cts.getVenuetimeslotId()%>">
-        </button>
-        <%
+        for (ArrayList<CalendarTimeslot> ctss : monthlyDateTimeslot) {
+            boolean selected = false;
+            String d = "";
+            if (selectedDate != null && selectedDate.size() > 0) {
+                if (ctss != null && !ctss.isEmpty() && selectedDate.contains(ctss.get(0).getDate().toString())) {
+                    out.print("<div name=\"dateBox\" class=\"card mb-3 rounded-0\">");
+                } else {
+                    out.print("<div name=\"dateBox\" class=\"card mb-3 rounded-0 d-none\">");
                 }
             } else {
-                out.print("<label class=\"w-100 h-100\">No time slot available</label>");
+                out.print("<div name=\"dateBox\" class=\"card mb-3 rounded-0 d-none\">");
             }
-        %>
-    </div>
+
+%>
+<div class="card-header d-flex align-items-center justify-content-between">
+    <label name="datetitle" class="fs-5"><%=ctss != null && !ctss.isEmpty() ? ctss.get(0).getDate() : ""%></label>
+    <button type="button" class="btn-close"></button>
+</div>
+<div class="card-body d-flex justify-content-evenly flex-wrap">
+    <%
+        if (ctss != null && !ctss.isEmpty()) {
+            for (CalendarTimeslot cts : ctss) {
+                int[] selectedTimes = null;
+                if (bookingVenues != null && !bookingVenues.isEmpty() && bookingVenues.get(cts.getVenueId() + "") != null) {
+                    selectedTimes = bookingVenues.get(cts.getVenueId() + "");
+                }
+                out.print("<button type=\"button\" onclick=\"event.preventDefault();\" " + (cts.isBooked() ? "disabled" : ""));
+                out.print("class=\"ts-btn btn btn-outline-" + (cts.isBooked() ? "secondary" : "primary") + " btn-rounded m-1\">");
+                out.print(cts.getTimeslot().getStartTime() + " - " + cts.getTimeslot().getEndTime());
+                boolean st = false;
+                if (selectedTimes != null) {
+                    for (int selectedTime : selectedTimes) {
+                        if (selectedTime == cts.getVenuetimeslotId()) {
+                            st = true;
+                        }
+                    }
+                }
+
+                if (st) {
+                    out.print("<input type=\"checkbox\" class=\"d-none\" checked name=\"timeOption\" value=\"" + cts.getVenuetimeslotId() + "\">");
+                } else {
+                    out.print("<input type=\"checkbox\" class=\"d-none\" name=\"timeOption\" value=\"" + cts.getVenuetimeslotId() + "\">");
+                }
+                out.print("</button>");
+            }
+        } else {
+            out.print("<label class=\"w-100 h-100\">No time slot available</label>");
+        }
+    %>
+</div>
 </div>
 <%
         }

@@ -266,7 +266,7 @@ public class VenueTimeslotDAO extends BaseDAO {
         if (!ls.isEmpty()) {
             for (Map<String, Object> m : ls) {
                 VenueTimeslot vt = new VenueTimeslot();
-                vt.setId((int) m.get("int"));
+                vt.setId((int) m.get("id"));
                 vt.setBookingId((int) m.get("bookingId"));
                 vt.setVenueId((int) m.get("venueId"));
                 vt.setTimeslotId((int) m.get("timeslotId"));
@@ -285,7 +285,7 @@ public class VenueTimeslotDAO extends BaseDAO {
         if (!ls.isEmpty()) {
             for (Map<String, Object> m : ls) {
                 VenueTimeslot vt = new VenueTimeslot();
-                vt.setId((int) m.get("int"));
+                vt.setId((int) m.get("id"));
                 vt.setBookingId((int) m.get("bookingId"));
                 vt.setVenueId((int) m.get("venueId"));
                 vt.setTimeslotId((int) m.get("timeslotId"));
@@ -294,6 +294,24 @@ public class VenueTimeslotDAO extends BaseDAO {
             }
         }
         return vts;
+    }
+
+    public VenueTimeslot queryRocordById(int id) {
+        String sql = "SELECT * FROM venue_timeslot WHERE id = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(id);
+        VenueTimeslot vt = null;
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        if (!ls.isEmpty()) {
+            Map<String, Object> m = ls.get(0);
+            vt = new VenueTimeslot();
+            vt.setId((int) m.get("id"));
+            vt.setBookingId(m.get("bookingId") != null ? (int) m.get("bookingId") : 0 );
+            vt.setVenueId((int) m.get("venueId"));
+            vt.setTimeslotId((int) m.get("timeslotId"));
+            vt.setDate(((Date) m.get("date")).toLocalDate());
+        }
+        return vt;
     }
 
     public LocalDate queryMaxDate() {

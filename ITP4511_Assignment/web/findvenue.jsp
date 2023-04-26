@@ -120,14 +120,11 @@
                                 alert("You have to select a timeslot");
                             }
                         });
-
-
                     });
     </script>
     <%
         ArrayList<Venue> venueList = (ArrayList<Venue>) request.getAttribute("venueList");
-        String[] selectedDate = (String[]) session.getAttribute("selectedDate");
-        String selectedVenue = (Integer) request.getAttribute("selectedVenue") + "";
+        String selectedVenue = (String) request.getAttribute("selectedVenue");
         HashMap<String, int[]> bookingVenues = (HashMap<String, int[]>) session.getAttribute("bookingVenues");
     %>
 
@@ -143,8 +140,7 @@
                     d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                 </svg>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-                    <%=bookingVenues != null ? "+" + bookingVenues.size() : 0%> <span class="visually-hidden">unread
-                        messages</span>
+                    <%=bookingVenues != null ? "+" + bookingVenues.size() : 0%> <span class="visually-hidden">booking venues</span>
                 </span>
             </button>
         </div>
@@ -156,14 +152,14 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <input type="hidden" id="venueId" name="venueId"
-                                   value="<%=selectedVenue != null || selectedVenue != "" ? selectedVenue : null%>">
+                                   value="<%=selectedVenue != null || selectedVenue != "" ? selectedVenue : "" %>">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">
                                 Calendar
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <jsp:include page="calendar.jsp"/>
+                            <jsp:include page="calendar.jsp" />
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -176,14 +172,16 @@
             <!-- Modal -->
 
             <!-- Cart -->
-            <div class="card position-fixed w-25" style="bottom:1rem; right: 0.5rem; z-index: 20;" id="cartBox" tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
+            <div class="card position-fixed w-25" style="bottom:1rem; right: 0.5rem; z-index: 20;" id="cartBox"
+                 tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
                 <form class="" id="cartForm" action="handleCart" method="post">
                     <input type="hidden" id="action" name="action" value="cart">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h1 class="modal-title fs-5">
                             Cart
                         </h1>
-                        <button type="button" onclick="hideCart()" class="btn-close" data-bs-dismiss="card" aria-label="Close"></button>
+                        <button type="button" onclick="hideCart()" class="btn-close" data-bs-dismiss="card"
+                                aria-label="Close"></button>
                     </div>
                     <div class="card-body">
                         <%
@@ -200,7 +198,9 @@
                         %>
                         <div class="d-flex align-items-center justify-content-between">
                             <strong><%=v.getName()%></strong>
-                            <div class="d-flex w-25 align-items-center"><label class="me-1">$<%=v.getHourlyRate()%></label><label class="me-auto">x</label><label> <%=val.length%></label></div>
+                            <div class="d-flex w-25 align-items-center"><label
+                                    class="me-1">$<%=v.getHourlyRate()%></label><label class="me-auto">x</label><label>
+                                    <%=val.length%></label></div>
                         </div>
                         <%                           }
                                     }
@@ -213,7 +213,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
-                        <button type="button" onclick="hideCart()" class="btn btn-secondary me-2" data-bs-dismiss="offcanvas">Close</button>
+                        <button type="button" onclick="hideCart()" class="btn btn-secondary me-2"
+                                data-bs-dismiss="offcanvas">Close</button>
                         <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">GO TO CART</button>
                     </div>
                 </form>
@@ -232,7 +233,19 @@
                     </div>
                     <div class="col card ms-4">
                         <div class="card-header d-flex flex-row justify-content-between align-items-center">
-                            <label class="fs-4"><strong>Displaying <%=venueList != null ? venueList.size() : 0%> matching
+                            <%
+                                ArrayList<Venue> shownVenues = new ArrayList<Venue>();
+                                if (venueList != null && !venueList.isEmpty()) {
+                                    for (int i = 0; i < venueList.size(); i++) {
+                                        if (venueList.get(i) != null && venueList.get(i).getUserId() != 0) {
+                                            Venue venue = venueList.get(i);
+                                            shownVenues.add(venue);
+                                        }
+                                    }
+                                }
+                            %>
+                            <label class="fs-4"><strong>Displaying <%=shownVenues != null ? shownVenues.size() : 0%>
+                                    matching
                                     results</strong></label>
                             <form class="input-group w-25" action="searchVenue" method="GET">
                                 <div class="form-outline">
@@ -246,10 +259,10 @@
                             </form>
                         </div>
                         <div class="card-body">
-                            <% if (venueList != null && !venueList.isEmpty()) {
-                                    for (int i = 0; i < venueList.size(); i++) {
-                                        if (venueList.get(i) != null) {
-                                            Venue venue = venueList.get(i);
+                            <% if (shownVenues != null && !shownVenues.isEmpty()) {
+                                    for (int i = 0; i < shownVenues.size(); i++) {
+                                        if (shownVenues.get(i) != null && shownVenues.get(i).getUserId() != 0) {
+                                            Venue venue = shownVenues.get(i);
                             %>
                             <div class="row">
                                 <div class="card mb-3 ps-0" style="max-width: 100%;">
@@ -307,7 +320,6 @@
                                 </div>
                             </div>
                             <%
-
                                         }
                                     }
                                 } else {
