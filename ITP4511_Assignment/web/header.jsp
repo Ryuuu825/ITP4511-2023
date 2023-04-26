@@ -7,7 +7,7 @@
         class="title text-uppercase ms-3 me-auto fw-bold text-white"
         style="font-size: 1.5rem; line-height: 2rem"
         >
-        <a href="index.jsp" class="text-white text-decoration-none">
+        <a href="<%=request.getContextPath()%>/index.jsp" class="text-white text-decoration-none">
             Event Point Limited
         </a>
     </div>
