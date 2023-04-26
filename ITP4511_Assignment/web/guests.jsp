@@ -18,12 +18,32 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Guest List</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
+
+        <script src="https://cdn.tailwindcss.com"></script>
+
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"
+    ></script>
+
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+        
+
+        <style>
+            .btn-primary {
+                background-color: #3b71ca !important;
+            }
+
+            input {
+                border : 1px solid #e0e0e0;
+                border-radius: 0.375rem;
+            }
+        </style>
     </head>
     <style>
         .nav-hover:hover {
@@ -64,6 +84,11 @@
                     $(this).removeClass("border-2 border-primary");
                 }
             });
+
+            // show the modal
+            if (params.get('action') == "edit") {
+                $("#editModal").modal("show");
+            }
         });
     </script>
     <%
@@ -76,8 +101,54 @@
         int venueId = guests.getVenueId();
     %>
 
+    <jsp:useBean id="guest" class="ict.bean.Guest" scope="request" />
+
     <body style="background-color: #f2f2f2;">
         <jsp:include page="header.jsp" />
+
+
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="errorModalLabel">
+            <div class="modal-dialog modal-dialog-centered"  style="width:20rem;height: 20rem; ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="errorModalLabel">
+                            Edit Guest
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            onclick=""></button>
+                    </div>
+                    <% if (guest != null) { %>
+
+                    <form action="<%=request.getContextPath()%>/editGuest" method="post">
+                        <div class="modal-body">
+                            <input type="hidden" name="id" value="<%=guest.getId()%>">
+                            <input type="hidden" name="action" value="update">
+
+                            <input type="hidden" name="bookingId" value="<%=request.getParameter("bookingId")%>">
+                            <input type="hidden" name="venueId" value="<%=request.getParameter("venueId")%>">
+
+                            <div class="form-outline my-3">
+                                <input id="editGuestName" name="editGuestName" type="text" class="active form-control border rounded-start" value="<%=guest.getName()%>" />
+                                <label class="form-label" for="search">Guest Name</label>
+                            </div>ssss
+
+                            <div class="form-outline mb-3">
+                                <input id="editGuestEmail" name="editGuestEmail" type="text" class="active form-control border rounded-start" value="<%=guest.getEmail()%>" />
+                                <label class="form-label" for="search">Guest Email</label>
+                            </div>
+                                
+                        </div>
+                        <div class="modal-footer">
+                            <a href="<%=request.getContextPath()%>/viewGuests?action=search&bookingId=<%=request.getParameter("bookingId")%>&venueId=<%=request.getParameter("venueId")%>" class="btn btn-secondary" >Cancel</a>
+                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+                            
+                        </div>
+                    </form>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
         <section class="p-5">
             <div class="fw-bold fs-5 my-3"><a href="searchBookings">Bookings </a>> <span
                     class=""><a href="searchBookings?bookingId=<%=bookingId%>&venueId=<%=venueId%>">Details </a></span> > <span

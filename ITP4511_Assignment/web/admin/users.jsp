@@ -2,9 +2,12 @@
 
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib" prefix="ict" %>
 <ict:checkDbConnection />
-<ict:checkRole roleStr="SeniorManager" redirectFrom="/admin/users" />
 
-
+<%
+    if (request.getAttribute("userAccounts") == null) {
+        getServletContext().getRequestDispatcher("/api/admin/users").forward(request, response);
+    }
+%>
 <!DOCTYPE html>
 <html>
     
@@ -19,7 +22,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>JSP Page</title>
+        <title>Users</title>
 
         <script src="https://cdn.tailwindcss.com"></script>
         <link
@@ -77,14 +80,6 @@
         </style>
 
         <script>
-            // setInterval(() => {
-            //     document.documentElement.style.setProperty('--mutate-width-1', '35%');
-            // }, 1);
-
-            // setInterval(() => {
-            //     document.documentElement.style.setProperty('--mutate-width-2', '65%');
-            // }, 1);
-
             let formDisabled = true;
         </script>
     </head>
@@ -151,7 +146,7 @@
                                 </div>
 
                                 <% if (request.getParameter("id") != null) { %>
-                                <input type="hidden" name="id" value="<% if (request.getParameter("id") != null) {%><%=request.getParameter("id")%><% } %>">
+                                    <input type="hidden" name="id" value="<% if (request.getParameter("id") != null) {%><%=request.getParameter("id")%><% } %>">
                                 <% } %>
 
                                 <button class="btn btn-primary ml-2" type="submit">

@@ -93,7 +93,7 @@
                             <% if ( session.getAttribute("redirectFrom") != null ) { %>
                                 <input type="hidden" name="redirectFrom" value="<%=session.getAttribute("redirectFrom")%>" />
                             <% } %>
-                            <% session.removeAttribute("redirectFrom"); %> <% session.removeAttribute("unautherror"); %>
+                            <% session.removeAttribute("unautherror"); %>
                             <!-- Username input -->
                             <div class="form-outline mb-4">
                                 <input type="text" id="username" required aria-autocomplete="none" name="username"

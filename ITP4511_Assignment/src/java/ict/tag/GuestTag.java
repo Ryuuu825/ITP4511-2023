@@ -57,7 +57,7 @@ public class GuestTag extends SimpleTagSupport {
                 out.print("<td>" + guest.getName() + "</td>");
                 out.print("<td>" + guest.getEmail() + "</td>");
                 if ("Member".equalsIgnoreCase(role)) {
-                    out.print("<td><a class=\"btn btn-primary btn-rounded me-2 btn-sm\" role=\"button\"\">Edit</a>"
+                    out.print("<td><a class=\"btn btn-primary btn-rounded me-2 btn-sm\" role=\"button\"\" href=\"editGuest?action=edit&bookingId=" + guests.getBookingId() + "&venueId=" + guests.getVenueId() + "&guestId=" + guest.getId() + "\">Edit</a>"
                             + "<a class=\"btn btn-danger btn-rounded btn-sm\" role=\"button\" href=\"delGuest?action=delete&bookingId=" + guests.getBookingId() + "&venueId=" + guests.getVenueId() + "&guestId=" + guest.getId() + "\">Delete</a></td>");
                 }
                 out.print("</tr>");

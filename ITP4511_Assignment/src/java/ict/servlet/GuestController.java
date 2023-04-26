@@ -13,6 +13,8 @@ import ict.db.GuestListGuestDAO;
 import ict.util.CheckRole;
 
 import java.io.IOException;
+import java.util.Enumeration;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,7 +27,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "GuestController", urlPatterns = {"/delGuest", "/viewGuests" , "/addGuest" })
+@WebServlet(name = "GuestController", urlPatterns = {"/delGuest", "/viewGuests" , "/addGuest" , "/editGuest" })
 public class GuestController extends HttpServlet {
 
     private GuestListDAO guestListDAO;
@@ -35,35 +37,77 @@ public class GuestController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-
-        // add guest
-        String guestName = req.getParameter("name");
-        String guestEmail = req.getParameter("email");
-
-        int bookingId = Integer.parseInt(req.getParameter("bookingId"));
-        int venueId = Integer.parseInt(req.getParameter("venueId"));
-
-        // get user id 
-        User user = (User) req.getSession().getAttribute("userInfo");
-        int userId = user.getId();
+        String guestName;
+        String guestEmail;
+        String bookingIdStr;
+        String venueIdStr;
 
 
-        guestDAO.addRecord(userId , guestName , guestEmail);
-        // get guest id from guestname, guestemail ( from ben ) : goodest idea
-        Guest guest = guestDAO.queryRecordByGuestNameAndEmail(guestName, guestEmail);
-        System.out.println("guest id: " + guest.getId());
+        bookingIdStr = req.getParameter("bookingId");
+        venueIdStr = req.getParameter("venueId");
+
+        if ("add".equalsIgnoreCase(action)) {
+            // add guest
+            guestName = req.getParameter("name");
+            guestEmail = req.getParameter("email");
+
+            
+
+            int bookingId = Integer.parseInt(bookingIdStr);
+            int venueId = Integer.parseInt(venueIdStr);
+
+            // get user id 
+            User user = (User) req.getSession().getAttribute("userInfo");
+            int userId = user.getId();
 
 
-        // get the guestlist id from booking id and venue id
-        GuestList gl =  guestListDAO.queryRocordByBooking(bookingId, venueId );
-        int guestListId = gl.getId();
+            guestDAO.addRecord(userId , guestName , guestEmail);
+            // get guest id from guestname, guestemail ( from ben ) : goodest idea
+            Guest guest = guestDAO.queryRecordByGuestNameAndEmail(guestName, guestEmail);
+            System.out.println("guest id: " + guest.getId());
 
-        // add guest to guestlist
-        boolean success = guestListGuestDAO.addRecord(guestListId, guest.getId());
 
+            // get the guestlist id from booking id and venue id
+            GuestList gl =  guestListDAO.queryRocordByBooking(bookingId, venueId );
+            int guestListId = gl.getId();
+
+            // add guest to guestlist
+            boolean success = guestListGuestDAO.addRecord(guestListId, guest.getId());
+
+            req.getSession().setAttribute("message", "Add Guest <span class='fw-bold'>" + guestName + "</span> successfully!");
+
+
+        } else if ("update".equalsIgnoreCase(action)) {
+
+            String guestId = req.getParameter("id");
+
+            Enumeration<String> params = req.getParameterNames();
+            while (params.hasMoreElements()) {
+                String paramName = params.nextElement();
+                System.out.println("Parameter Name - " + paramName + ", Value - " + req.getParameter(paramName));
+            }
+                     
+            guestName = req.getParameter("editGuestName");
+            guestEmail = req.getParameter("editGuestEmail");
+
+            if (guestName == null || guestName.equals("") || guestEmail == null || guestEmail.equals("")) {
+                req.getSession().setAttribute("error", "Guest name and email cannot be empty!");
+            } else {
+                 // get the guest information from the database
+                Guest guest = guestDAO.queryRecordById(Integer.parseInt(guestId));
+                guest.setName(guestName);
+                guest.setEmail(guestEmail);
+                // update the guest information to the database
+                guestDAO.editRecord(guest);
+
+                req.getSession().setAttribute("message", "Updated Guest <span class='fw-bold'>" + guestName + "</span> successfully!");
+            }
+
+           
+
+        }
         // forward to viewGuests
-        req.getSession().setAttribute("message", "Add Guest <span class='fw-bold'>" + guestName + "</span> successfully!");
-        resp.sendRedirect("viewGuests?action=search&bookingId="+bookingId+"&venueId="+venueId);
+        resp.sendRedirect("viewGuests?action=search&bookingId="+bookingIdStr+"&venueId="+venueIdStr);
 
     }
 
@@ -82,7 +126,7 @@ public class GuestController extends HttpServlet {
             String guestName = guest.getName();
             int vid = Integer.parseInt(req.getParameter("venueId"));
             if (guestListGuestDAO.delRecordByGuestId(guestId)) {
-            req.getSession().setAttribute("message", "Deleted Guest <span class='fw-bold'>" + guestName + "</span> successfully!");
+                req.getSession().setAttribute("message", "Deleted Guest <span class='fw-bold'>" + guestName + "</span> successfully!");
                 resp.sendRedirect("viewGuests?action=search&bookingId="+bid+"&venueId="+vid);
             };
         } else if ("search".equalsIgnoreCase(action)) {
@@ -104,7 +148,21 @@ public class GuestController extends HttpServlet {
             req.setAttribute("guests", gl);
             rd = getServletContext().getRequestDispatcher("/guests.jsp");
             rd.forward(req, resp);
-        } else {
+        } else if ("edit".equalsIgnoreCase(action)) {
+            String guestId = req.getParameter("guestId");
+
+            // get the guest information from the database 
+            Guest guest = guestDAO.queryRecordById(Integer.parseInt(guestId));
+
+            // set the guest information to the request
+            req.setAttribute("guest", guest);
+
+            // forward to the edit page
+            RequestDispatcher rd;
+            // /viewGuests?action=search&bookingId=1&venueId=1
+            // get the oringal url that the user come from
+            rd = getServletContext().getRequestDispatcher("/viewGuests?bookingId="+req.getParameter("bookingId")+"&venueId="+req.getParameter("venueId")+ "&action=search");
+            rd.forward(req, resp);
         }
     }
 
