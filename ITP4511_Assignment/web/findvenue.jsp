@@ -209,7 +209,7 @@
                         %>
                         <div class="mt-2 d-flex align-items-start justify-content-between">
                             <strong>Total</strong>
-                            <strong class="fs-4">HK$<%=total %></strong>
+                            <strong class="fs-4">HK$<%=total%></strong>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-end">

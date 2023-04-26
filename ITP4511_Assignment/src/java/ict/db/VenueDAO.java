@@ -299,7 +299,7 @@ public class VenueDAO extends BaseDAO {
                 v.setType((int) m.get("type"));
                 v.setImg((String) m.get("img"));
                 v.setDescription((String) m.get("description"));
-                v.setUserId((int) m.get("userId"));
+                v.setUserId(m.get("userId") != null ? (int)m.get("userId") : 0);
                 v.setHourlyRate((double) m.get("hourlyRate"));
                 v.setEnable((int) m.get("enable") > 0);
                 vs.add(v);

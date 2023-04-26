@@ -87,6 +87,11 @@ public class VenueBookingController extends HttpServlet {
             rd = getServletContext().getRequestDispatcher("/venues.jsp");
             rd.forward(req, resp);
         } else if ("calendar".equalsIgnoreCase(action)) {
+            User u = (User) req.getSession().getAttribute("userInfo");
+            if(u == null){
+                resp.sendRedirect("login.jsp");
+                return; 
+            }
             int vid = Integer.parseInt(req.getParameter("venueId"));
             req.setAttribute("selectedVenue", vid);
             RequestDispatcher rd;
