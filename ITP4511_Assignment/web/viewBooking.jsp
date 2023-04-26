@@ -75,7 +75,7 @@
 <body style="background-color: #f2f2f2;">
     <jsp:include page="header.jsp" />
     <section class="p-5">
-        <div class="fw-bold fs-5 my-3"><a href="searchBookings">Bookings </a>/ <span
+        <div class="fw-bold fs-5 my-3"><a href="<%=role.equals("Member") ? "member/booking" : "searchBookings"%>">Bookings </a>/ <span
                 class="text-decoration-underline">Details</span></div>
         <div class="row">
             <div class="col-md-8 mb-4">
@@ -126,7 +126,7 @@
                     %>
                 <div class="card mb-4">
                     <div class="card-header py-3">
-                        <h5 class="mb-0">Booked Venue <%=i%></h5>
+                        <h5 class="mb-0">Booked Venue</h5>
                     </div>
                     <div class="card-body">
                         <div>

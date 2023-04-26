@@ -9,6 +9,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib.tld" prefix="ict" %>
 
+<ict:checkRole roleStr="Member,SeniorManager,Staff"
+    redirectFrom="/getCart?action=cart" />
+
+<% String role = (String) session.getAttribute("role"); %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,7 +67,7 @@
                 <div class="col-md-8 mb-4">
                     <div class="card mb-4">
                         <div class="card-header py-3">
-                            <h5 class="mb-0">Member Information</h5>
+                            <h5 class="mb-0">Personal Information</h5>
                         </div>
                         <div class="card-body">
                             <div>
@@ -106,8 +111,9 @@
                             String hourlyRate = "HK$ " + v.getHourlyRate() + " per hour";
                     %>
                     <div class="card mb-4">
-                        <div class="card-header py-3">
+                        <div class="card-header py-3 d-flex align-items-center justify-content-between">
                             <h5 class="mb-0">Booking Venue</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="card-body">
                             <div>
