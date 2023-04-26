@@ -127,7 +127,7 @@
                             <input type="hidden" name="bookingId" value="<%=request.getParameter("bookingId")%>">
                             <input type="hidden" name="venueId" value="<%=request.getParameter("venueId")%>">
 
-                            <div class="form-outline my-3">
+                            <div class="form-outline mt-3 mb-5">
                                 <input id="editGuestName" name="editGuestName" type="text" class="active form-control border rounded-start" value="<%=guest.getName()%>" />
                                 <label class="form-label" for="search">Guest Name</label>
                             </div>
@@ -169,6 +169,26 @@
                             </button>
                         </div>
 
+                        <script>
+                            // set listener to close the #guestBox when clicked outside
+                            window.addEventListener('mouseup', function(event){
+                                var box = document.getElementById('guestBox');
+                                
+                                // get all elements that are inside the box
+                                var elements = box.getElementsByTagName('*');
+                                var isInside = false;
+                                for (var i = 0; i < elements.length; i++) {
+                                    if (event.target == elements[i]) {
+                                        isInside = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!isInside) {
+                                    box.classList.add('hidden');
+                                }
+                            });
+                        </script>
                         <div class="relative">
                             <div class="btn btn-primary ml-3" onclick="document.getElementById('guestBox').classList.toggle('hidden');">
                                 Add Guest
@@ -245,10 +265,10 @@
                                 </div>
 
                                 <div class="card-footer flex flex-row justify-content-end">
-                                    <div class="btn btn-secondary mx-2" onclick="document.getElementById('guestList').classList.add('hidden');document.getElementById('newGuest').classList.remove('hidden');">
+                                    <div class="btn btn-secondary mx-2" id="test1" onclick="document.getElementById('guestList').classList.add('hidden');document.getElementById('newGuest').classList.remove('hidden');">
                                         New Guest
                                     </div>
-                                    <div class="btn btn-secondary mx-2" onclick="document.getElementById('guestList').classList.remove('hidden');document.getElementById('newGuest').classList.add('hidden');">
+                                    <div class="btn btn-secondary mx-2" id="test2" onclick="document.getElementById('guestList').classList.remove('hidden');document.getElementById('newGuest').classList.add('hidden');">
                                         Existing Guest
                                     </div> 
                       
