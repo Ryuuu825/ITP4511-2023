@@ -306,7 +306,7 @@ public class VenueTimeslotDAO extends BaseDAO {
             Map<String, Object> m = ls.get(0);
             vt = new VenueTimeslot();
             vt.setId((int) m.get("id"));
-            vt.setBookingId(m.get("bookingId") != null ? (int) m.get("bookingId") : 0 );
+            vt.setBookingId(m.get("bookingId") != null ? (int) m.get("bookingId") : 0);
             vt.setVenueId((int) m.get("venueId"));
             vt.setTimeslotId((int) m.get("timeslotId"));
             vt.setDate(((Date) m.get("date")).toLocalDate());

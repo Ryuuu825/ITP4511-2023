@@ -4,16 +4,19 @@
  */
 package ict.servlet;
 
+import ict.bean.Timeslot;
 import ict.bean.User;
 import ict.bean.Venue;
 import ict.bean.VenueTimeslot;
 import ict.bean.view.CalendarTimeslot;
+import ict.db.TimeslotDAO;
 import ict.db.UserDAO;
 import ict.db.VenueDAO;
 import ict.db.VenueTimeslotDAO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,10 +29,11 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar", "/selectDate", "/handleBooking"})
+@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar", "/selectDate", "/handleBooking", "/getCart"})
 public class VenueBookingController extends HttpServlet {
 
     private VenueDAO venueDAO;
+    private TimeslotDAO timeslotDAO;
     private UserDAO userDAO;
     private VenueTimeslotDAO vtsDAO;
 
@@ -64,7 +68,7 @@ public class VenueBookingController extends HttpServlet {
             } else {
                 bookingVenus = new HashMap<>();
             }
-            
+
             HashMap<String, ArrayList<String>> bookingDates = null;
             if (session.getAttribute("bookingDates") != null) {
                 bookingDates = (HashMap<String, ArrayList<String>>) session.getAttribute("bookingDates");
@@ -86,26 +90,46 @@ public class VenueBookingController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        ArrayList<Venue> venues = venueDAO.queryRecord();
-        req.setAttribute("venueList", venues);
         if ("delete".equalsIgnoreCase(action)) {
             int vid = Integer.parseInt(req.getParameter("venueId"));
             HttpSession session = req.getSession(true);
             resp.sendRedirect("findVenue");
-        } else if ("search".equalsIgnoreCase(action)) {
-            String searchKeys = req.getParameter("search");
-            if (searchKeys != null && !searchKeys.equals("")) {
-                venues = venueDAO.queryRecordByName("");
-            } else {
-                venues = venueDAO.queryRecord();
+        } else if ("cart".equalsIgnoreCase(action)) {
+            HashMap<String, int[]> bookingVenues = (HashMap<String, int[]>) req.getSession().getAttribute("bookingVenues");
+            HashMap<String, Venue> cartVenues = new HashMap<>();
+            HashMap<String, HashMap<String, ArrayList<Timeslot>>> venueDateTimes = new HashMap<>();
+            if (bookingVenues == null || bookingVenues.isEmpty()) {
+                resp.sendRedirect("findVenue");
+                return;
             }
+            for (Map.Entry<String, int[]> entry : bookingVenues.entrySet()) {
+                String vid = entry.getKey();
+                int venueId = Integer.parseInt(vid);
+                int[] vtsIds = entry.getValue();
+                Venue v = venueDAO.queryRecordById(venueId);
+                cartVenues.put(vid, v);
+                HashMap<String, ArrayList<Timeslot>> dateTimes = new HashMap<>();
+                for (int vtsId : vtsIds) {
+                    VenueTimeslot vts = vtsDAO.queryRocordById(vtsId);
+                    ArrayList<Timeslot> tss = new ArrayList<>();
+                    for (int t : vtsIds) {
+                        VenueTimeslot vt = vtsDAO.queryRocordById(t);
+                        Timeslot ts = timeslotDAO.queryRecordById(vt.getTimeslotId());
+                        tss.add(ts);
+                    }
+                    dateTimes.put(vts.getDate().toString(), tss);
+                }
+                venueDateTimes.put("vid"+vid, dateTimes);
+                System.err.println(venueDateTimes.get("vid"+vid));
+            }
+            req.setAttribute("cartVenues", cartVenues);
+            req.setAttribute("venueDateTimes", venueDateTimes);
             RequestDispatcher rd;
-            req.setAttribute("venueList", venues);
-            ArrayList<User> staff = userDAO.queryRecordByRole(2);
-            req.setAttribute("staff", staff);
-            rd = getServletContext().getRequestDispatcher("/venues.jsp");
+            rd = this.getServletContext().getRequestDispatcher("/cart.jsp");
             rd.forward(req, resp);
         } else if ("calendar".equalsIgnoreCase(action)) {
+            ArrayList<Venue> venues = venueDAO.queryRecord();
+            req.setAttribute("venueList", venues);
             User u = (User) req.getSession().getAttribute("userInfo");
             if (u == null) {
                 resp.sendRedirect("login.jsp");
@@ -115,14 +139,13 @@ public class VenueBookingController extends HttpServlet {
             int vid = Integer.parseInt(venueId);
             req.setAttribute("selectedVenue", venueId);
             RequestDispatcher rd;
-//            String[] selectedDate = req.getParameterValues("selectedDate");
-//            HttpSession session = req.getSession();
-//            session.setAttribute("selectedDate", selectedDate);
             ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = vtsDAO.queryMonthlyCalendarByVenueId(vid);
             req.setAttribute("monthlyDateTimeslot", monthlyDateTimeslot);
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
         } else {
+            ArrayList<Venue> venues = venueDAO.queryRecord();
+            req.setAttribute("venueList", venues);
             RequestDispatcher rd;
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
@@ -137,6 +160,7 @@ public class VenueBookingController extends HttpServlet {
         venueDAO = new VenueDAO(dbUrl, dbUser, dbPassword);
         userDAO = new UserDAO(dbUrl, dbUser, dbPassword);
         vtsDAO = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+        timeslotDAO = new TimeslotDAO(dbUrl, dbUser, dbPassword);
     }
 
 }

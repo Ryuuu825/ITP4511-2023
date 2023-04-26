@@ -60,6 +60,15 @@
                     function showCart() {
                         $("#cartBox").show();
                     }
+
+                    function goCart() {
+                        if ($(`#total`).text() !== "HK$0.0") {
+                            $("#cartForm").submit();
+                        } else {
+                            alert("You have not selected any venues");
+                        }
+                    }
+
                     $(document).ready(function () {
                         hideCart();
                         var params = new window.URLSearchParams(window.location.search);
@@ -152,7 +161,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <input type="hidden" id="venueId" name="venueId"
-                                   value="<%=selectedVenue != null || selectedVenue != "" ? selectedVenue : "" %>">
+                                   value="<%=selectedVenue != null || selectedVenue != "" ? selectedVenue : ""%>">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">
                                 Calendar
                             </h1>
@@ -174,7 +183,7 @@
             <!-- Cart -->
             <div class="card position-fixed w-25" style="bottom:1rem; right: 0.5rem; z-index: 20;" id="cartBox"
                  tabindex="-1" aria-labelledby="cartLabel" aria-hidden="true">
-                <form class="" id="cartForm" action="handleCart" method="post">
+                <form class="" id="cartForm" action="getCart" method="get">
                     <input type="hidden" id="action" name="action" value="cart">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h1 class="modal-title fs-5">
@@ -209,13 +218,14 @@
                         %>
                         <div class="mt-2 d-flex align-items-start justify-content-between">
                             <strong>Total</strong>
-                            <strong class="fs-4">HK$<%=total%></strong>
+                            <strong id="total" class="fs-4">HK$<%=total%></strong>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
                         <button type="button" onclick="hideCart()" class="btn btn-secondary me-2"
                                 data-bs-dismiss="offcanvas">Close</button>
-                        <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">GO TO CART</button>
+                        <button type="submit" onclick="event.preventDefault();
+                                goCart();" class ="btn btn-primary">GO TO CART</button>
                     </div>
                 </form>
             </div>
