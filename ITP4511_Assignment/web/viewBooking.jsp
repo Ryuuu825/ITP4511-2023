@@ -276,7 +276,7 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Timeslot</h5>
                             <a onclick="showCalendar()" href="<%=request.getContextPath()%>/viewBooking?action=getCalendar&venueId=<%=venueId%>"
-                               class="btn btn-link fs-7 rounded-pill <%=status == 1 || status == 3 ? "" : "d-none"%>">
+                               class="btn btn-link fs-7 rounded-pill <%=(status == 1 || status == 3) && role.equals("Member") ? "" : "d-none"%>">
                                 Change Timeslots
                             </a>
                         </div>
