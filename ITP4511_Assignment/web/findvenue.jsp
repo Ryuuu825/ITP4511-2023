@@ -261,7 +261,7 @@
                                 ArrayList<Venue> shownVenues = new ArrayList<Venue>();
                                 if (venueList != null && !venueList.isEmpty()) {
                                     for (int i = 0; i < venueList.size(); i++) {
-                                        if (venueList.get(i) != null && venueList.get(i).getUserId() != 0) {
+                                        if (venueList.get(i) != null && venueList.get(i).getUserId() != 0 && venueList.get(i).getEnable()) {
                                             Venue venue = venueList.get(i);
                                             shownVenues.add(venue);
                                         }

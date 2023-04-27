@@ -18,7 +18,7 @@ public class Booking implements Serializable{
     private double amount;
     private LocalDate createDate;
     
-    public static String[] statuString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancel", "Complete"};
+    public static String[] statuString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Completed", "Cancelled", "Completed"};
 
     public enum BookingStatus {
         PENDING_APPROVAL, REJECTED, PENDING_CHECK_IN, CHECK_IN, CHECK_OUT, CANCEL, COMPLETE

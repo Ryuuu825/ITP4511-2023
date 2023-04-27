@@ -42,7 +42,7 @@ public class VenueDAO extends BaseDAO {
 
     public boolean addRecord(String name, String district, String address, int capacity, int type, String img, String description, int userId, double hourlyRate) {
         boolean isSuccess = false;
-        if (queryRecordByName(name) == null) {
+        if (queryRecordByName(name).isEmpty()) {
             ArrayList<Object> params = new ArrayList<>();
             params.add(name);
             params.add(district);

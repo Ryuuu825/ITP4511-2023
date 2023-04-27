@@ -28,6 +28,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>View Booking</title>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+                integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous">
+        </script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
@@ -46,37 +49,58 @@
         }
     </style>
     <script>
-        $(document).ready(function () {
-            var params = new window.URLSearchParams(window.location.search);
-            var venue = params.get('venueId');
-            venue !== null ? showCalendar() : "";
-            function showCalendar() {
-                $("#calendarModal").modal('show');
-            }
-            $(window).scroll(function () {
-                if ($(this).scrollTop() >= $('#summary').height()) {
-                    $('#summary').parent().addClass("me-5");
-                    $('#summary').addClass("position-fixed end-0 top-0 mx-5 summary-width");
-                } else {
-                    $('#summary').parent().removeClass("me-5");
-                    $('#summary').removeClass("position-fixed end-0 top-0 mx-5 summary-width");
-                }
-            });
-
-            $("#bookVenueForm button[type=submit]").click(function () {
-                var submit = false;
-                for (var i = 0; i < $("input[name='timeOption']").length; i++) {
-                    if ($(`input[name='timeOption']:eq(` + i + `)`).is(":checked")) {
-                        submit = true;
+                    function uploadReceipt() {
+                        event.preventDefault();
+                        $("#receiptModal").modal('show');
                     }
-                }
-                if (submit) {
-                    $("#bookVenueForm").submit();
-                } else {
-                    alert("You have to select a timeslot");
-                }
-            });
-        });
+
+                    $(document).ready(function () {
+                        var params = new window.URLSearchParams(window.location.search);
+                        var venue = params.get('venueId');
+                        venue !== null ? showCalendar() : "";
+                        function showCalendar() {
+                            $("#calendarModal").modal('show');
+                        }
+                        $(window).scroll(function () {
+                            if ($(this).scrollTop() >= $('#summary').height()) {
+                                $('#summary').parent().addClass("me-5");
+                                $('#summary').addClass("position-fixed end-0 top-0 mx-5 summary-width");
+                            } else {
+                                $('#summary').parent().removeClass("me-5");
+                                $('#summary').removeClass("position-fixed end-0 top-0 mx-5 summary-width");
+                            }
+                        });
+
+                        $("#bookVenueForm button[type=submit]").click(function () {
+                            var submit = false;
+                            for (var i = 0; i < $("input[name='timeOption']").length; i++) {
+                                if ($(`input[name='timeOption']:eq(` + i + `)`).is(":checked")) {
+                                    submit = true;
+                                }
+                            }
+                            if (submit) {
+                                $("#bookVenueForm").submit();
+                            } else {
+                                alert("You have to select a timeslot");
+                            }
+                        });
+
+                        $(".imgbox-hover").click(function () {
+                            $("#fileinput").click();
+                        });
+
+                        $("#fileinput").change(function () {
+                            var file = this.files[0];
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $("#venue-img").attr('src', e.target.result);
+                                $("#upload-img").addClass("d-none");
+                                $("#venue-img").removeClass("d-none");
+                                $("#changeImage").val(true);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    });
     </script>
 
     <jsp:useBean scope="request" id="bookingDTO" class="ict.bean.view.BookingDTO" />
@@ -115,6 +139,43 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">ADD TO
                             BOOK</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Modal -->
+        <!-- Modal -->
+        <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptLabel" aria-hidden="true">
+            <form class="modal-dialog modal-dialog-centered" action="handleReceipt" method="post"
+                  enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            Upload Receipt
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="action" name="action" value="">
+
+                        <input type="file" class="d-none" id="fileinput" name="img" accept="image/*">
+                        <input type="hidden" id="changeImage" name="changeImage" value="false">
+                        <div style="height:30vh;" class="imgbox-hover form-outline card h-100 bg-gray text-center"
+                             title="Click to upload receipt">
+                            <div id="upload-img"
+                                 class="card-img d-flex bg-secondary bg-opacity-25 w-100 h-100 justify-content-center align-items-center">
+                                Click to upload receipt
+                            </div>
+                            <img id="venue-img"
+                                 src=""
+                                 class="card-img w-100 h-100"
+                                 alt="Receipt image">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit"
+                                class="btn btn-primary">Upload</button>
                     </div>
                 </div>
             </form>
@@ -215,7 +276,7 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Timeslot</h5>
                             <a onclick="showCalendar()" href="<%=request.getContextPath()%>/viewBooking?action=getCalendar&venueId=<%=venueId%>"
-                               class="btn btn-link fs-7 rounded-pill">
+                               class="btn btn-link fs-7 rounded-pill <%=status == 1 || status == 3 ? "" : "d-none"%>">
                                 Change Timeslots
                             </a>
                         </div>

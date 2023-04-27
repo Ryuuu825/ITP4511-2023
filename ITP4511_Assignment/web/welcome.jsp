@@ -94,9 +94,9 @@
 
             <div class="absolute w-full h-full mask">
                 <div
-                    class="absolute bottom-50 w-9/12 h-[5rem] bg-gray-100 flex items-center justify-center left-[13%]"
+                    class="absolute bottom-50 w-9/12 h-[5rem] flex items-center justify-center left-[13%]"
                     >
-                    <input type="text" class="mx-auto" />
+                    <button onclick="location.href = 'findVenue'; " class="rounded-pill btn btn-light w-25 fs-4 fw-bold">Get Start Here</button>
                 </div>
 
                 <div class="absolute bottom-20 left-10 text-5xl font-bold">

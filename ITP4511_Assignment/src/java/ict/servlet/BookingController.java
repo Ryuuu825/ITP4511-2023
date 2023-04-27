@@ -162,6 +162,7 @@ public class BookingController extends HttpServlet {
                 return;
             }
         }
+        String action = (String) req.getAttribute("action");
 
         String searchKeys = req.getParameter("search");
         ArrayList<BookingDTO> bdtos = null;
@@ -203,4 +204,3 @@ public class BookingController extends HttpServlet {
     }
 
 }
- 

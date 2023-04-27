@@ -42,6 +42,16 @@ public class BookingStatusTag extends SimpleTagSupport {
             if ("Member".equalsIgnoreCase(role)) {
                 switch (status) {
                     case 1:
+                        out.print("<button onclick=\"uploadReceipt();\" class=\"btn btn-lg btn-success btn-block \">");
+                        out.print("Upload Receipt");
+                        out.print("</button>");
+                        out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
+                        out.print("Update");
+                        out.print("</button>");
+                        out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
+                        out.print("Cancel");
+                        out.print("</button>");
+                        break;
                     case 3:
                         out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
                         out.print("Update");
@@ -52,7 +62,7 @@ public class BookingStatusTag extends SimpleTagSupport {
                         break;
                     default:
                         out.print("<button name=\"status\" disabled class=\"btn btn-lg btn-secondary btn-block \">");
-                        out.print(statusString[status-1]);
+                        out.print(statusString[status - 1]);
                         out.print("</button>");
                         break;
                 }
@@ -71,9 +81,14 @@ public class BookingStatusTag extends SimpleTagSupport {
                         out.print("Check in");
                         out.print("</button>");
                         break;
-                    case 5:
+                    case 4:
                         out.print("<button name=\"status\" value=\"7\" type=\"submit\" class=\"btn btn-lg btn-success btn-block \">");
                         out.print("Check out");
+                        out.print("</button>");
+                        break;
+                    default:
+                        out.print("<button name=\"status\" disabled class=\"btn btn-lg btn-secondary btn-block \">");
+                        out.print(statusString[status - 1]);
                         out.print("</button>");
                         break;
                 }
