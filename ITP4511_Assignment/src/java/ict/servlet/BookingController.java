@@ -104,10 +104,8 @@ public class BookingController extends HttpServlet {
                     session.setAttribute("error", "The venue is booked fail! <br>Sorry, the selected time is already booked.");
                 }
             } else {
-                session.removeAttribute("bookingVenues");
-                session.removeAttribute("bookingDates");
                 bookingDB.delRecord(bookingId);//remove the created order which is booked fail
-                session.setAttribute("error", "The venue is booked fail! <br>Sorry, the selected time is already booked.");
+                session.setAttribute("error", "Server Erro! <br>Sorry, the booking cannot be created, please try again!");
             }
             String userRole = (String) req.getSession().getAttribute("role");
             if (!userRole.equals("Member")) {
