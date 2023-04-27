@@ -50,11 +50,12 @@ public class MemberBookingController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        
         String bookingId = req.getParameter("bookingId");
         String searchKeys = req.getParameter("search");
-        User user = (User) req.getSession().getAttribute("userInfo");
         String action = req.getParameter("action");
-
+        
+        User user = (User) req.getSession().getAttribute("userInfo");
         if (user == null) {
             req.getSession().setAttribute("redirectFrom",  "/member/booking");
             req.getSession().setAttribute("unautherror", "You need to login first!");

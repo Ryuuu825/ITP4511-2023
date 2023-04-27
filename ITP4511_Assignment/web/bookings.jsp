@@ -49,7 +49,7 @@
 
             $("#search-button").click(function () {
                 var search = $("#search-input").val();
-                window.location.href = "searchBookings?search=" + search;
+                window.location.href = "<%=request.getContextPath()%>/searchBookings?search=" + search;
             });
 
             //key press enter
@@ -104,7 +104,6 @@
             <div class="card bg-white p-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="m-2">Bookings</h5>
-                        
                     <div class="input-group" style="width: 30%;">
                         <div class="form-outline">
                             <input id="search-input" type="search" class="form-control border rounded-start" />
