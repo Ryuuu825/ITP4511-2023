@@ -293,7 +293,6 @@
                                     Guest a = guests.getGuests().get(i - 1);
                             %>
                                 <tr class="align-middle">
-                                    <%= a %>
                                     <th scope="row"><%=i%></th>
                                     <td><%=a.getName()%></td>
                                     <td><%=a.getEmail()%></td>
