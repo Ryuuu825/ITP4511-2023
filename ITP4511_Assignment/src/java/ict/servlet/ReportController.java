@@ -56,9 +56,6 @@ public class ReportController extends HttpServlet {
             resp.getWriter().write(dbUtil.getErrorMsg());
             return;
         }
-
-
-
         if (action != null && action.equals("usercount")) {
             jsonUtil.clear();
             jsonUtil.addJsonObject(getUserVisited());

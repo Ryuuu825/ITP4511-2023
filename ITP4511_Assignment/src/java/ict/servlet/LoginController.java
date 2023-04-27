@@ -8,6 +8,8 @@ import ict.bean.Account;
 import ict.bean.User;
 import ict.db.AccountDAO;
 import ict.db.UserDAO;
+import ict.util.DbUtil;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -29,6 +31,7 @@ public class LoginController extends HttpServlet {
 
     private AccountDAO accountDB;
     private UserDAO userDB;
+    private DbUtil db;
 
     private static HashMap<String, String> loginSuccessRedirectMap = new HashMap<String, String>() {
         {
@@ -41,6 +44,16 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        boolean dbAvailable = db.testConnectionWithDB();
+        if (!dbAvailable) {
+            // forward to error page , getServletContext().getContextPath() + "/http/500.jsp"
+            req.setAttribute("error", "Database is not available");
+            req.setAttribute("redirect", req.getRequestURL().toString());
+            req.getRequestDispatcher("/http/500.jsp").forward(req, resp);
+        } 
+
+
         String action = req.getParameter("action");
         if ("login".equalsIgnoreCase(action)) {
             String username = req.getParameter("username");
@@ -125,6 +138,7 @@ public class LoginController extends HttpServlet {
         String dbUser = this.getServletContext().getInitParameter("dbUser");
         String dbPassword = this.getServletContext().getInitParameter("dbPassword");
         String dbUrl = this.getServletContext().getInitParameter("dbUrl");
+        db = new DbUtil(dbUrl, dbUser, dbPassword);
         accountDB = new AccountDAO(dbUrl, dbUser, dbPassword);
         userDB = new UserDAO(dbUrl, dbUser, dbPassword);
     }

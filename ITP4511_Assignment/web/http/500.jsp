@@ -31,7 +31,7 @@
             
             <div class="card w-[35%]">
                 <div class="card-header">
-                    <h1 class="text-3xl font-bold text-dark">
+                    <h1 class="text-2xl font-bold text-dark">
                         500 Server Error
                     </h1>
                 </div>
