@@ -4,11 +4,16 @@
  */
 package ict.servlet;
 
+import ict.bean.Guest;
+import ict.bean.GuestList;
 import ict.bean.User;
 import ict.bean.VenueTimeslot;
 import ict.bean.view.BookingDTO;
 import ict.db.AccountDAO;
 import ict.db.BookingDAO;
+import ict.db.GuestDAO;
+import ict.db.GuestListDAO;
+import ict.db.GuestListGuestDAO;
 import ict.db.UserDAO;
 import ict.db.VenueTimeslotDAO;
 import ict.util.CheckRole;
@@ -36,6 +41,9 @@ public class BookingController extends HttpServlet {
     private UserDAO userDB;
     private BookingDAO bookingDB;
     private VenueTimeslotDAO vtsDB;
+    private GuestListDAO guestListDB;
+    private GuestListGuestDAO guestListGuestDB;
+    private GuestDAO guestDB;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -85,14 +93,30 @@ public class BookingController extends HttpServlet {
                     }
                 };
                 if (canBook == true) {
+
+                    // get the guest list from the session
+                    GuestList guestList = (GuestList) session.getAttribute("guests");
                     //update record
                     for (Map.Entry<String, ArrayList<Integer>> vs : bookingVenus.entrySet()) {
                         String venueId = vs.getKey();
                         ArrayList<Integer> vtsIds = vs.getValue();
                         for (int vtsId : vtsIds) {
                             vtsDB.updateRecordBookingId(vtsId, bookingId);
+
+                            //add guest list
+                            int guestListId = guestListDB.addRecord( bookingId , Integer.parseInt(venueId) );
+                            System.err.println("guestListId:" + guestListId);
+                            for (Guest guest : guestList.getGuests()) {
+                                // add the guest
+                                int guestId = guestDB.addRecord(userId, guest.getName(), guest.getEmail());
+                                System.err.println("guestId:" + guestId);
+                                // add the guest to the guest list
+                                guestListGuestDB.addRecord(guestListId, guestId);
+                            }
+
                             session.removeAttribute("bookingVenues");
                             session.removeAttribute("bookingDates");
+                            session.removeAttribute("guests");
                             session.setAttribute("message", "The venue is booked successfully! <br>The reservation order will be reserved for 24 hours! <br>Please pay in time, otherwise the reservation will be cancelled.");
                         }
                     }
@@ -170,6 +194,10 @@ public class BookingController extends HttpServlet {
         userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
         vtsDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+        guestListDB = new GuestListDAO(dbUrl, dbUser, dbPassword);
+        guestListGuestDB = new GuestListGuestDAO(dbUrl, dbUser, dbPassword);
+        guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
+        
     }
 
 }

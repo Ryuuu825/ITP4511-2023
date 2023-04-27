@@ -30,18 +30,17 @@ public class GuestDAO extends BaseDAO {
         dbUtil.executeByPreparedStatement(sql);
     }
 
-    public boolean addRecord(int userId, String name, String email) {
-        boolean isSuccess = false;
+    public int addRecord(int userId, String name, String email) {
         if (!isExistedGuest(userId, name, email)) {
             ArrayList<Object> params = new ArrayList<>();
             params.add(userId);
             params.add(name);
             params.add(email);
             String sql = "INSERT INTO guest (userId,  name, email) VALUES (?,?,?)";
-            isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+            dbUtil.updateByPreparedStatement(sql, params);
         }
         ;
-        return isSuccess;
+        return queryRecordByGuestNameAndEmail(name, email).getId();
     }
 
     public boolean isExistedGuest(int userId, String name, String email) {

@@ -26,14 +26,13 @@ public class GuestListDAO extends BaseDAO {
         dbUtil.executeByPreparedStatement(sql);
     }
 
-    public boolean addRecord(int bookingId, int venueId) {
-        boolean isSuccess = false;
+    public int addRecord(int bookingId, int venueId) {
         String sql = "INSERT INTO guestlist (bookingId, venueId) VALUES (?, ?)";
         ArrayList<Object> params = new ArrayList<>();
         params.add(bookingId);
         params.add(venueId);
-        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
-        return isSuccess;
+        dbUtil.updateByPreparedStatement(sql, params);
+        return dbUtil.getLastInsertId();
     }
 
     public boolean delRecord(int id) {

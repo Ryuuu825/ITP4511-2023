@@ -97,12 +97,12 @@
             response.sendRedirect("");
         }
         GuestList guests = (GuestList) request.getAttribute("guests");
-        int bookingId = null ;
-        int venueId = null ;
+        int bookingId = 0 ;
+        int venueId = 0 ;
 
-        if ( guest != null ) {
-            bookingId = guest.getBookingId();
-            venueId = guest.getVenueId();
+        if ( guests != null ) {
+            bookingId = Integer.parseInt(request.getParameter("bookingId"));
+            venueId = Integer.parseInt(request.getParameter("venueId"));
         } 
     %>
 
