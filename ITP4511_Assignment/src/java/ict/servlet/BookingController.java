@@ -7,14 +7,17 @@ package ict.servlet;
 import ict.bean.Guest;
 import ict.bean.GuestList;
 import ict.bean.User;
+import ict.bean.Venue;
 import ict.bean.VenueTimeslot;
 import ict.bean.view.BookingDTO;
+import ict.bean.view.CalendarTimeslot;
 import ict.db.AccountDAO;
 import ict.db.BookingDAO;
 import ict.db.GuestDAO;
 import ict.db.GuestListDAO;
 import ict.db.GuestListGuestDAO;
 import ict.db.UserDAO;
+import ict.db.VenueDAO;
 import ict.db.VenueTimeslotDAO;
 import ict.util.CheckRole;
 
@@ -44,6 +47,7 @@ public class BookingController extends HttpServlet {
     private GuestListDAO guestListDB;
     private GuestListGuestDAO guestListGuestDB;
     private GuestDAO guestDB;
+    private VenueDAO venueDB;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -162,7 +166,6 @@ public class BookingController extends HttpServlet {
                 return;
             }
         }
-        String action = (String) req.getAttribute("action");
 
         String searchKeys = req.getParameter("search");
         ArrayList<BookingDTO> bdtos = null;
@@ -170,6 +173,15 @@ public class BookingController extends HttpServlet {
             int bid = Integer.parseInt(bookingId);
             BookingDTO b = bookingDB.queryRecordToDTOByBookingId(bid);
             if (b.getBooking().getId() == bid) {
+                String action = (String) req.getAttribute("action");
+                if ("getCalendar".equalsIgnoreCase(action)) {
+                    String venueId = req.getParameter("venueId");
+                    System.out.println("ict.servlet.BookingController.doGet()");
+                    int vid = Integer.parseInt(venueId);
+                    req.setAttribute("selectedVenue", venueId);
+                    ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = vtsDB.queryMonthlyCalendarByVenueId(vid);
+                    req.setAttribute("monthlyDateTimeslot", monthlyDateTimeslot);
+                }
                 RequestDispatcher rd;
                 req.setAttribute("bookingDTO", b);
                 rd = getServletContext().getRequestDispatcher("/viewBooking.jsp");
@@ -200,7 +212,7 @@ public class BookingController extends HttpServlet {
         guestListDB = new GuestListDAO(dbUrl, dbUser, dbPassword);
         guestListGuestDB = new GuestListGuestDAO(dbUrl, dbUser, dbPassword);
         guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
-
+        venueDB = new VenueDAO(dbUrl, dbUser, dbPassword);
     }
 
 }

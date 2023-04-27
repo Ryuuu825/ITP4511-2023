@@ -29,7 +29,7 @@ import javax.servlet.http.Part;
  *
  * @author jyuba
  */
-@WebServlet(name = "MemberBookingController", urlPatterns = {"/member/booking", "/member/updateBooking", "/member/uploadReceipt"})
+@WebServlet(name = "MemberBookingController", urlPatterns = {"/member/booking", "/member/updateBooking", "/member/uploadReceipt", "/member/getCalendar"})
 @MultipartConfig
 public class MemberBookingController extends HttpServlet {
 

@@ -102,6 +102,10 @@
                             };
                             reader.readAsDataURL(file);
                         });
+                        
+                        $("#calendarModal").on('hidden.bs.modal', function () {
+                            location.href = "viewBooking?bookingId=" + params.get('bookingId');
+                        });
                     });
     </script>
 
@@ -124,7 +128,7 @@
         <!-- Modal -->
         <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarLabel" aria-hidden="true">
             <form class="modal-dialog modal-dialog-centered" id="bookVenueForm" action="updateBooking" method="post">
-                <input type="hidden" id="action" name="action" value="update">
+                <input type="hidden" id="action" name="action" value="updateTimesolts">
                 <div class="modal-content">
                     <div class="modal-header">
                         <input type="hidden" id="venueId" name="venueId"
@@ -139,8 +143,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">ADD TO
-                            BOOK</button>
+                        <button type="submit" class="btn btn-primary">Update Booking</button>
                     </div>
                 </div>
             </form>
@@ -279,7 +282,7 @@
                         </div>
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Timeslot</h5>
-                            <a onclick="showCalendar()" href="<%=request.getContextPath()%>/viewBooking?action=getCalendar&venueId=<%=venueId%>"
+                            <a onclick="showCalendar()" href="<%=request.getContextPath()%>/viewBooking?action=getCalendar&bookingId=<%=bookingId%>&venueId=<%=venueId%>"
                                class="btn btn-link fs-7 rounded-pill <%=(status == 1 || status == 3) && role.equals("Member") ? "" : "d-none"%>">
                                 Change Timeslots
                             </a>
