@@ -86,16 +86,18 @@
                         });
 
                         $(".imgbox-hover").click(function () {
-                            $("#fileinput").click();
+                            if ($("#receiptaction").val() == "uploadReceipt") {
+                                $("#fileinput").click();
+                            }
                         });
 
                         $("#fileinput").change(function () {
                             var file = this.files[0];
                             var reader = new FileReader();
                             reader.onload = function (e) {
-                                $("#venue-img").attr('src', e.target.result);
+                                $("#receipt-img").attr('src', e.target.result);
                                 $("#upload-img").addClass("d-none");
-                                $("#venue-img").removeClass("d-none");
+                                $("#receipt-img").removeClass("d-none");
                                 $("#changeImage").val(true);
                             };
                             reader.readAsDataURL(file);
@@ -146,36 +148,38 @@
         <!-- Modal -->
         <!-- Modal -->
         <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptLabel" aria-hidden="true">
-            <form class="modal-dialog modal-dialog-centered" action="handleReceipt" method="post"
+            <form class="modal-dialog modal-dialog-centered" action="member/uploadReceipt" method="post"
                   enctype="multipart/form-data">
+                <input type="hidden" id="bookingId" name="bookingId" value="<%=bookingDTO.getBooking().getId()%>">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">
-                            Upload Receipt
+                            <%=role.equals("Member") && status == 1 ? "Upload" : "View"%> Receipt
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" id="action" name="action" value="">
+                        <input type="hidden" id="receiptaction" name="action" value="<%=role.equals("Member") && status == 1 ? "uploadReceipt" : "" %>">
 
                         <input type="file" class="d-none" id="fileinput" name="img" accept="image/*">
                         <input type="hidden" id="changeImage" name="changeImage" value="false">
-                        <div style="height:30vh;" class="imgbox-hover form-outline card h-100 bg-gray text-center"
-                             title="Click to upload receipt">
+                        <div class="imgbox-hover form-outline card h-100 bg-gray text-center">
                             <div id="upload-img"
-                                 class="card-img d-flex bg-secondary bg-opacity-25 w-100 h-100 justify-content-center align-items-center">
-                                Click to upload receipt
+                                 class="card-img bg-secondary bg-opacity-25 w-100 h-100  <%=bookingDTO.getBooking().getReceipt() != null ? "d-none" : ""%>">
+                                <div  style="height:30vh;" class="d-flex justify-content-center align-items-center">
+                                    <%=bookingDTO.getBooking().getReceipt() == null ? "No receipt" : "Click to upload receipt"%>
+                                </div>
                             </div>
-                            <img id="venue-img"
-                                 src=""
-                                 class="card-img w-100 h-100"
+                            <img id="receipt-img"
+                                 src="assets/<%=bookingDTO.getBooking().getReceipt() != null ? bookingDTO.getBooking().getReceipt() : ""%>"
+                                 class="card-img w-100 h-100 <%=bookingDTO.getBooking().getReceipt() != null ? "" : "d-none"%>"
                                  alt="Receipt image">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit"
-                                class="btn btn-primary">Upload</button>
+                                class="<%=role.equals("Member") && status == 1 ? "" : "d-none"%> btn btn-primary">Upload</button>
                     </div>
                 </div>
             </form>
@@ -328,8 +332,11 @@
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card mb-4" id="summary">
-                        <div class="card-header py-3">
+                        <div class="card-header py-3 d-flex align-items-center justify-content-between">
                             <h5 class="mb-0">Summary</h5>
+                            <button onclick="uploadReceipt()" class="btn btn-lg btn-link rounded-pill">
+                                <%=role.equals("Member") && status == 1 ? "Upload" : "View"%> Receipt
+                            </button>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">

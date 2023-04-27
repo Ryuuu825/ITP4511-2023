@@ -71,6 +71,7 @@ public class BookingDAO extends BaseDAO {
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
             b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            b.setReceipt((String) m.get("receipt"));
         }
         return b;
     }
@@ -130,6 +131,7 @@ public class BookingDAO extends BaseDAO {
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
             b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            b.setReceipt((String) m.get("receipt"));
             bs.add(b);
         }
         return bs;
@@ -153,6 +155,7 @@ public class BookingDAO extends BaseDAO {
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
             b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            b.setReceipt((String) m.get("receipt"));
             bs.add(b);
         }
         return bs;
@@ -171,26 +174,10 @@ public class BookingDAO extends BaseDAO {
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
             b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            b.setReceipt((String) m.get("receipt"));
             bs.add(b);
         }
         return bs;
-    }
-
-    public int queryRecordIdByInfo(int userId, double amount, int status, String date) {
-        String sql = "SELECT id FROM booking WHERE userId = ? and amount = ? and createDate = ? and status = ?";
-        ArrayList<Object> params = new ArrayList<>();
-        params.add(userId);
-        params.add(amount);
-        params.add(status);
-        params.add(date);
-        ArrayList<Booking> bs = new ArrayList<>();
-        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
-        if (!ls.isEmpty()) {
-            Map<String, Object> m = ls.get(0);
-            return ((int) m.get("id"));
-        }
-
-        return 0;
     }
 
     public ArrayList<Booking> queryRecordByDate(String date) {
@@ -207,6 +194,7 @@ public class BookingDAO extends BaseDAO {
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
             b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            b.setReceipt((String) m.get("receipt"));
             bs.add(b);
         }
         return bs;
@@ -227,6 +215,7 @@ public class BookingDAO extends BaseDAO {
             b.setAmount(((BigDecimal) m.get("amount")).doubleValue());
             b.setStatus((int) m.get("status"));
             b.setCreateDate(((Date) m.get("createDate")).toLocalDate());
+            b.setReceipt((String) m.get("receipt"));
             bs.add(b);
         }
         return bs;
@@ -392,6 +381,18 @@ public class BookingDAO extends BaseDAO {
                 + "WHERE id = ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add(status);
+        params.add(bookingId);
+        boolean isSuccess = false;
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
+    
+    public boolean updateReceipt(int bookingId, String url) {
+        String sql = "UPDATE booking "
+                + "SET receipt = ? "
+                + "WHERE id = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(url);
         params.add(bookingId);
         boolean isSuccess = false;
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);

@@ -42,20 +42,7 @@ public class BookingStatusTag extends SimpleTagSupport {
             if ("Member".equalsIgnoreCase(role)) {
                 switch (status) {
                     case 1:
-                        out.print("<button onclick=\"uploadReceipt();\" class=\"btn btn-lg btn-success btn-block \">");
-                        out.print("Upload Receipt");
-                        out.print("</button>");
-                        out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
-                        out.print("Update");
-                        out.print("</button>");
-                        out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
-                        out.print("Cancel");
-                        out.print("</button>");
-                        break;
                     case 3:
-                        out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
-                        out.print("Update");
-                        out.print("</button>");
                         out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
                         out.print("Cancel");
                         out.print("</button>");

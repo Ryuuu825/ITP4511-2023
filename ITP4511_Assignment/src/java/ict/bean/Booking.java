@@ -17,6 +17,7 @@ public class Booking implements Serializable{
     private int status;
     private double amount;
     private LocalDate createDate;
+    private String receipt;
     
     public static String[] statuString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Completed", "Cancelled", "Completed"};
 
@@ -27,12 +28,13 @@ public class Booking implements Serializable{
     public Booking() {
     }
 
-    public Booking(int id, int userId, int status, double amount, LocalDate createDate) {
+    public Booking(int id, int userId, int status, double amount, LocalDate createDate, String receipt) {
         this.id = id;
         this.userId = userId;
         this.status = status;
         this.amount = amount;
         this.createDate = createDate;
+        this.receipt = receipt;
     }
 
     public int getId() {
@@ -43,6 +45,14 @@ public class Booking implements Serializable{
         this.id = id;
     }
 
+    public String getReceipt() {
+        return receipt;
+    }
+
+    public void setReceipt(String receipt) {
+        this.receipt = receipt;
+    }
+    
     public int getUserId() {
         return userId;
     }
@@ -86,10 +96,10 @@ public class Booking implements Serializable{
     public static int getStatusInt(BookingStatus status) {
         return status.ordinal()+1;
     }
-    
+
     @Override
     public String toString() {
-        return "Booking{" + "id=" + id + ", userId=" + userId + ", status=" + status + ", amount=" + amount + ", createDate=" + createDate + '}';
+        return "Booking{" + "id=" + id + ", userId=" + userId + ", status=" + status + ", amount=" + amount + ", createDate=" + createDate + ", receipt=" + receipt + '}';
     }
-
+    
 }
