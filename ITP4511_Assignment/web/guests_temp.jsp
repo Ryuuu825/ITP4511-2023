@@ -143,9 +143,8 @@
         </div>
 
         <section class="p-5">
-            <div class="fw-bold fs-5 my-3"><a href="searchBookings">Bookings </a>> <span
-                    class=""><a href="searchBookings">Details </a></span> > <span
-                    class="text-decoration-underline">View Guests</span>
+            <div class="fw-bold fs-5 my-3"><a href="findVenue">Find venues </a>/ <a href="<%= request.getContextPath()%>/getCart?action=cart">Cart</a> / <span class="text-decoration-underline">Guests List</span></div>
+            </div>
             </div>
             <ict:result />
             <div class="bg-white p-3 border card">
