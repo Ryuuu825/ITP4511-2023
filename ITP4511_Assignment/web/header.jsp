@@ -64,7 +64,7 @@
         <% if (role != null) { %>
             <li class="nav-item border bg-light rounded-1 py-1">
                 <a class="mx-3 text-dark text-decoration-none" href="<%=request.getContextPath()%>/logout">
-                    Sign Out
+                    Log Out
                 </a>
             </li>
         <% } else { %>
