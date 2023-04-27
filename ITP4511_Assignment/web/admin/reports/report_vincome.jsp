@@ -45,7 +45,6 @@
                             });
 
                             loadYear();
-                            loadTimeText();
                             loadVenueText();
                         });
 
@@ -118,12 +117,19 @@
 
                 function loadTimeText() {
                     let par = '<%= request.getParameter("year")%>';
+                    console.log(par , par == 'null');
+                    if (par == 'null') {
+                        par = '2018';
+                    }
+                    console.log(document.getElementById("year").value);
                     if (par == 'all') {
                         document.getElementById("timetext").innerHTML = "all time";
                     } else {
                         document.getElementById("timetext").innerHTML = par;
                     }
                 }
+
+                document.onload = loadTimeText();
 
             </script>
 
