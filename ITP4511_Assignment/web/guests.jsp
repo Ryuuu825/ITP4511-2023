@@ -65,9 +65,9 @@
 
             //key press enter
             $("#search-input").keypress(function (e) {
-                if (e.which == 13) {
+                if (e.which === 13) {
                     var search = $("#search-input").val();
-                    window.location.href = "viewGuests?search&bookingId=" + bookingId + "&venueId=" + venueId + "&search=" + search;
+                    window.location.href = "viewGuests?action=search&bookingId=" + bookingId + "&venueId=" + venueId + "&search=" + search;
                 }
             });
 
