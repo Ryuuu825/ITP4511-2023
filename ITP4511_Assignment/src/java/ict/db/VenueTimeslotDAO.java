@@ -139,6 +139,21 @@ public class VenueTimeslotDAO extends BaseDAO {
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         return isSuccess;
     }
+    
+    public boolean updateRecordBookingId(int id, int bookingId) {
+        boolean isSuccess = false;
+        ArrayList<Object> params = new ArrayList<>();
+        String sql;
+        if (bookingId != 0) {
+            sql = "UPDATE venue_timeslot SET bookingId = ? WHERE id = ?";
+            params.add(bookingId);
+        } else {
+            sql = "UPDATE venue_timeslot SET bookingId = null WHERE id = ?";
+        }
+        params.add(id);
+        isSuccess = dbUtil.updateByPreparedStatement(sql, params);
+        return isSuccess;
+    }
 
     public ArrayList<Timeslot> queryTimeslotByVenueId(int venueId) {
         String sql = "SELECT venue.name, venue_timeslot.date, timeslot.startTime, timeslot.endTime"

@@ -43,12 +43,13 @@ public class BookingDAO extends BaseDAO {
 
     public int addRecord(int userId, double amount, int status) {
         boolean isSuccess = false;
+        LocalDate now = LocalDate.now();
         ArrayList<Object> params = new ArrayList<>();
         params.add(userId);
         params.add(amount);
         params.add(status);
-        params.add(LocalDate.now());
-        String sql = "INSERT INTO booking (userId, amount, status, createDate) VALUES (?,?,?,?)";
+        params.add(now);
+        String sql = "INSERT INTO booking (userId, amount, status, createDate) VALUES (?,?,?,?);";
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
         if (isSuccess) {
             return dbUtil.getLastInsertId();
@@ -56,8 +57,6 @@ public class BookingDAO extends BaseDAO {
             return 0;
         }
     }
-
-    
 
     public Booking queryRecordById(int id) {
         String sql = "SELECT * FROM booking WHERE id=?";
@@ -177,7 +176,23 @@ public class BookingDAO extends BaseDAO {
         return bs;
     }
 
-    
+    public int queryRecordIdByInfo(int userId, double amount, int status, String date) {
+        String sql = "SELECT id FROM booking WHERE userId = ? and amount = ? and createDate = ? and status = ?";
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(userId);
+        params.add(amount);
+        params.add(status);
+        params.add(date);
+        ArrayList<Booking> bs = new ArrayList<>();
+        ArrayList<Map<String, Object>> ls = dbUtil.findRecord(sql, params);
+        if (!ls.isEmpty()) {
+            Map<String, Object> m = ls.get(0);
+            return ((int) m.get("id"));
+        }
+
+        return 0;
+    }
+
     public ArrayList<Booking> queryRecordByDate(String date) {
         String sql = "SELECT * FROM booking WHERE createDate=?";
         ArrayList<Object> params = new ArrayList<>();
@@ -241,8 +256,7 @@ public class BookingDAO extends BaseDAO {
         return bdtos;
     }
 
-
-    public ArrayList<BookingDTO> queryRecordToDTOWithUserId( int userID) {
+    public ArrayList<BookingDTO> queryRecordToDTOWithUserId(int userID) {
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
         GuestListDAO guestListDAO = new GuestListDAO(dbUrl, dbUser, dbPassword);
@@ -265,7 +279,6 @@ public class BookingDAO extends BaseDAO {
         }
         return bdtos;
     }
-
 
     public ArrayList<BookingDTO> queryRecordToDTOByKeyword(String keyword) {
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
@@ -323,7 +336,6 @@ public class BookingDAO extends BaseDAO {
             bookings.add(queryRecordToDTOByBookingId((int) m.get("id")));
         }
 
-
         return bookings;
     }
 
@@ -345,7 +357,6 @@ public class BookingDAO extends BaseDAO {
 
         return bookings;
     }
-    
 
     public boolean updateStatus(int bookingId, int status) {
         String sql = "UPDATE booking "

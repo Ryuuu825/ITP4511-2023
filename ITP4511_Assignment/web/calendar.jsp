@@ -189,7 +189,7 @@ integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="ano
                     if (bookingVenues != null && !bookingVenues.isEmpty() && bookingVenues.get(cts.getVenueId() + "") != null) {
                         selectedTimes = bookingVenues.get(cts.getVenueId() + "");
                     }
-                    out.print("<button type=\"button\" onclick=\"event.preventDefault();\" " + (cts.isBooked() ? "disabled" : ""));
+                    out.print("<button type=\"button\" onclick=\"event.preventDefault();\" " + (cts.isBooked() ? "disabled " : ""));
                     out.print("class=\"ts-btn btn btn-outline-"+ (cts.isBooked() ? "secondary " : "primary ") + (ctss.indexOf(cts) == ctss.size()-1 ? "me-auto":"") + " btn-rounded m-1\">");
                     out.print(cts.getTimeslot().getStartTime() + " - " + cts.getTimeslot().getEndTime());
                     boolean st = false;

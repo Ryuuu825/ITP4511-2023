@@ -71,6 +71,7 @@ public class BookingController extends HttpServlet {
             //add booking record and get booking id
             int bookingId = bookingDB.addRecord(userId, total, 1);
             if (bookingId != 0) {
+                System.err.println(bookingId);
                 //check timeslot vaildable
                 boolean canBook = true;
                 for (Map.Entry<String, ArrayList<Integer>> vs : bookingVenus.entrySet()) {
@@ -79,7 +80,7 @@ public class BookingController extends HttpServlet {
                     for (int vtsId : vtsIds) {
                         VenueTimeslot vts = vtsDB.queryRocordById(vtsId);
                         //check venue whether is booked
-                        if (vts.getBookingId() == 0) {
+                        if (vts.getBookingId() != 0) {
                             canBook = false;
                         }
                     }
@@ -90,9 +91,7 @@ public class BookingController extends HttpServlet {
                         String venueId = vs.getKey();
                         ArrayList<Integer> vtsIds = vs.getValue();
                         for (int vtsId : vtsIds) {
-                            VenueTimeslot vts = vtsDB.queryRocordById(vtsId);
-                            vts.setBookingId(bookingId);
-                            vtsDB.editRecord(vts);
+                            vtsDB.updateRecordBookingId(vtsId, bookingId);
                             session.removeAttribute("bookingVenues");
                             session.removeAttribute("bookingDates");
                             session.setAttribute("message", "The venue is booked successfully! <br>The reservation order will be reserved for 24 hours! <br>Please pay in time, otherwise the reservation will be cancelled.");

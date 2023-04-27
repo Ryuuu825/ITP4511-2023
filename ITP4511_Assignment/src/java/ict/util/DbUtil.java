@@ -28,6 +28,7 @@ public class DbUtil {
 
     private static ArrayList<String> errorMsgs = new ArrayList<>();
     private static boolean hasError = false;
+    private int lastInsertId;
 
     public DbUtil(String dburl, String dbUser, String dbPassword) {
         this.dburl = dburl;
@@ -71,39 +72,6 @@ public class DbUtil {
         }
         return false;
 
-    }
-
-    public int getLastInsertId() {
-        // get last insert id
-        int lastInsertId = 0;
-
-        try {
-            Connection cnnt = getConnection();
-            Statement stmnt = cnnt.createStatement();
-            ResultSet rs = stmnt.executeQuery("SELECT LAST_INSERT_ID()");
-
-            if (rs.next()) {
-                lastInsertId = rs.getInt(1);
-            }
-            cnnt.close();
-        } catch (SQLException e) {
-            while (e != null) {
-                e.printStackTrace();
-                hasError = true;
-                String errorMsg = e.getMessage();
-                if (errorMsg.contains("(")) {
-                    errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
-                }
-                errorMsgs.add(errorMsg);
-                e = e.getNextException();
-            }
-        } catch (IOException e) {
-            String errorMsg = e.getMessage();
-            errorMsgs.add(errorMsg);
-            e.printStackTrace();
-            hasError = true;
-        }
-        return lastInsertId;
     }
 
     /**
@@ -183,11 +151,17 @@ public class DbUtil {
         try {
             cnnt = getConnection();
             cnnt.setAutoCommit(false);
-            pStmnt = cnnt.prepareStatement(sql);
+            pStmnt = cnnt.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             for (int i = 0; i < params.size(); i++) {
                 pStmnt.setObject(i + 1, params.get(i));
             }
             int rowCount = pStmnt.executeUpdate();
+            ResultSet rs = pStmnt.getGeneratedKeys();
+            if (rs.next()) {
+                lastInsertId = rs.getInt(1);
+            } else {
+                lastInsertId = 0;
+            }
             cnnt.commit();
             if (rowCount >= 1) {
                 isSuccess = true;
@@ -225,6 +199,10 @@ public class DbUtil {
             hasError = true;
         }
         return isSuccess;
+    }
+
+    public int getLastInsertId() {
+        return lastInsertId;
     }
 
     /**
