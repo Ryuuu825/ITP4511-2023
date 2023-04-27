@@ -62,7 +62,6 @@ public class BookingController extends HttpServlet {
         } else if ("add".equalsIgnoreCase(action)) {
             HttpSession session = req.getSession();
             HashMap<String, ArrayList<Integer>> bookingVenus = (HashMap<String, ArrayList<Integer>>) session.getAttribute("bookingVenues");
-            HashMap<String, ArrayList<String>> bookingDates = (HashMap<String, ArrayList<String>>) session.getAttribute("bookingDates");
             //add booking
             //get user id from session
             User user = (User) session.getAttribute("userInfo");
