@@ -35,37 +35,5 @@ public class TestAccount {
         VenueTimeslotDAO vtdb = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
         GuestListGuestDAO glsdb = new GuestListGuestDAO(dbUrl, dbUser, dbPassword);
         GuestListDAO gldb = new GuestListDAO(dbUrl, dbUser, dbPassword);
-        adb.delRecord(1);
-//        gdb.createTable();
-//        Account acc = adb.queryRecordById(12);
-//        acc.setPassword("123");
-//        adb.editRecord(acc);
-//        bdb.queryRecordToDTO();
-//        udb.dropTable();
-//        db.dropTable();
-//        adb.createTable();
-//        udb.createTable();
-//        vdb.createTable();
-//        tdb.createTable();
-//        bdb.createTable();
-//        vtdb.createTable();
-//        gdb.createTable();
-//        gldb.createTable();
-//        glsdb.createTable();
-//        adb.addRecord("ben", "123", 3);
-//        adb.addRecord("ken", "123", 3);
-//        adb.addRecord("user", "123", 1);
-//        adb.addRecord("staff", "123", 2);
-//        udb.addRecord(1, "Ben", "Poon", "210426767@stu.vtc.edu.hk", "62723020");
-//        udb.addRecord(2, "Ken", "Lee", "210426767@stu.vtc.edu.hk", "62723020");
-//        udb.addRecord(3, "User", "Lam", "210426767@stu.vtc.edu.hk", "62723020");
-//            Account acc = adb.queryRecordByUsername("ben");
-//            System.out.println(acc.getId());
-//        acc.toString();
-//        acc.setPassword("456");
-//        adb.editRecord(acc);
-//        udb.createTable();
-//        
-//        adb.delRecord(1);
     }
 }

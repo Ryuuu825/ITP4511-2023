@@ -52,7 +52,7 @@ public class BookingStatusTag extends SimpleTagSupport {
                         break;
                     default:
                         out.print("<button name=\"status\" disabled class=\"btn btn-lg btn-secondary btn-block \">");
-                        out.print(statusString[status]);
+                        out.print(statusString[status-1]);
                         out.print("</button>");
                         break;
                 }

@@ -93,7 +93,6 @@ public class BookingController extends HttpServlet {
                     }
                 };
                 if (canBook == true) {
-
                     // get the guest list from the session
                     GuestList guestList = (GuestList) session.getAttribute("guests");
                     //update record
@@ -104,14 +103,16 @@ public class BookingController extends HttpServlet {
                             vtsDB.updateRecordBookingId(vtsId, bookingId);
 
                             //add guest list
-                            int guestListId = guestListDB.addRecord( bookingId , Integer.parseInt(venueId) );
-                            System.err.println("guestListId:" + guestListId);
-                            for (Guest guest : guestList.getGuests()) {
-                                // add the guest
-                                int guestId = guestDB.addRecord(userId, guest.getName(), guest.getEmail());
-                                System.err.println("guestId:" + guestId);
-                                // add the guest to the guest list
-                                guestListGuestDB.addRecord(guestListId, guestId);
+                            if (guestList != null) {
+                                int guestListId = guestListDB.addRecord(bookingId, Integer.parseInt(venueId));
+
+                                for (Guest guest : guestList.getGuests()) {
+                                    // add the guest
+                                    int guestId = guestDB.addRecord(userId, guest.getName(), guest.getEmail());
+                                    System.err.println("guestId:" + guestId);
+                                    // add the guest to the guest list
+                                    guestListGuestDB.addRecord(guestListId, guestId);
+                                }
                             }
 
                             session.removeAttribute("bookingVenues");
@@ -197,7 +198,7 @@ public class BookingController extends HttpServlet {
         guestListDB = new GuestListDAO(dbUrl, dbUser, dbPassword);
         guestListGuestDB = new GuestListGuestDAO(dbUrl, dbUser, dbPassword);
         guestDB = new GuestDAO(dbUrl, dbUser, dbPassword);
-        
+
     }
 
 }
