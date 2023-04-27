@@ -247,14 +247,14 @@
 
             <div class="text-start container-xl py-5">
                 <div class="row">
-                    <div class="col-md-3 card">
+<!--                    <div class="col-md-3 card">
                         <div class="card-header">
                             <label class="fs-4"><strong>Find venues</strong></label>
                         </div>
                         <div class="row card-body">
                             <p class="text-lg">Find the perfect venue for your event</p>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col card ms-4">
                         <div class="card-header d-flex flex-row justify-content-between align-items-center">
                             <%
