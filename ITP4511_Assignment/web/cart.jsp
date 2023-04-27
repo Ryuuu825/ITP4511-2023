@@ -204,7 +204,7 @@
                         </div>
                         <div class="card-header border-top d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Guest List</h5>
-                            <a type="button" href="createGuests?action=add&usreId=<%=user.getId()%>&venueId=<%=venueId%>"
+                            <a type="button" href="<%=request.getContextPath()%>/createGuests?action=addlist"
                                class="btn btn-link fs-7 rounded-pill">
                                 Add Guests
                             </a>

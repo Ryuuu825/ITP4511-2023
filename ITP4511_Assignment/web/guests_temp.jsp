@@ -96,14 +96,7 @@
         if (role == null) {
             response.sendRedirect("");
         }
-        GuestList guests = (GuestList) request.getAttribute("guests");
-        int bookingId = null ;
-        int venueId = null ;
-
-        if ( guest != null ) {
-            bookingId = guest.getBookingId();
-            venueId = guest.getVenueId();
-        } 
+        GuestList guests = (GuestList) request.getSession().getAttribute("guests");
     %>
 
     <jsp:useBean id="guest" class="ict.bean.Guest" scope="request" />
@@ -126,10 +119,7 @@
                         <form action="<%=request.getContextPath()%>/editGuest" method="post">
                             <div class="modal-body">
                                 <input type="hidden" name="id" value="<%=guest.getId()%>">
-                                <input type="hidden" name="action" value="update">
-
-                                <input type="hidden" name="bookingId" value="<%=request.getParameter("bookingId")%>">
-                                <input type="hidden" name="venueId" value="<%=request.getParameter("venueId")%>">
+                                <input type="hidden" name="action" value="tempListUpdate">
 
                                 <div class="form-outline mt-3 mb-5">
                                     <input id="editGuestName" name="editGuestName" type="text" class="active form-control border rounded-start" value="<%=guest.getName()%>" />
@@ -154,7 +144,7 @@
 
         <section class="p-5">
             <div class="fw-bold fs-5 my-3"><a href="searchBookings">Bookings </a>> <span
-                    class=""><a href="searchBookings?bookingId=<%=bookingId%>&venueId=<%=venueId%>">Details </a></span> > <span
+                    class=""><a href="searchBookings">Details </a></span> > <span
                     class="text-decoration-underline">View Guests</span>
             </div>
             <ict:result />
@@ -216,10 +206,7 @@
                                                     <li class="list-group-item d-flex justify-content-between align-items-center"  style="border:none">
                                                         <input id="guestName" type="hidden" name="name" value="<%=guestNotOnList.getName()%>" />
                                                         <input id="guestEmail" type="hidden" name="email" value="<%=guestNotOnList.getEmail()%>"  />
-                                                        <input type="hidden" name="action" value="add">
-                                                        <input type="hidden" name="bookingId" value="<%=request.getParameter("bookingId")%>">
-                                                        <input type="hidden" name="venueId" value="<%=request.getParameter("venueId")%>">
-
+                                                        <input type="hidden" name="action" value="tempListUpdate">
 
                                                         <div class="d-flex align-items-center">
                                                             <div class="ms-3">
@@ -278,13 +265,45 @@
 
                             </div>
                         </div>
+
+                        <a class="btn btn-primary ml-3" href="<%=request.getContextPath()%>/getCart?action=cart">
+                            Create Guest List
+                        </a>
     
                     </div>
 
                 </div>
               
                 <div class="table-responsive text-nowrap mt-3 fs-6">
-                    <ict:guestTable guests="<%=guests%>" role="<%=role%>"/>
+
+                    <table class="table text-center table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <% if ("Member".equalsIgnoreCase(role)) { %>
+                                    <th>Action</th>
+                                <% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (guest!=null && guests.getGuests() != null) {
+                                for (int i = 1; i <= guests.getGuests().size(); i++) {
+                                    Guest a = guests.getGuests().get(i - 1);
+                            %>
+                                <tr class="align-middle">
+                                    <%= a %>
+                                    <th scope="row"><%=i%></th>
+                                    <td><%=a.getName()%></td>
+                                    <td><%=a.getEmail()%></td>
+                                    <td>
+                                        <a class="btn btn-danger btn-rounded btn-sm" role="button" href="<%=request.getContextPath()%>/delGuest?action=delete&guestId=<%=a.getId()%>">Delete</a>
+                                    </td>
+                                </tr>
+                            <% }} %>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>

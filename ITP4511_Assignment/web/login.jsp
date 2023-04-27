@@ -83,9 +83,11 @@
                     </div>
                     <div class="card-body">
                         <% if ( session.getAttribute("redirectFrom") != null ) { %>
-                            <div class="alert alert-danger mx-4 mb-4 text-xs">
-                                <%= session.getAttribute("unautherror") %>
-                            </div>
+                            <% if ( session.getAttribute("unautherror") != null ) { %>
+                                <div class="alert alert-danger mx-4 mb-4 text-xs">
+                                    <%=session.getAttribute("unautherror")%>
+                                </div>
+                            <% } %>
                         <% } %>
                         <h1 class="text-sm-start ps-4 mb-4 fw-bold">Sign in</h1>
                         <form method="post" action="handleLogin" class="px-4">
