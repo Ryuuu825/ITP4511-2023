@@ -59,15 +59,15 @@
                                 </td>
                                 <td>
                                     <% if ( a >= 85 ) { %>
-                                        <span class="badge bg-success">
+                                        <span class="badge bg-success" style="font-size:1rem">
                                             <%= a %>%
                                         </span>
                                     <% } else if ( a >= 70 ) { %>
-                                        <span class="badge bg-warning">
+                                        <span class="badge bg-warning" style="font-size:1rem">
                                             <%= a %>%
                                         </span>
                                     <% } else { %>
-                                        <span class="badge bg-danger">
+                                        <span class="badge bg-danger" style="font-size:1rem">
                                             <%= a %>%
                                         </span>
                                     <% } %>
