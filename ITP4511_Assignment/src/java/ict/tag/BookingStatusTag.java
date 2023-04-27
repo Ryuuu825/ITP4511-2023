@@ -16,7 +16,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class BookingStatusTag extends SimpleTagSupport {
 
-    private String[] statusString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancel", "Complete"};
+    private String[] statusString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Check out", "Cancelled", "Completed"};
     private String[] color = {"btn-warning", "btn-danger", "btn-primary", "btn-success", "btn-danger", "btn-success"};
 
     private int status;
@@ -40,17 +40,22 @@ public class BookingStatusTag extends SimpleTagSupport {
             PageContext pageContext = (PageContext) getJspContext();
             JspWriter out = pageContext.getOut();
             if ("Member".equalsIgnoreCase(role)) {
-                out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
-                out.print("Update");
-                out.print("</button>");
-                if (status != 2 && status != 6 && status != 7) {
-                    out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
-                } else {
-                    out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \" style=\"display: none;\">");
+                switch (status) {
+                    case 1:
+                    case 3:
+                        out.print("<button type=\"submit\" class=\"btn btn-lg btn-primary btn-block \">");
+                        out.print("Update");
+                        out.print("</button>");
+                        out.print("<button name=\"status\" value=\"6\" type=\"submit\" class=\"btn btn-lg btn-block btn-danger \">");
+                        out.print("Cancel");
+                        out.print("</button>");
+                        break;
+                    default:
+                        out.print("<button name=\"status\" disabled class=\"btn btn-lg btn-secondary btn-block \">");
+                        out.print(statusString[status]);
+                        out.print("</button>");
+                        break;
                 }
-
-                out.print("Cancel");
-                out.print("</button>");
             } else {
                 switch (status) {
                     case 1:

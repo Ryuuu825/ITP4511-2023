@@ -21,6 +21,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>View Cart</title>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+                integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+                integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous">
+        </script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
@@ -39,41 +45,88 @@
         }
     </style>
     <script>
-        function removeVenue(id, size) {
-            if (size == 1) {
-                if (confirm("Only one venue was selected!\n If you confirm to remove this venue, the page will be returned!") == true) {
-                    $.ajax({url: "delCartVenue", type: "post", data: {action: "delCartVenue", venueId: id}, async: false, success: function (result) {
-                            location.href = "findVenue";
-                        }});
-                }
-            } else {
-                $.ajax({url: "delCartVenue", type: "post", data: {action: "delCartVenue", venueId: id}, async: false, success: function (result) {
-                        location.reload();
-                    }});
-            }
+                    function removeVenue(id, size) {
+                        if (size == 1) {
+                            if (confirm("Only one venue was selected!\n If you confirm to remove this venue, the page will be returned!") == true) {
+                                $.ajax({url: "delCartVenue", type: "post", data: {action: "delCartVenue", venueId: id}, async: false, success: function (result) {
+                                        location.href = "findVenue";
+                                    }});
+                            }
+                        } else {
+                            $.ajax({url: "delCartVenue", type: "post", data: {action: "delCartVenue", venueId: id}, async: false, success: function (result) {
+                                    location.reload();
+                                }});
+                        }
 
-        }
-        $(document).ready(function () {
-            $(window).scroll(function () {
-                if ($(this).scrollTop() >= $('#summary').height()) {
-                    $('#summary').parent().addClass("me-5");
-                    $('#summary').addClass("position-fixed end-0 top-0 mx-5 summary-width");
-                } else {
-                    $('#summary').parent().removeClass("me-5");
-                    $('#summary').removeClass("position-fixed end-0 top-0 mx-5 summary-width");
-                }
-            });
-        });
+                    }
+                    $(document).ready(function () {
+                        var params = new window.URLSearchParams(window.location.search);
+                        var venue = params.get('venueId');
+                        venue !== null ? showCalendar() : "";
+                        function showCalendar() {
+                            $("#calendarModal").modal('show');
+                        }
+                        $(window).scroll(function () {
+                            if ($(this).scrollTop() >= $('#summary').height()) {
+                                $('#summary').parent().addClass("me-5");
+                                $('#summary').addClass("position-fixed end-0 top-0 mx-5 summary-width");
+                            } else {
+                                $('#summary').parent().removeClass("me-5");
+                                $('#summary').removeClass("position-fixed end-0 top-0 mx-5 summary-width");
+                            }
+                        });
+
+                        $("#bookVenueForm button[type=submit]").click(function () {
+                            var submit = false;
+                            for (var i = 0; i < $("input[name='timeOption']").length; i++) {
+                                if ($(`input[name='timeOption']:eq(` + i + `)`).is(":checked")) {
+                                    submit = true;
+                                }
+                            }
+                            if (submit) {
+                                $("#bookVenueForm").submit();
+                            } else {
+                                alert("You have to select a timeslot");
+                            }
+                        });
+                    });
     </script>
 
     <%
         HashMap<String, Venue> cartVenues = (HashMap<String, Venue>) request.getAttribute("cartVenues");
         HashMap<String, HashMap<String, ArrayList<Timeslot>>> venueDateTimes = (HashMap<String, HashMap<String, ArrayList<Timeslot>>>) request.getAttribute("venueDateTimes");
         User user = (User) session.getAttribute("userInfo");
+        String selectedVenue = (String) request.getAttribute("selectedVenue");
     %>
 
     <body style="background-color: #f2f2f2;">
         <jsp:include page="header.jsp" />
+        <!-- Modal -->
+        <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarLabel" aria-hidden="true">
+            <form class="modal-dialog modal-dialog-centered" id="bookVenueForm" action="getCart" method="post">
+                <input type="hidden" id="action" name="action" value="addBookingVenue">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <input type="hidden" id="venueId" name="venueId"
+                               value="<%=selectedVenue != null || selectedVenue != "" ? selectedVenue : ""%>">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            Calendar
+                        </h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <jsp:include page="calendar.jsp" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" onclick="event.preventDefault();" class="btn btn-primary">ADD TO
+                            BOOK</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Modal -->
+
         <section class="p-5">
             <div class="fw-bold fs-5 my-3"><a href="findVenue">Find venues </a>/ <span
                     class="text-decoration-underline">Cart</span></div>
@@ -167,8 +220,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Timeslot</h5>
+                            <a onclick="showCalendar()" href="<%=request.getContextPath()%>/getCart?action=cart&venueId=<%=venueId%>"
+                               class="btn btn-link fs-7 rounded-pill">
+                                Change Timeslots
+                            </a>
                         </div>
                         <div class="card-body">
                             <%
