@@ -154,7 +154,7 @@
 
         <section class="p-5">
             <div class="fw-bold fs-5 my-3"><a class="text-primary" href="searchBookings">Bookings </a>/ <span
-                    class=""><a class="text-primary" href="searchBookings?bookingId=<%=bookingId%>&venueId=<%=venueId%>">Details </a></span> / <span
+                    class=""><a class="text-primary" href="searchBookings?bookingId=<%=bookingId%>">Details </a></span> / <span
                     class="text-decoration-underline">View Guests</span>
             </div>
             <ict:result />
