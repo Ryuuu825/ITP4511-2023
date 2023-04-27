@@ -17,8 +17,8 @@ public class GuestListDAO extends BaseDAO {
         String sql = "CREATE TABLE IF NOT EXISTS guestlist ("
                 + "id INT(11) NOT NULL AUTO_INCREMENT,"
                 + "createDate DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                + "bookingId INT(11) NOT NULL,"
-                + "venueId INT(11) NOT NULL,"
+                + "bookingId INT(11),"
+                + "venueId INT(11),"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (bookingId) REFERENCES booking(id) ON DELETE CASCADE,"
                 + "FOREIGN KEY (venueId) REFERENCES venue(id) ON DELETE CASCADE"
@@ -99,9 +99,9 @@ public class GuestListDAO extends BaseDAO {
             gl = new GuestList();
             gl.setCreateDate(((Date) m.get("createDate")).toLocalDate());
             gl.setId((int) m.get("id"));
-            gl.setBookingId((int) m.get("bookingId"));
+            gl.setBookingId(m.get("bookingId") != null ? (int) m.get("bookingId") : 0);
             gl.setGuests(queryGuestsByGuestListId(gl.getId()));
-            gl.setVenueId((int) m.get("venueId"));
+            gl.setVenueId(m.get("venueId") != null ? (int) m.get("venueId") : 0);
         }
         return gl;
     }
@@ -144,9 +144,9 @@ public class GuestListDAO extends BaseDAO {
             gl = new GuestList();
             gl.setCreateDate(((Date) m.get("createDate")).toLocalDate());
             gl.setId((int) m.get("id"));
-            gl.setBookingId((int) m.get("bookingId"));
+            gl.setBookingId(m.get("bookingId") != null ? (int) m.get("bookingId") : 0);
             gl.setGuests(queryGuestsByGuestListId(gl.getId()));
-            gl.setVenueId((int) m.get("venueId"));
+            gl.setVenueId(m.get("venueId") != null ? (int) m.get("venueId") : 0);
         }
         return gl;
     }
@@ -163,8 +163,9 @@ public class GuestListDAO extends BaseDAO {
             gl = new GuestList();
             gl.setCreateDate(((Date) m.get("createDate")).toLocalDate());
             gl.setId((int) m.get("id"));
-            gl.setBookingId((int) m.get("bookingId"));
+            gl.setBookingId(m.get("bookingId") != null ? (int) m.get("bookingId") : 0);
             gl.setGuests(queryGuestsByKeyword(gl.getId(), keyword));
+            gl.setVenueId(m.get("venueId") != null ? (int) m.get("venueId") : 0);
         }
         return gl;
     }
