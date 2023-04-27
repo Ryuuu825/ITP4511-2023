@@ -128,7 +128,7 @@ public class BookingController extends HttpServlet {
                 }
             } else {
                 bookingDB.delRecord(bookingId);//remove the created order which is booked fail
-                session.setAttribute("error", "Server Erro! <br>Sorry, the booking cannot be created, please try again!");
+                session.setAttribute("error", "Server Error! <br>Sorry, the booking cannot be created, please try again!");
             }
             String userRole = (String) req.getSession().getAttribute("role");
             if (!userRole.equals("Member")) {
@@ -148,7 +148,7 @@ public class BookingController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        boolean isAuth = CheckRole.checkIfRoleIs(req.getSession(), new String[]{"Admin", "Staff", "Member"});
+        boolean isAuth = CheckRole.checkIfRoleIs(req.getSession(), new String[]{"SeniorManager", "Staff", "Member"});
 
         String bookingId = req.getParameter("bookingId");
 
