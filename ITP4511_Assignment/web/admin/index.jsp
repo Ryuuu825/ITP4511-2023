@@ -105,7 +105,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="card">
+                    <!-- <div class="card">
                         <div class="card-body flex flex-col">
                             <span
                                 class="text-2xl font-bold animate-pulse"
@@ -116,7 +116,7 @@
                                   >Bounce Rate</span
                             >
                         </div>
-                    </div>
+                    </div> -->
                     <div class="card">
                         <div class="card-body flex flex-col">
                             <span class="text-2xl font-bold">
