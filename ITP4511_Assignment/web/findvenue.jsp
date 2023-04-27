@@ -69,6 +69,13 @@
                         }
                     }
 
+                    function removeVenue(id) {
+                        $.ajax({url: "delCartVenue", type: "post", data: {action: "delCartVenue", venueId: id}, async: false, success: function (result) {
+                                location.reload();
+                                showCart();
+                            }});
+                    }
+
                     $(document).ready(function () {
                         hideCart();
                         var params = new window.URLSearchParams(window.location.search);
@@ -134,7 +141,7 @@
     <%
         ArrayList<Venue> venueList = (ArrayList<Venue>) request.getAttribute("venueList");
         String selectedVenue = (String) request.getAttribute("selectedVenue");
-        HashMap<String, int[]> bookingVenues = (HashMap<String, int[]>) session.getAttribute("bookingVenues");
+        HashMap<String, ArrayList<Integer>> bookingVenues = (HashMap<String, ArrayList<Integer>>) session.getAttribute("bookingVenues");
     %>
 
     <body style="min-height: 100vh;background-color: #eee;">
@@ -192,32 +199,39 @@
                         <button type="button" onclick="hideCart()" class="btn-close" data-bs-dismiss="card"
                                 aria-label="Close"></button>
                     </div>
-                    <div class="card-body">
-                        <%
-                            double total = 0;
-                            if (bookingVenues != null && !bookingVenues.isEmpty()) {
-                                total = 0;
-                                for (Map.Entry<String, int[]> en : bookingVenues.entrySet()) {
-                                    String key = en.getKey();
-                                    int[] val = en.getValue();
-                                    for (Venue v : venueList) {
-                                        String venueId = v.getId() + "";
-                                        if (venueId.equalsIgnoreCase(key)) {
-                                            total += v.getHourlyRate() * val.length;
-                        %>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <strong><%=v.getName()%></strong>
-                            <div class="d-flex w-25 align-items-center"><label
-                                    class="me-1">$<%=v.getHourlyRate()%></label><label class="me-auto">x</label><label>
-                                    <%=val.length%></label></div>
-                        </div>
-                        <%                           }
+                    <div class="card-body p-0">
+                        <ol class="list-group list-group-flush list-group-numbered">
+                            <%
+                                double total = 0;
+                                if (bookingVenues != null && !bookingVenues.isEmpty()) {
+                                    total = 0;
+                                    for (Map.Entry<String, ArrayList<Integer>> en : bookingVenues.entrySet()) {
+                                        String key = en.getKey();
+                                        ArrayList<Integer> val = en.getValue();
+                                        for (Venue v : venueList) {
+                                            String venueId = v.getId() + "";
+                                            if (venueId.equalsIgnoreCase(key)) {
+                                                total += v.getHourlyRate() * val.size();
+                            %>
+                            <li class="list-group-item d-flex align-items-start justify-content-between">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-semibold"><%=v.getName()%></div>
+                                    Content for list item
+                                </div>
+                                <div class="d-flex align-items-center" style="width:30%;"><label
+                                        class="me-auto">$<%=v.getHourlyRate()%></label><label class="me-1">x</label>
+                                    <label class="me-1"><%=val.size()%></label>
+                                    <button type="button" onclick="removeVenue(<%=venueId%>);" class="btn-close" style="width:0.3rem;height: 0.3rem;" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                            </li>
+                            <%                           }
+                                        }
                                     }
                                 }
-                            }
-                        %>
-                        <div class="mt-2 d-flex align-items-start justify-content-between">
-                            <strong>Total</strong>
+                            %>
+                        </ol>
+                        <div class="mt-2 d-flex align-items-start justify-content-between p-4 border-top">
+                            <div class="fs-5 fw-semibold">Total</div>
                             <strong id="total" class="fs-4">HK$<%=total%></strong>
                         </div>
                     </div>

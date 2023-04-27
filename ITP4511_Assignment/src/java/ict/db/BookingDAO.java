@@ -41,7 +41,7 @@ public class BookingDAO extends BaseDAO {
         dbUtil.executeByPreparedStatement(sql);
     }
 
-    public boolean addRecordRecord(int userId, double amount, int status) {
+    public int addRecord(int userId, double amount, int status) {
         boolean isSuccess = false;
         ArrayList<Object> params = new ArrayList<>();
         params.add(userId);
@@ -50,7 +50,11 @@ public class BookingDAO extends BaseDAO {
         params.add(LocalDate.now());
         String sql = "INSERT INTO booking (userId, amount, status, createDate) VALUES (?,?,?,?)";
         isSuccess = dbUtil.updateByPreparedStatement(sql, params);
-        return isSuccess;
+        if (isSuccess) {
+            return dbUtil.getLastInsertId();
+        } else {
+            return 0;
+        }
     }
 
     

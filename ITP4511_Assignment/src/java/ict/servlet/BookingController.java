@@ -4,14 +4,19 @@
  */
 package ict.servlet;
 
+import ict.bean.User;
+import ict.bean.VenueTimeslot;
 import ict.bean.view.BookingDTO;
 import ict.db.AccountDAO;
 import ict.db.BookingDAO;
 import ict.db.UserDAO;
+import ict.db.VenueTimeslotDAO;
 import ict.util.CheckRole;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,12 +29,13 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "BookingController", urlPatterns = {"/searchBookings", "/updateBooking", "/viewBooking"})
+@WebServlet(name = "BookingController", urlPatterns = {"/searchBookings", "/updateBooking", "/viewBooking", "/addBooking"})
 public class BookingController extends HttpServlet {
 
     private AccountDAO accountDB;
     private UserDAO userDB;
     private BookingDAO bookingDB;
+    private VenueTimeslotDAO vtsDB;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,27 +53,90 @@ public class BookingController extends HttpServlet {
                 session.setAttribute("message", "Update booking " + bookingId + " failed!");
             };
 
-            String userRole = (String) req.getSession().getAttribute("userRole");
-            if ( ! userRole.equals("Member")) {
+            String userRole = (String) req.getSession().getAttribute("role");
+            if (!userRole.equals("Member")) {
                 resp.sendRedirect("searchBookings");
             } else {
-                resp.sendRedirect( getServletContext().getContextPath() + "/member/booking");
+                resp.sendRedirect(getServletContext().getContextPath() + "/member/booking");
+            }
+        } else if ("add".equalsIgnoreCase(action)) {
+            HttpSession session = req.getSession();
+            HashMap<String, ArrayList<Integer>> bookingVenus = (HashMap<String, ArrayList<Integer>>) session.getAttribute("bookingVenues");
+            HashMap<String, ArrayList<String>> bookingDates = (HashMap<String, ArrayList<String>>) session.getAttribute("bookingDates");
+            //add booking
+            //get user id from session
+            User user = (User) session.getAttribute("userInfo");
+            int userId = user.getId();
+            double total = Double.parseDouble(req.getParameter("total"));
+            //add booking record and get booking id
+            int bookingId = bookingDB.addRecord(userId, total, 1);
+            if (bookingId != 0) {
+                //check timeslot vaildable
+                boolean canBook = true;
+                for (Map.Entry<String, ArrayList<Integer>> vs : bookingVenus.entrySet()) {
+                    String venueId = vs.getKey();
+                    ArrayList<Integer> vtsIds = vs.getValue();
+                    for (int vtsId : vtsIds) {
+                        VenueTimeslot vts = vtsDB.queryRocordById(vtsId);
+                        //check venue whether is booked
+                        if (vts.getBookingId() == 0) {
+                            canBook = false;
+                        }
+                    }
+                };
+                if (canBook == true) {
+                    //update record
+                    for (Map.Entry<String, ArrayList<Integer>> vs : bookingVenus.entrySet()) {
+                        String venueId = vs.getKey();
+                        ArrayList<Integer> vtsIds = vs.getValue();
+                        for (int vtsId : vtsIds) {
+                            VenueTimeslot vts = vtsDB.queryRocordById(vtsId);
+                            vts.setBookingId(bookingId);
+                            vtsDB.editRecord(vts);
+                            session.removeAttribute("bookingVenues");
+                            session.removeAttribute("bookingDates");
+                            session.setAttribute("message", "The venue is booked successfully! <br>The reservation order will be reserved for 24 hours! <br>Please pay in time, otherwise the reservation will be cancelled.");
+                        }
+                    }
+                } else {
+                    session.removeAttribute("bookingVenues");
+                    session.removeAttribute("bookingDates");
+                    bookingDB.delRecord(bookingId);//remove the created order which is booked fail
+                    session.setAttribute("error", "The venue is booked fail! <br>Sorry, the selected time is already booked.");
+                }
+            } else {
+                session.removeAttribute("bookingVenues");
+                session.removeAttribute("bookingDates");
+                bookingDB.delRecord(bookingId);//remove the created order which is booked fail
+                session.setAttribute("error", "The venue is booked fail! <br>Sorry, the selected time is already booked.");
+            }
+            String userRole = (String) req.getSession().getAttribute("role");
+            if (!userRole.equals("Member")) {
+                resp.sendRedirect("searchBookings");
+            } else {
+                resp.sendRedirect(getServletContext().getContextPath() + "/member/booking");
+            }
+        } else {
+            String userRole = (String) req.getSession().getAttribute("role");
+            if (!userRole.equals("Member")) {
+                resp.sendRedirect("searchBookings");
+            } else {
+                resp.sendRedirect(getServletContext().getContextPath() + "/member/booking");
             }
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        boolean isAuth = CheckRole.checkIfRoleIs( req.getSession() , new String[] {"Admin", "Staff" , "Member"});
-        
+        boolean isAuth = CheckRole.checkIfRoleIs(req.getSession(), new String[]{"Admin", "Staff", "Member"});
 
         String bookingId = req.getParameter("bookingId");
 
-        if ( ! isAuth && bookingId != null) {
-            CheckRole.redirect(req, resp, "/viewBooking?bookingId=" + bookingId , "You need to login first!");
+        if (!isAuth && bookingId != null) {
+            CheckRole.redirect(req, resp, "/viewBooking?bookingId=" + bookingId, "You need to login first!");
             return;
         } else {
-            if ( ! isAuth) {
+            if (!isAuth) {
                 CheckRole.redirect(req, resp, "/member/booking", "You need to login first!");
                 return;
             }
@@ -104,6 +173,7 @@ public class BookingController extends HttpServlet {
         accountDB = new AccountDAO(dbUrl, dbUser, dbPassword);
         userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         bookingDB = new BookingDAO(dbUrl, dbUser, dbPassword);
+        vtsDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
     }
 
 }

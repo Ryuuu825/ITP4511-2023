@@ -10,7 +10,7 @@
 <%@ taglib uri="/WEB-INF/tlds/ict-taglib.tld" prefix="ict" %>
 
 <ict:checkRole roleStr="Member,SeniorManager,Staff"
-    redirectFrom="/getCart?action=cart" />
+               redirectFrom="/getCart?action=cart" />
 
 <% String role = (String) session.getAttribute("role"); %>
 
@@ -39,6 +39,20 @@
         }
     </style>
     <script>
+        function removeVenue(id, size) {
+            if (size == 1) {
+                if (confirm("Only one venue was selected!\n If you confirm to remove this venue, the page will be returned!") == true) {
+                    $.ajax({url: "delCartVenue", type: "post", data: {action: "delCartVenue", venueId: id}, async: false, success: function (result) {
+                            location.href = "findVenue";
+                        }});
+                }
+            } else {
+                $.ajax({url: "delCartVenue", type: "post", data: {action: "delCartVenue", venueId: id}, async: false, success: function (result) {
+                        location.reload();
+                    }});
+            }
+
+        }
         $(document).ready(function () {
             $(window).scroll(function () {
                 if ($(this).scrollTop() >= $('#summary').height()) {
@@ -113,7 +127,7 @@
                     <div class="card mb-4">
                         <div class="card-header py-3 d-flex align-items-center justify-content-between">
                             <h5 class="mb-0">Booking Venue</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" onclick="removeVenue(<%=venueId%>, <%=cartVenues.size()%>);" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="card-body">
                             <div>
@@ -233,8 +247,8 @@
                             </ul>
                             <form method="post" action="addBooking">
                                 <input type="hidden" name="action" value="add">
-                                <button type="submit" onclick="event.preventDefault();" class="btn btn-primary w-100">ADD
-                                    BOOKING</button>
+                                <input type="hidden" name="total" value="<%=Arrays.stream(subTotals).sum()%>">
+                                <button type="submit" class="btn btn-primary w-100">ADD BOOKING</button>
                             </form>
                         </div>
                     </div>

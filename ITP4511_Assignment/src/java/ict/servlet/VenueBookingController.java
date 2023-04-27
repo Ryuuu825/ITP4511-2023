@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author jyuba
  */
-@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar", "/selectDate", "/handleBooking", "/getCart"})
+@WebServlet(name = "VenueBookingController", urlPatterns = {"/findVenue", "/getCalendar", "/selectDate", "/handleBooking", "/getCart", "/delCartVenue"})
 public class VenueBookingController extends HttpServlet {
 
     private VenueDAO venueDAO;
@@ -44,13 +44,12 @@ public class VenueBookingController extends HttpServlet {
             String venueId = (String) req.getParameter("venueId");
             String[] selectedTimeslotIds = req.getParameterValues("timeOption");
             ArrayList<String> selectedDate = new ArrayList<>();
-            int[] toIntTimeslotIds = new int[0];
+            ArrayList<Integer> toIntTimeslotIds = new ArrayList<>();
             if (selectedTimeslotIds != null) {
-                toIntTimeslotIds = new int[selectedTimeslotIds.length];
                 for (int i = 0; i < selectedTimeslotIds.length; i++) {
                     System.out.println(selectedTimeslotIds[i]);
                     int vtsId = Integer.parseInt(selectedTimeslotIds[i]);
-                    toIntTimeslotIds[i] = vtsId;
+                    toIntTimeslotIds.add(vtsId);
                     VenueTimeslot vts = vtsDAO.queryRocordById(vtsId);
                     System.err.println(vts.getDate().toString());
                     if (vts != null && selectedDate.contains(vts.getDate().toString())) {
@@ -62,9 +61,9 @@ public class VenueBookingController extends HttpServlet {
             }
             System.err.println(selectedDate);
             HttpSession session = req.getSession();
-            HashMap<String, int[]> bookingVenus = null;
+            HashMap<String, ArrayList<Integer>> bookingVenus = null;
             if (session.getAttribute("bookingVenues") != null) {
-                bookingVenus = (HashMap<String, int[]>) session.getAttribute("bookingVenues");
+                bookingVenus = (HashMap<String, ArrayList<Integer>>) session.getAttribute("bookingVenues");
             } else {
                 bookingVenus = new HashMap<>();
             }
@@ -80,7 +79,23 @@ public class VenueBookingController extends HttpServlet {
             bookingVenus.put(venueId, toIntTimeslotIds);
             session.setAttribute("bookingVenues", bookingVenus);
             resp.sendRedirect("findVenue");
-        } else if ("update".equalsIgnoreCase(action)) {
+        } else if ("delCartVenue".equalsIgnoreCase(action)) {
+            HttpSession session = req.getSession();
+            String venueId = (String) req.getParameter("venueId");
+            HashMap<String, ArrayList<Integer>> bookingVenus = (HashMap<String, ArrayList<Integer>>) session.getAttribute("bookingVenues");
+            HashMap<String, ArrayList<String>> bookingDates = (HashMap<String, ArrayList<String>>) session.getAttribute("bookingDates");
+            bookingVenus.remove(venueId);
+            bookingDates.remove(venueId);
+            session.setAttribute("bookingDates", bookingDates);
+            session.setAttribute("bookingVenues", bookingVenus);
+            resp.sendRedirect("findVenue");
+        } else if ("delVenueTimeslot".equalsIgnoreCase(action)) {
+            HttpSession session = req.getSession();
+            String venueId = (String) req.getParameter("venueId");
+            String vtsId = (String) req.getParameter("vtsId");
+            HashMap<String, ArrayList<Integer>> bookingVenus = (HashMap<String, ArrayList<Integer>>) session.getAttribute("bookingVenues");
+            bookingVenus.get(venueId).remove(vtsId);
+            session.setAttribute("bookingVenues", bookingVenus);
             resp.sendRedirect("findVenue");
         } else {
             resp.sendRedirect("findVenue");
@@ -95,17 +110,17 @@ public class VenueBookingController extends HttpServlet {
             HttpSession session = req.getSession(true);
             resp.sendRedirect("findVenue");
         } else if ("cart".equalsIgnoreCase(action)) {
-            HashMap<String, int[]> bookingVenues = (HashMap<String, int[]>) req.getSession().getAttribute("bookingVenues");
+            HashMap<String, ArrayList<Integer>> bookingVenues = (HashMap<String, ArrayList<Integer>>) req.getSession().getAttribute("bookingVenues");
             HashMap<String, Venue> cartVenues = new HashMap<>();
             HashMap<String, HashMap<String, ArrayList<Timeslot>>> venueDateTimes = new HashMap<>();
             if (bookingVenues == null || bookingVenues.isEmpty()) {
                 resp.sendRedirect("findVenue");
                 return;
             }
-            for (Map.Entry<String, int[]> entry : bookingVenues.entrySet()) {
+            for (Map.Entry<String, ArrayList<Integer>> entry : bookingVenues.entrySet()) {
                 String vid = entry.getKey();
                 int venueId = Integer.parseInt(vid);
-                int[] vtsIds = entry.getValue();
+                ArrayList<Integer> vtsIds = entry.getValue();
                 Venue v = venueDAO.queryRecordById(venueId);
                 cartVenues.put(vid, v);
                 HashMap<String, ArrayList<Timeslot>> dateTimes = new HashMap<>();

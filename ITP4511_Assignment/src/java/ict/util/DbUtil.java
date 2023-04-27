@@ -73,6 +73,39 @@ public class DbUtil {
 
     }
 
+    public int getLastInsertId() {
+        // get last insert id
+        int lastInsertId = 0;
+
+        try {
+            Connection cnnt = getConnection();
+            Statement stmnt = cnnt.createStatement();
+            ResultSet rs = stmnt.executeQuery("SELECT LAST_INSERT_ID()");
+
+            if (rs.next()) {
+                lastInsertId = rs.getInt(1);
+            }
+            cnnt.close();
+        } catch (SQLException e) {
+            while (e != null) {
+                e.printStackTrace();
+                hasError = true;
+                String errorMsg = e.getMessage();
+                if (errorMsg.contains("(")) {
+                    errorMsg = errorMsg.substring(0, e.getLocalizedMessage().indexOf("(")) + ". SQL State Code:" + e.getSQLState();
+                }
+                errorMsgs.add(errorMsg);
+                e = e.getNextException();
+            }
+        } catch (IOException e) {
+            String errorMsg = e.getMessage();
+            errorMsgs.add(errorMsg);
+            e.printStackTrace();
+            hasError = true;
+        }
+        return lastInsertId;
+    }
+
     /**
      * excute query statement
      *

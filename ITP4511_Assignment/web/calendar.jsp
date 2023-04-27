@@ -7,7 +7,7 @@
 integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <style>
     .modal {
-        --mdb-modal-width: 60%;
+        --mdb-modal-width: 55%;
     }
 
     .date-td {
@@ -89,7 +89,7 @@ integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="ano
 </script>
 <%
     ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = (ArrayList<ArrayList<CalendarTimeslot>>) request.getAttribute("monthlyDateTimeslot");
-    HashMap<String, int[]> bookingVenues = (HashMap<String, int[]>) session.getAttribute("bookingVenues");
+    HashMap<String, ArrayList<Integer>> bookingVenues = (HashMap<String, ArrayList<Integer>>) session.getAttribute("bookingVenues");
     HashMap<String, ArrayList<String>> bookingDates = (HashMap<String, ArrayList<String>>) session.getAttribute("bookingDates");
     String selectedVenue = (String) request.getAttribute("selectedVenue");
     ArrayList<String> selectedDate = null;
@@ -180,37 +180,39 @@ integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="ano
     <label name="datetitle" class="fs-5"><%=ctss != null && !ctss.isEmpty() ? ctss.get(0).getDate() : ""%></label>
     <button type="button" class="btn-close"></button>
 </div>
-<div class="card-body d-flex justify-content-evenly flex-wrap">
-    <%
-        if (ctss != null && !ctss.isEmpty()) {
-            for (CalendarTimeslot cts : ctss) {
-                int[] selectedTimes = null;
-                if (bookingVenues != null && !bookingVenues.isEmpty() && bookingVenues.get(cts.getVenueId() + "") != null) {
-                    selectedTimes = bookingVenues.get(cts.getVenueId() + "");
-                }
-                out.print("<button type=\"button\" onclick=\"event.preventDefault();\" " + (cts.isBooked() ? "disabled" : ""));
-                out.print("class=\"ts-btn btn btn-outline-" + (cts.isBooked() ? "secondary" : "primary") + " btn-rounded m-1\">");
-                out.print(cts.getTimeslot().getStartTime() + " - " + cts.getTimeslot().getEndTime());
-                boolean st = false;
-                if (selectedTimes != null) {
-                    for (int selectedTime : selectedTimes) {
-                        if (selectedTime == cts.getVenuetimeslotId()) {
-                            st = true;
+<div class="card-body">
+    <div class="d-flex justify-content-start flex-wrap">
+        <%
+            if (ctss != null && !ctss.isEmpty()) {
+                for (CalendarTimeslot cts : ctss) {
+                    ArrayList<Integer> selectedTimes = null;
+                    if (bookingVenues != null && !bookingVenues.isEmpty() && bookingVenues.get(cts.getVenueId() + "") != null) {
+                        selectedTimes = bookingVenues.get(cts.getVenueId() + "");
+                    }
+                    out.print("<button type=\"button\" onclick=\"event.preventDefault();\" " + (cts.isBooked() ? "disabled" : ""));
+                    out.print("class=\"ts-btn btn btn-outline-"+ (cts.isBooked() ? "secondary " : "primary ") + (ctss.indexOf(cts) == ctss.size()-1 ? "me-auto":"") + " btn-rounded m-1\">");
+                    out.print(cts.getTimeslot().getStartTime() + " - " + cts.getTimeslot().getEndTime());
+                    boolean st = false;
+                    if (selectedTimes != null) {
+                        for (int selectedTime : selectedTimes) {
+                            if (selectedTime == cts.getVenuetimeslotId()) {
+                                st = true;
+                            }
                         }
                     }
-                }
 
-                if (st) {
-                    out.print("<input type=\"checkbox\" class=\"d-none\" checked name=\"timeOption\" value=\"" + cts.getVenuetimeslotId() + "\">");
-                } else {
-                    out.print("<input type=\"checkbox\" class=\"d-none\" name=\"timeOption\" value=\"" + cts.getVenuetimeslotId() + "\">");
+                    if (st) {
+                        out.print("<input type=\"checkbox\" class=\"d-none\" checked name=\"timeOption\" value=\"" + cts.getVenuetimeslotId() + "\">");
+                    } else {
+                        out.print("<input type=\"checkbox\" class=\"d-none\" name=\"timeOption\" value=\"" + cts.getVenuetimeslotId() + "\">");
+                    }
+                    out.print("</button>");
                 }
-                out.print("</button>");
+            } else {
+                out.print("<label class=\"w-100 h-100\">No time slot available</label>");
             }
-        } else {
-            out.print("<label class=\"w-100 h-100\">No time slot available</label>");
-        }
-    %>
+        %>
+    </div>
 </div>
 </div>
 <%
