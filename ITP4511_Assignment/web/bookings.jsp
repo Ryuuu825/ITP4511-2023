@@ -49,7 +49,7 @@
 
             $("#search-button").click(function () {
                 var search = $("#search-input").val();
-                window.location.href = "<%=request.getContextPath()%>/searchBookings?search=" + search;
+                window.location.href = "<%=request.getContextPath()%>/member/booking?search=" + search;
             });
 
             //key press enter

@@ -177,6 +177,7 @@ public class BookingController extends HttpServlet {
             }
         } else if (searchKeys != null && !searchKeys.equals("")) {
             bdtos = bookingDB.queryRecordToDTOByKeyword(searchKeys);
+
         } else {
             bdtos = bookingDB.queryRecordToDTO();
         }
@@ -202,3 +203,4 @@ public class BookingController extends HttpServlet {
     }
 
 }
+ 

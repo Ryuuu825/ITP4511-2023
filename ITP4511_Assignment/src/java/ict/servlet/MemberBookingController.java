@@ -82,7 +82,8 @@ public class MemberBookingController extends HttpServlet {
 
 
         } else if (searchKeys != null && !searchKeys.equals("")) {
-            bdtos = bookingDB.queryRecordToDTOByKeyword(searchKeys);
+            User u = (User) req.getSession().getAttribute("userInfo");
+            bdtos = bookingDB.queryRecordToDTOByKeywordWithUserId(searchKeys , Integer.toString(u.getId()));
         } else {
             bdtos = bookingDB.queryRecordToDTOWithUserId( user.getId());
 

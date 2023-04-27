@@ -304,6 +304,34 @@ public class BookingDAO extends BaseDAO {
         return bdtos;
     }
 
+    public ArrayList<BookingDTO> queryRecordToDTOByKeywordWithUserId( String keyword , String userId) {
+
+        UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
+        GuestListDAO guestListDAO = new GuestListDAO(dbUrl, dbUser, dbPassword);
+        VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
+        ArrayList<BookingDTO> bdtos = new ArrayList<>();
+        ArrayList<Booking> bookings = queryRecordByKeywords(keyword);
+        ArrayList<GuestList> gl = null;
+        BookingDTO bdto = null;
+        if (bookings.size() != 0) {
+            for (Booking b : bookings) {
+                User u = userDB.queryRecordById(b.getUserId());
+                if (u.getId() == Integer.parseInt(userId)) {
+                    bdto = new BookingDTO();
+                    bdto.setBooking(b);
+                    ArrayList<VenueTimeslots> vts1 = venueTimeslotDB.queryRocordToVenueTimeslotsList(b.getId());
+                    bdto.setVenueTimeslotses(vts1);
+                    gl = guestListDAO.queryRocordByBookingId(b.getId());
+                    bdto.setVenueGuestlists(gl);
+                    bdto.setMember(u);
+                    bdtos.add(bdto);
+                }
+            }
+        }
+        return bdtos;
+
+    }
+
     public BookingDTO queryRecordToDTOByBookingId(int bookingId) {
         UserDAO userDB = new UserDAO(dbUrl, dbUser, dbPassword);
         VenueTimeslotDAO venueTimeslotDB = new VenueTimeslotDAO(dbUrl, dbUser, dbPassword);
