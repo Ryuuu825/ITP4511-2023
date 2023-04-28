@@ -72,7 +72,7 @@ public class GuestController extends HttpServlet {
             req.getSession().setAttribute("guests", guests);
 
             // forward to the same page
-            resp.sendRedirect( req.getContextPath() + "/createGuests?action=addlist");
+            resp.sendRedirect(req.getContextPath() + "/createGuests?action=addlist");
 
         } else {
 
@@ -147,7 +147,7 @@ public class GuestController extends HttpServlet {
         if ("delete".equalsIgnoreCase(action)) {
             String bookingId = req.getParameter("bookingId");
             String venueId = req.getParameter("venueId");
-            if ( bookingId != null && venueId != null ) {
+            if (bookingId != null && venueId != null) {
                 int bid = Integer.parseInt(req.getParameter("bookingId"));
                 int guestId = Integer.parseInt(req.getParameter("guestId"));
                 // get guest name
@@ -170,11 +170,9 @@ public class GuestController extends HttpServlet {
                     }
                 } // cannot remove the guest by its index, because the index will change
                 // forward to the same page
-                resp.sendRedirect( req.getContextPath() + "/createGuests?action=addlist");
+                resp.sendRedirect(req.getContextPath() + "/createGuests?action=addlist");
             }
-                
 
-            
         } else if ("search".equalsIgnoreCase(action)) {
             int bid = Integer.parseInt(req.getParameter("bookingId"));
             int vid = Integer.parseInt(req.getParameter("venueId"));
@@ -196,12 +194,17 @@ public class GuestController extends HttpServlet {
 
                 for (Guest g : l) {
                     boolean found = false;
-                    for (Guest g2 : l2.getGuests()) {
-                        if (g.getId() == g2.getId() || (g.getName().equals(g2.getName()) && g.getEmail().equals(g2.getEmail()))) {
-                            found = true;
-                            break;
+                    try {
+
+                        for (Guest g2 : l2.getGuests()) {
+                            if (g.getId() == g2.getId() || (g.getName().equals(g2.getName()) && g.getEmail().equals(g2.getEmail()))) {
+                                found = true;
+                                break;
+                            }
                         }
+                    } catch (Exception e) {
                     }
+
                     if (!found) {
                         res.add(g);
                     }
@@ -260,7 +263,7 @@ public class GuestController extends HttpServlet {
             // try to get the guest list on the session
             gl = (GuestList) req.getSession().getAttribute("guests");
             if (gl != null) {
-               // check of the guest is already on the list
+                // check of the guest is already on the list
                 for (Guest g : gl.getGuests()) {
                     for (Guest g2 : l) {
                         if (g.getId() == g2.getId() || (g.getName().equals(g2.getName()) && g.getEmail().equals(g2.getEmail()))) {
