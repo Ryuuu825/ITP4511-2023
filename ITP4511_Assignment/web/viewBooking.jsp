@@ -19,7 +19,7 @@
 <ict:checkRole roleStr="Member,SeniorManager,Staff"
                redirectFrom="/viewBooking?bookingId=${request.getParameter('bookingId')}" />
 
-<% String role = (String) session.getAttribute("role"); %>
+<% String role = (String) session.getAttribute("role");%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,11 +47,18 @@
         .summary-width {
             width: calc(33.33% - 3rem);
         }
+
     </style>
     <script>
                     function uploadReceipt() {
                         event.preventDefault();
                         $("#receiptModal").modal('show');
+                    }
+
+                    function openFileInput() {
+                        if ($("#receiptaction").val() == "uploadReceipt") {
+                            $("#fileinput").click();
+                        }
                     }
 
                     $(document).ready(function () {
@@ -86,23 +93,22 @@
                         });
 
                         $(".imgbox-hover").click(function () {
-                            if ($("#receiptaction").val() == "uploadReceipt") {
-                                $("#fileinput").click();
-                            }
+                            openFileInput();
                         });
+
 
                         $("#fileinput").change(function () {
                             var file = this.files[0];
                             var reader = new FileReader();
                             reader.onload = function (e) {
-                                $("#receipt-img").attr('src', e.target.result);
+                                $("#receipt-file").attr('data', e.target.result);
                                 $("#upload-img").addClass("d-none");
-                                $("#receipt-img").removeClass("d-none");
+                                $("#receipt-file").removeClass("d-none");
                                 $("#changeImage").val(true);
                             };
                             reader.readAsDataURL(file);
                         });
-                        
+
                         $("#calendarModal").on('hidden.bs.modal', function () {
                             location.href = "viewBooking?bookingId=" + params.get('bookingId');
                         });
@@ -161,28 +167,33 @@
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <input type="hidden" id="receiptaction" name="action" value="<%=role.equals("Member") && status == 1 ? "uploadReceipt" : "" %>">
+                    <div class="modal-body" style="min-height:50vh;">
+                        <input type="hidden" id="receiptaction" name="action" value="<%=role.equals("Member") && status == 1 ? "uploadReceipt" : ""%>">
 
-                        <input type="file" class="d-none" id="fileinput" name="img" accept="image/*">
+                        <input type="file" class="d-none" id="fileinput" name="img" accept="image/*, .pdf, .doc">
                         <input type="hidden" id="changeImage" name="changeImage" value="false">
-                        <div class="imgbox-hover form-outline card h-100 bg-gray text-center">
-                            <div id="upload-img"
-                                 class="card-img bg-secondary bg-opacity-25 w-100 h-100  <%=bookingDTO.getBooking().getReceipt() != null ? "d-none" : ""%>">
-                                <div  style="height:30vh;" class="d-flex justify-content-center align-items-center">
+                        <div style="min-height: 50vh;" class="imgbox-hover form-outline card h-100 bg-gray text-center">
+                            <div id="upload-img" style="min-height: 50vh;"
+                                 class="card-img bg-secondary bg-opacity-25 w-100 h-100 d-flex justify-content-center align-items-center  <%=bookingDTO.getBooking().getReceipt() != null ? "d-none" : ""%>">
+                                <div class="h-100">
                                     <%=bookingDTO.getBooking().getReceipt() == null ? "No receipt" : "Click to upload receipt"%>
                                 </div>
                             </div>
-                            <img id="receipt-img"
-                                 src="assets/<%=bookingDTO.getBooking().getReceipt() != null ? bookingDTO.getBooking().getReceipt() : ""%>"
-                                 class="card-img w-100 h-100 <%=bookingDTO.getBooking().getReceipt() != null ? "" : "d-none"%>"
-                                 alt="Receipt image">
+                            <object id="receipt-file"
+                                    style="min-height: 100vh;"
+                                    data="assets/<%=bookingDTO.getBooking().getReceipt() != null ? bookingDTO.getBooking().getReceipt() : ""%>"
+                                    class="card-img w-100 h-100 <%=bookingDTO.getBooking().getReceipt() != null ? "" : "d-none"%>"
+                                    alt="Receipt image"></object>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit"
-                                class="<%=role.equals("Member") && status == 1 ? "" : "d-none"%> btn btn-primary">Upload</button>
+                    <div class="modal-footer d-flex align-items-center justify-content-between">
+                        <button type="button" onclick="openFileInput()"
+                                class="<%=role.equals("Member") && status == 1 ? "" : "d-none"%> btn btn-primary">Add File</button>
+                        <div>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit"
+                                    class="<%=role.equals("Member") && status == 1 ? "" : "d-none"%> btn btn-primary">Upload</button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -337,9 +348,16 @@
                     <div class="card mb-4" id="summary">
                         <div class="card-header py-3 d-flex align-items-center justify-content-between">
                             <h5 class="mb-0">Summary</h5>
+                            <%String fileurl = bookingDTO.getBooking().getReceipt() != null ? bookingDTO.getBooking().getReceipt() : "";%>
+                            <% if (role.equals("Member") && status == 1) {%>
                             <button onclick="uploadReceipt()" class="btn btn-lg btn-link rounded-pill">
-                                <%=role.equals("Member") && status == 1 ? "Upload" : "View"%> Receipt
+                                Upload Receipt
                             </button>
+                            <%} else {%>
+                            <a <%=bookingDTO.getBooking().getReceipt() != null ? "target=\"_blank\"" : "onclick=\"alert('No receipt');\""%> href="<%=bookingDTO.getBooking().getReceipt() != null ? "receipt.jsp?file=assets/" + bookingDTO.getBooking().getReceipt() : ""%>" class="btn btn-lg btn-link rounded-pill">
+                                View Receipt
+                            </a>
+                            <%}%>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
