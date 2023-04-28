@@ -345,7 +345,7 @@
                                                     </tr>
                                                 </table>
                                                 <div
-                                                    class="card-footer px-0 d-flex justify-content-between align-items-center">
+                                                    class="card-footer px-0 d-flex justify-content-between align-items-start">
                                                     <div class="note note-primary">
                                                         <strong>HourlyRate(HK$):
                                                             <%=venue.getHourlyRate()%>

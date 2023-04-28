@@ -33,7 +33,7 @@ public class BookingTag extends SimpleTagSupport {
         this.role = role;
     }
     
-    private String[] color = {"warning", "danger", "warning", "primary", "success", "danger", "success"};
+    private String[] color = {"warning", "danger", "warning", "primary", "success", "danger", "success", "warning", "warning"};
 
     @Override
     public void doTag() throws JspException, IOException {

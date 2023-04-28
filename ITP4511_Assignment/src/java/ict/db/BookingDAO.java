@@ -34,6 +34,7 @@ public class BookingDAO extends BaseDAO {
                 + "userId INT(11) NOT NULL,"
                 + "amount DECIMAL(10,2) NOT NULL,"
                 + "createDate DATE NOT NULL DEFAULT current_timestamp(),"
+                + "receipt VARCHAR(50),"
                 + "status TINYINT(1) NOT NULL DEFAULT 1,"
                 + "PRIMARY KEY (id),"
                 + "FOREIGN KEY (userId) REFERENCES user(id)"

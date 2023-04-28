@@ -138,8 +138,10 @@ public class VenueBookingController extends HttpServlet {
                     ArrayList<Timeslot> tss = new ArrayList<>();
                     for (int t : vtsIds) {
                         VenueTimeslot vt = vtsDAO.queryRocordById(t);
-                        Timeslot ts = timeslotDAO.queryRecordById(vt.getTimeslotId());
-                        tss.add(ts);
+                        if (vt.getDate().toString().equals(vts.getDate().toString())) {
+                            Timeslot ts = timeslotDAO.queryRecordById(vt.getTimeslotId());
+                            tss.add(ts);
+                        }
                     }
                     dateTimes.put(vts.getDate().toString(), tss);
                 }
@@ -171,7 +173,7 @@ public class VenueBookingController extends HttpServlet {
             ArrayList<Venue> venues = new ArrayList<>();
             if (keyword != null && keyword != "") {
                 venues = venueDAO.queryRecordByKeyword(keyword);
-            }else {
+            } else {
                 venues = venueDAO.queryRecord();
             }
             req.setAttribute("venueList", venues);

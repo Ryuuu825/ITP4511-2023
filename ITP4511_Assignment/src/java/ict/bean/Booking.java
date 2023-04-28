@@ -19,10 +19,10 @@ public class Booking implements Serializable{
     private LocalDate createDate;
     private String receipt;
     
-    public static String[] statuString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Completed", "Cancelled", "Completed"};
+    public static String[] statuString = {"Pending Approval", "Rejected", "Pending Check in", "Check in", "Completed", "Cancelled", "Completed", "Pending Pay", "Pending Confirm"};
 
     public enum BookingStatus {
-        PENDING_APPROVAL, REJECTED, PENDING_CHECK_IN, CHECK_IN, CHECK_OUT, CANCEL, COMPLETE
+        PENDING_APPROVAL, REJECTED, PENDING_CHECK_IN, CHECK_IN, CHECK_OUT, CANCEL, COMPLETE, PENDING_PAY, PENDING_CONFIRM
     }
     
     public Booking() {

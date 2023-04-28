@@ -159,12 +159,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">
-                            <%=role.equals("Member") && status == 1 ? "Upload" : "View"%> Receipt
+                            <%=role.equals("Member") && status == 8 ? "Upload" : "View"%> Receipt
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" style="min-height:50vh;">
-                        <input type="hidden" id="receiptaction" name="action" value="<%=role.equals("Member") && status == 1 ? "uploadReceipt" : ""%>">
+                        <input type="hidden" id="receiptaction" name="action" value="<%=role.equals("Member") && status == 8 ? "uploadReceipt" : ""%>">
 
                         <input type="file" class="d-none" id="fileinput" name="img" accept="image/*, .pdf, .doc">
                         <input type="hidden" id="changeImage" name="changeImage" value="false">
@@ -184,11 +184,11 @@
                     </div>
                     <div class="modal-footer d-flex align-items-center justify-content-between">
                         <button type="button" onclick="openFileInput()"
-                                class="<%=role.equals("Member") && status == 1 ? "" : "d-none"%> btn btn-primary">Add File</button>
+                                class="<%=role.equals("Member") && status == 8 ? "" : "d-none"%> btn btn-primary">Add File</button>
                         <div>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit"
-                                    class="<%=role.equals("Member") && status == 1 ? "" : "d-none"%> btn btn-primary">Upload</button>
+                                    class="<%=role.equals("Member") && status == 8 ? "" : "d-none"%> btn btn-primary">Upload</button>
                         </div>
                     </div>
                 </div>
@@ -290,7 +290,7 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Timeslot</h5>
                             <a onclick="showCalendar()" href="<%=request.getContextPath()%>/viewBooking?action=getCalendar&bookingId=<%=bookingId%>&venueId=<%=venueId%>"
-                               class="btn btn-link fs-7 rounded-pill <%=(status == 1 || status == 3) && role.equals("Member") ? "" : "d-none"%>">
+                               class="btn btn-link fs-7 rounded-pill <%=(status == 1) && role.equals("Member") ? "" : "d-none"%>">
                                 Change Timeslots
                             </a>
                         </div>
@@ -345,7 +345,7 @@
                         <div class="card-header py-3 d-flex align-items-center justify-content-between">
                             <h5 class="mb-0">Summary</h5>
                             <%String fileurl = bookingDTO.getBooking().getReceipt() != null ? bookingDTO.getBooking().getReceipt() : "";%>
-                            <% if (role.equals("Member") && status == 1) {%>
+                            <% if (role.equals("Member") && status == 8) {%>
                             <button onclick="uploadReceipt()" class="btn btn-lg btn-link rounded-pill">
                                 Upload Receipt
                             </button>
