@@ -97,12 +97,15 @@
             response.sendRedirect("");
         }
         GuestList guests = (GuestList) request.getAttribute("guests");
+        String bookingIdStr = request.getParameter("bookingId");
+        String venueIdStr = request.getParameter("venueId");
+
         int bookingId = 0;
         int venueId = 0;
 
         if (guests != null) {
-            bookingId = Integer.parseInt(request.getParameter("bookingId"));
-            venueId = Integer.parseInt(request.getParameter("venueId"));
+            bookingId = Integer.parseInt(bookingIdStr);
+            venueId = Integer.parseInt(venueIdStr);
         }
     %>
 
@@ -154,7 +157,7 @@
 
         <section class="p-5">
             <div class="fw-bold fs-5 my-3"><a class="text-primary" href="searchBookings">Bookings </a>/ <span
-                    class=""><a class="text-primary" href="searchBookings?bookingId=<%=bookingId%>">Details </a></span> / <span
+                    class=""><a class="text-primary" href="searchBookings?bookingId=<%=bookingIdStr%>">Details </a></span> / <span
                     class="text-decoration-underline">View Guests</span>
             </div>
             <ict:result />
