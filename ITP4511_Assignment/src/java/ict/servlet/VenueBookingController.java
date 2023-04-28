@@ -166,6 +166,18 @@ public class VenueBookingController extends HttpServlet {
             req.setAttribute("monthlyDateTimeslot", monthlyDateTimeslot);
             rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
             rd.forward(req, resp);
+        } else if ("findByKey".equalsIgnoreCase(action)) {
+            String keyword = req.getParameter("search");
+            ArrayList<Venue> venues = new ArrayList<>();
+            if (keyword != null && keyword != "") {
+                venues = venueDAO.queryRecordByKeyword(keyword);
+            }else {
+                venues = venueDAO.queryRecord();
+            }
+            req.setAttribute("venueList", venues);
+            RequestDispatcher rd;
+            rd = getServletContext().getRequestDispatcher("/findvenue.jsp");
+            rd.forward(req, resp);
         } else {
             ArrayList<Venue> venues = venueDAO.queryRecord();
             req.setAttribute("venueList", venues);

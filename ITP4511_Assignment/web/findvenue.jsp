@@ -109,12 +109,34 @@
                                 }
                             });
                         });
-                        $('#search-focus').on('focus', function () {
-                            $(this).addClass('border-primary');
+
+                        $("#search-button").click(function () {
+                            var search = $("#search-input").val();
+                            location.href = "findVenue?action=findByKey&search=" + search;
                         });
-                        $('#search-focus').on('blur', function () {
-                            $(this).removeClass('border-primary');
+
+                        //key press enter
+                        $("#search-input").keypress(function (e) {
+                            if (e.which === 13) {
+                                var search = $("#search-input").val();
+                                location.href = "findVenue?action=findByKey&search=" + search;
+                            }
                         });
+
+                        $(".form-control").focus(function () {
+                            $(".form-label").addClass("bg-white");
+                            $(this).addClass("border-2 border-primary active");
+                        });
+
+                        $(".form-control").blur(function () {
+                            $(".form-label").removeClass("bg-white");
+                            if ($(this).val() === "") {
+                                $(this).removeClass("border-2 border-primary active");
+                            } else {
+                                $(this).removeClass("border-2 border-primary");
+                            }
+                        });
+
                         $("#calendarModal").on('hidden.bs.modal', () => {
                             location.href = 'findVenue';
                         });
@@ -247,16 +269,16 @@
 
             <div class="text-start container-xl py-5">
                 <div class="row">
-<!--                    <div class="col-md-3 card">
-                        <div class="card-header">
-                            <label class="fs-4"><strong>Find venues</strong></label>
-                        </div>
-                        <div class="row card-body">
-                            <p class="text-lg">Find the perfect venue for your event</p>
-                        </div>
-                    </div>-->
-                    <div class="col card ms-4">
-                        <div class="card-header d-flex flex-row justify-content-between align-items-center">
+                    <!--                    <div class="col-md-3 card">
+                                            <div class="card-header">
+                                                <label class="fs-4"><strong>Find venues</strong></label>
+                                            </div>
+                                            <div class="row card-body">
+                                                <p class="text-lg">Find the perfect venue for your event</p>
+                                            </div>
+                                        </div>-->
+                    <div class="col card ms-4" style="min-height: 75vh;">
+                        <div class="card-header p-3 d-flex flex-row justify-content-between align-items-center">
                             <%
                                 ArrayList<Venue> shownVenues = new ArrayList<Venue>();
                                 if (venueList != null && !venueList.isEmpty()) {
@@ -271,11 +293,12 @@
                             <label class="fs-4"><strong>Displaying <%=shownVenues != null ? shownVenues.size() : 0%>
                                     matching
                                     results</strong></label>
-                            <form class="input-group w-25" action="searchVenue" method="GET">
+                            <form class="input-group w-25" action="findVenue" method="GET">
+                                <input type="hidden" name="action" value="findByKey">
                                 <div class="form-outline">
-                                    <input id="search-focus" name="keyword" type="search" id="keyword"
+                                    <input id="search-focus" name="search" type="search" id="search"
                                            class="form-control border" />
-                                    <label class="form-label" for="keyword">Search</label>
+                                    <label class="form-label" for="search">Search</label>
                                 </div>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-search"></i>
@@ -347,7 +370,7 @@
                                         }
                                     }
                                 } else {
-                                    out.print("<div class=\"row\">No such record found</div>");
+                                    out.print("<div class=\"fw-bold fs-4 row w-100 h-100 d-flex justify-content-center align-items-center\">No such record found!</div>");
                                 }
                             %>
                         </div>

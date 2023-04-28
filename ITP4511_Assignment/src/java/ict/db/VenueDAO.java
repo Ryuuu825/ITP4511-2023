@@ -227,7 +227,7 @@ public class VenueDAO extends BaseDAO {
     }
 
     public ArrayList<Venue> queryRecordByKeyword(String keyword) {
-        String sql = "SELECT * FROM venue WHERE name LIKE ? or location LIKE ? or address LIKE ? or type LIKE ?";
+        String sql = "SELECT * FROM venue WHERE name LIKE ? or district LIKE ? or address LIKE ? or type LIKE ?";
         ArrayList<Object> params = new ArrayList<>();
         params.add("%" + keyword + "%");
         params.add("%" + keyword + "%");
