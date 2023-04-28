@@ -133,12 +133,14 @@
         <jsp:include page="header.jsp" />
         <!-- Modal -->
         <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarLabel" aria-hidden="true">
-            <form class="modal-dialog modal-dialog-centered" id="bookVenueForm" action="updateBooking" method="post">
-                <input type="hidden" id="action" name="action" value="updateTimesolts">
+            <form class="modal-dialog modal-dialog-centered" id="bookVenueForm" action="member/updateBooking" method="post">
+                <input type="hidden" id="action" name="action" value="updateTimesolt">
                 <div class="modal-content">
                     <div class="modal-header">
                         <input type="hidden" id="venueId" name="venueId"
                                value="<%=selectedVenue != null || selectedVenue != "" ? selectedVenue : ""%>">
+                        <input type="hidden" id="bookingId" name="bookingId"
+                               value="<%=bookingId%>">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">
                             Calendar
                         </h1>
