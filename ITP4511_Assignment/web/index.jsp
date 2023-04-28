@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : 2023年4月7日, 上午1:30:03
-    Author     : jyuba
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

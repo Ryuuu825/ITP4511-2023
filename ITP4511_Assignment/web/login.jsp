@@ -1,9 +1,3 @@
-<%-- 
-   Document   : login
-   Created on : 2023年4月8日, 下午2:57:20
-   Author     : jyuba
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">

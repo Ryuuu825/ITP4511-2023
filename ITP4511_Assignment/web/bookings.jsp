@@ -1,9 +1,3 @@
-<%-- 
-   Document   : venueInfo
-   Created on : 2023年4月8日, 下午2:57:20
-   Author     : jyuba
---%>
-
 <%@page import="ict.bean.view.BookingDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

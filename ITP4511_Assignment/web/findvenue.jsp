@@ -1,9 +1,3 @@
-<%-- 
-   Document   : venueInfo
-   Created on : 2023年4月8日, 下午2:57:20
-   Author     : jyuba
---%>
-
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="ict.bean.User"%>
@@ -22,7 +16,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Login Page</title>
+        <title>Find Venue</title>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
                 integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous">
         </script>

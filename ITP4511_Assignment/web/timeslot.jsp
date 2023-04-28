@@ -1,9 +1,3 @@
-<%-- 
-   Document   : Timeslot
-   Created on : 2023年4月8日, 下午2:57:20
-   Author     : jyuba
---%>
-
 <%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="ict.bean.Timeslot"%>
 <%@page import="ict.bean.Venue"%>

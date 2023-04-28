@@ -1,5 +1,4 @@
-<%-- Document : welcome Created on : 2023年4月7日, 上午1:31:01 Author : jyuba
---%> <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -40,12 +39,6 @@
             </div>
             <ul class="nav justify-content-end font-semibold flex align-items-center mr-5">
                 <li class="nav-item">
-                    <a class="text-white mx-3 hover:text-lg" href="#">
-                        <!-- Browse Spaces -->
-                        Browse Spaces
-                    </a>
-                </li>
-                <li class="nav-item border-l">
                     <a class="text-white mx-3 hover:text-lg" href="findVenue">
                         <!-- Browse Spaces -->
                         Find venues
@@ -96,7 +89,7 @@
                 <div
                     class="absolute bottom-50 w-9/12 h-[5rem] flex items-center justify-center left-[13%]"
                     >
-                    <button onclick="location.href = 'findVenue'; " class="rounded-pill btn btn-light w-25 fs-4 fw-bold">Get Start Here</button>
+                    <button onclick="location.href = 'findVenue'; " class="rounded-pill btn btn-light w-25 fs-4 fw-bold">Get Start</button>
                 </div>
 
                 <div class="absolute bottom-20 left-10 text-5xl font-bold">
