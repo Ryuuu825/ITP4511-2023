@@ -54,6 +54,7 @@ public class MemberBookingController extends HttpServlet {
             };
             resp.sendRedirect("searchBookings");
         } else if ("updateTimesolt".equalsIgnoreCase(action)) {
+            System.out.println("ict.servlet.MemberBookingController.doPost()");
             int bookingId = Integer.parseInt(req.getParameter("bookingId"));
             String[] vtsIds = req.getParameterValues("timeOption");
             boolean isSuccess = false;
@@ -68,7 +69,7 @@ public class MemberBookingController extends HttpServlet {
             } else {
                 session.setAttribute("error", "Update booking " + bookingId + " failed!");
             };
-            resp.sendRedirect("searchBookings");
+            resp.sendRedirect(getServletContext().getContextPath()+"/member/booking");
         } else if ("uploadReceipt".equalsIgnoreCase(action)) {
             int bookingId = Integer.parseInt(req.getParameter("bookingId"));
             String imgurl = writeImage(req, resp); // write a file to server folder

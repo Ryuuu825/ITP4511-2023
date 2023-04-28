@@ -173,10 +173,9 @@ public class BookingController extends HttpServlet {
             int bid = Integer.parseInt(bookingId);
             BookingDTO b = bookingDB.queryRecordToDTOByBookingId(bid);
             if (b.getBooking().getId() == bid) {
-                String action = (String) req.getAttribute("action");
+                String action = (String) req.getParameter("action");
                 if ("getCalendar".equalsIgnoreCase(action)) {
                     String venueId = req.getParameter("venueId");
-                    System.out.println("ict.servlet.BookingController.doGet()");
                     int vid = Integer.parseInt(venueId);
                     req.setAttribute("selectedVenue", venueId);
                     ArrayList<ArrayList<CalendarTimeslot>> monthlyDateTimeslot = vtsDB.queryMonthlyCalendarByVenueId(vid);
