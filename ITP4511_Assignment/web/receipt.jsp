@@ -19,13 +19,24 @@
 	$(document).ready(function () {
 		var params = new window.URLSearchParams(window.location.search);
 		var file = params.get('file');
-		$("#file").attr("data", file);
+		if (file.split(".")[1] === "pdf") {
+			$("#filePdf").attr("data", file);
+			$("#filePdf").css("display", "block");
+		} else {
+			$("#fileImg").attr("src", file);
+			$("#fileImg").css("display", "block");
+		}
 	});
 </script>
 
 <body style="width:100%; height:100vh; overflow: hidden; margin: 0;">
-	<object id="file" width="100%" height="100%">
+	<object id="filePdf" width="100%" height="100%" style="display: none;">
 	</object>
+	<div style="width:100%; height:100vh;">
+		<img id="fileImg" height="100%" style="display: none; margin: auto;">
+		</img>
+	</div>
+
 </body>
 
 </html>
