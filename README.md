@@ -40,11 +40,11 @@ EPL operates five venues in Hong Kong, providing rental venue services to its me
 
     ![list](./reports/venue/list.png)
 
-    ![list](./reports/venue/c.png)
+    ![list](./reports/venue/C.png)
 
-    ![list](./reports/venue/u.png)
+    ![list](./reports/venue/U.png)
 
-    ![list](./reports/venue/d.png)
+    ![list](./reports/venue/D.png)
 
 - Guest CURD
 
