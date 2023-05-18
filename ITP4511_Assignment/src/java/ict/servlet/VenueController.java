@@ -41,7 +41,11 @@ public class VenueController extends HttpServlet {
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         InputStream inputStream = filePart.getInputStream();
         System.err.println(getServletContext().getRealPath("").split("build")[0]);
-        String url = getServletContext().getRealPath("").split("build")[0] + "web\\assets\\img\\venues\\" + fileName;
+        boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+        String url = getServletContext().getRealPath("").split("build")[0] + "web/img/venues/" + fileName;
+        if (isWindows) {
+            url = getServletContext().getRealPath("").split("build")[0] + "web\\img\\venues\\" + fileName;
+        }
         FileOutputStream outputStream = new FileOutputStream(url);
         byte[] buffer = new byte[1024];
         int bytesRead = 0;
